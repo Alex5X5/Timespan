@@ -12,7 +12,7 @@
 	<Design.DataContext>
 		<vm:MainViewModel />
 	</Design.DataContext>
-	<Grid ShowGridLines="true">
+	<Grid ShowGridLines="false">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="3.5*"/>
 			<RowDefinition Height="1.5*"/>
@@ -27,12 +27,42 @@
 		<Panel Grid.Row="0"
 			   Grid.Column="0"
 			   Grid.ColumnSpan="3"
-			   Background="Orange">
+			   Background="{ DynamicResource BackgroundColor2 }">
+			<Grid ShowGridLines="true">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="1*"/>
+					<RowDefinition Height="3*"/>
+					<RowDefinition Height="1*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="15*"/>
+					<ColumnDefinition Width="39*"/>
+					<ColumnDefinition Width="5*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="5*"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<Viewbox Grid.Row="1"
+						 Grid.Column="5"
+						 Stretch="Uniform">
+					<Button Command="{Binding GoToSettingsCommand}"
+							Width="80"
+							Height="80"
+							BorderBrush="Transparent"
+							Background="Transparent"
+							CornerRadius="0"
+							Padding="0"
+							Margin="0">
+						<Image Source="avares://Hourglass.GUI/Assets/Images/test.png"  />
+					</Button>
+				</Viewbox>
+			</Grid>
 		</Panel>
-		<Panel Grid.Row="1"
-					Grid.Column="0"
-					Grid.ColumnSpan="3"
-					Background="#1d1d1b">
+		<Panel Grid.Row="1"	
+			   Grid.Column="0"
+			   Grid.ColumnSpan="3"
+			   Background="#1d1d1b">
 		</Panel>
 		<Grid Grid.Row="1"
 			  Grid.Column="0"
@@ -40,11 +70,34 @@
 			  ColumnDefinitions="*, 5*, *">
 			<Viewbox Grid.Row="1" Grid.Column="1" Stretch="Uniform">
 				<Button Width="100"
-						Height="100">
+						Height="100"
+						Classes="DynamicBackground">
 					<Svg Path="avares://Hourglass.GUI/Assets/Images/pfeil-links.svg"/>
 				</Button>
 			</Viewbox>
 		</Grid>
+		<ItemsControl Grid.Row="1"
+					  Grid.Column="1"
+					  HorizontalAlignment="Center"
+					  VerticalAlignment="Center"
+					  ItemsSource="{ Binding CurrentPage.ButtonActions } }">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal"
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Button	Content="{ Binding Text }"
+							Command="{ Binding Command }"
+							Background="White"
+							Margin="8,0"/>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+		<!--
 		<StackPanel Grid.Row="1"
 					Grid.Column="1"
 					Orientation="Horizontal"
@@ -55,5 +108,10 @@
 			<Rectangle Fill="Green" Height="20" Width="100"/>
 			<Rectangle Fill="Orange" Height="20" Width="50"/>
 		</StackPanel>
+		-->
+		<ContentControl Grid.Row="2"
+						Grid.Column="1"
+						Background="White"
+						Content="{Binding CurrentPage}"/>
 	</Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels;
 
+using Avalonia;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,11 +11,15 @@ using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 using ReactiveUI;
 
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
 
 public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
+	
+    public record class ButtonAction(string Text, ICommand Command);
 
-	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
+    private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;
 	private Services.CacheService cacheService;
 
@@ -76,8 +81,8 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
     }
 
     private bool IsFirstGraphPageChange = true;
-	
-	public MainViewModel() : this(null, null, null, null) {
+
+    public MainViewModel() : this(null, null, null, null) {
 		
 	}
 
@@ -154,4 +159,3 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		ChangePage<TaskDetailsPageViewModel>();
 	}
 }
-

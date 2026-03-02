@@ -6,7 +6,12 @@
 			<TextBlock Classes="DynamictextHeight" Width="50" Height="50" Text="test" />
 		</StackPanel>
 	</Design.PreviewWith>
-
+	<Style Selector="TextBlock">
+		<Style Selector="^.H2">
+			<Setter Property="FontWeight" Value="700" />
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.9}" />
+		</Style>
+	</Style>
 	<Style Selector="TextBox.Test">
 		<Setter Property="Padding" Value="0,0,0,0"/>
 		<Setter Property="MinHeight" Value="0"/>

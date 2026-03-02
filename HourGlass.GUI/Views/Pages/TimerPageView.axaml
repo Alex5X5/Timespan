@@ -15,7 +15,7 @@
 	<Design.DataContext>
 		<vm:TimerPageViewModel />
 	</Design.DataContext>
-	<Grid Background="White" >
+	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="15*" />
@@ -26,17 +26,18 @@
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="3*" />
 		</Grid.ColumnDefinitions>
-		<Grid Grid.Row="1" Grid.Column="1">
+		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="false">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="4*" />
-				<RowDefinition Height="2*" />
 				<RowDefinition Height="6*" />
-				<RowDefinition Height="4*" />
-				<RowDefinition Height="4*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="24*" />
-				<RowDefinition Height="6*" />
-				<RowDefinition Height="7*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="12*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="3*" />
 				<RowDefinition Height="7*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
@@ -45,13 +46,9 @@
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="{ Binding $parent[cls:TimerPageView].StartLabelText }"
-					   Grid.Row="0"
+					   Grid.Row="1"
 					   Grid.Column="0"
-					   Classes="Default DynamicTextHeight" />
-			<TextBlock Text="{ Binding $parent[cls:TimerPageView].FinishLabelText }"
-					   Grid.Row="0"
-					   Grid.Column="2"
-					   Classes="Default DynamicTextHeight" />
+					   Classes="Default DynamicTextHeight H2"/>
 			<TextBox Text="{ Binding StartTextboxText }"
 					 Grid.Row="2"
 					 Grid.Column="0"
@@ -77,31 +74,6 @@
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"
 					 TextWrapping="Wrap"/>
-			<!--
-			<TextBlock Text="Ticket"
-					   Classes="DynamictextHeight"
-					   Grid.Row="6"
-					   Grid.Column="0" />
-			<TextBox Grid.Row="7"
-					 Grid.Column="0"
-					 Text="{ Binding TicketTextboxText }" />
-			<TextBlock Text="Project"
-					   Classes="DynamictextHeight"
-					   Grid.Row="6"
-					   Grid.Column="2" />
-			<ComboBox SelectedIndex="0"
-					  Grid.Row="7"
-					  Grid.Column="2"
-					  MaxDropDownHeight="300"
-					  ItemsSource="{Binding AvailableProjects}"
-					  SelectedValue="{Binding SelectedProject}">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{Binding Name}" />
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
-			-->
 			<Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="2*, 3*, 3*, 3*, 2*" >
 				<Button Name="startButton"
 						Grid.Column="1"
@@ -135,23 +107,6 @@
 						</Viewbox>
 					</Grid>
 				</Button>
-				<!--
-				<Button Name="restartButton"
-						Grid.Column="4"
-						Classes="Default"
-						IsEnabled="{ Binding IsRestartButtonEnabled }"
-						Command="{ Binding RestartTaskCommand }" >
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Restart" />
-						</Viewbox>
-					</Grid>
-				</Button>
-				-->
 			</Grid>
 		</Grid>
 	</Grid>

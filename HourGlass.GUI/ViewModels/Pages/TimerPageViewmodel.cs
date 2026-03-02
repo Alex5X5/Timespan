@@ -8,8 +8,10 @@ using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
-
+using ReactiveUI;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using static Hourglass.GUI.ViewModels.MainViewModel;
 
 public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
@@ -84,7 +86,8 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
     public Project SelectedProject { get; set; }
     public List<Project> AvailableProjects { get; set; }
 
-	public new event PropertyChangedEventHandler? PropertyChanged;
+
+    public new event PropertyChangedEventHandler? PropertyChanged;
 
 
 	public TimerPageViewModel() : this(null, null) {
@@ -96,6 +99,10 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 		if(cacheService!=null)
 			cacheService.OnRunningTaksChanged +=
 				task => AllBindingPropertiesChanged();
+        ButtonActions = new ObservableCollection<ButtonAction>() {
+            new ButtonAction("start", ReactiveCommand.Create(StartTask)),
+            new ButtonAction("Stop", ReactiveCommand.Create(StopTask))
+        };
         //cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
         _timer = new DispatcherTimer {
             Interval = TimeSpan.FromSeconds(1)
