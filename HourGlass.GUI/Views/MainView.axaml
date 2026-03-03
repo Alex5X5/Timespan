@@ -3,6 +3,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels"
+			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
 			 xmlns:pages="using:Hourglass.GUI.Views.Pages.SettingsPages"
 			 xmlns:cls="using:Hourglass.GUI.Views"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -76,27 +77,36 @@
 				</Button>
 			</Viewbox>
 		</Grid>
-		<ItemsControl Grid.Row="1"
-					  Grid.Column="1"
-					  HorizontalAlignment="Center"
-					  VerticalAlignment="Center"
-					  ItemsSource="{ Binding CurrentPage.ButtonActions } }">
-			<ItemsControl.ItemsPanel>
-				<ItemsPanelTemplate>
-					<StackPanel Orientation="Horizontal"
-								HorizontalAlignment="Center"
-								VerticalAlignment="Center"/>
-				</ItemsPanelTemplate>
-			</ItemsControl.ItemsPanel>
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<Button	Content="{ Binding Text }"
-							Command="{ Binding Command }"
-							Background="White"
-							Margin="8,0"/>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
+		<Grid Grid.Row="1"
+			  Grid.Column="1"
+			  RowDefinitions="2*, 14*, 2*">
+			<ItemsControl Grid.Row="1"
+						  HorizontalAlignment="Center"
+						  VerticalAlignment="Center"
+						  ItemsSource="{ Binding CurrentPage.ButtonActions } }">
+				<ItemsControl.Styles>
+				</ItemsControl.Styles>
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Button	Classes="Navigation"
+								Classes.Selected="{ Binding Selected }"
+								Command="{ Binding Command }"
+								Width="150">
+							<TextBlock Text="{ Binding Text }"
+									   Grid.Row="1"
+									   Grid.Column="0"/>
+						</Button>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</Grid>
 		<!--
 		<StackPanel Grid.Row="1"
 					Grid.Column="1"

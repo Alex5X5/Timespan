@@ -2,6 +2,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Services.Interfaces;
@@ -11,13 +12,22 @@ using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 using ReactiveUI;
 
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 
 public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
-	
-    public record class ButtonAction(string Text, ICommand Command);
+
+	public partial class TabButtonAction(string _text, ICommand _command, bool _selected = false) : ObservableObject {
+
+		[ObservableProperty]
+		public string text = _text;
+
+		[ObservableProperty]
+		public ICommand command = _command;
+		
+		[ObservableProperty]
+        public bool selected = _selected;
+	}
 
     private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;

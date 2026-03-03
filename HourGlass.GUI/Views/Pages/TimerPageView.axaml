@@ -41,30 +41,34 @@
 				<RowDefinition Height="7*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="2*" />
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="2*" />
+				<ColumnDefinition Width="13*" />
+				<ColumnDefinition Width="4*" />
+				<ColumnDefinition Width="13*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="{ Binding $parent[cls:TimerPageView].StartLabelText }"
+			<TextBlock Classes="Default DynamicTextHeight H2"
+					   Text="{ Binding $parent[cls:TimerPageView].TitleLabelText }"
 					   Grid.Row="1"
-					   Grid.Column="0"
-					   Classes="Default DynamicTextHeight H2"/>
-			<TextBox Text="{ Binding StartTextboxText }"
-					 Grid.Row="2"
+					   Grid.Column="0"/>
+			<TextBox Classes="Default Output DynamicTextHeight" 
+					 Text="{ Binding StartTextboxText }"
+					 Grid.Row="3"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
-					 Classes="Default Output Rounded DynamicTextHeight" />
-			<TextBox Text="{ Binding FinishTextboxText }"
-					 Grid.Row="2"
+					 CornerRadius="5,5,5,5"/>
+			<TextBox Classes="Default Output DynamicTextHeight" 
+					 Text="{ Binding FinishTextboxText }"
+					 Grid.Row="3"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
-					 Classes="Default Output Rounded DynamicTextHeight" />
+					 CornerRadius="5,5,5,5"/>
+			<!--
 			<TextBlock Text="{ Binding $parent[cls:TimerPageView].DescriptionLabelText }"
 					   Grid.Row="4"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
+			-->
 			<TextBox Text="{ Binding DescriptionTextboxText }"
-					 Grid.Row="6"
+					 Grid.Row="5"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
 					 Name="DescriptionTextbox"

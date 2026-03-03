@@ -99,11 +99,12 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 		if(cacheService!=null)
 			cacheService.OnRunningTaksChanged +=
 				task => AllBindingPropertiesChanged();
-        ButtonActions = new ObservableCollection<ButtonAction>() {
-            new ButtonAction("start", ReactiveCommand.Create(StartTask)),
-            new ButtonAction("Stop", ReactiveCommand.Create(StopTask))
+        ButtonActions = new ObservableCollection<TabButtonAction>() {
+            new TabButtonAction("start", ReactiveCommand.Create(()=>SetTabButtonSeleted(0)), true),
+            new TabButtonAction("hallo", ReactiveCommand.Create(()=>SetTabButtonSeleted(1))),
+            new TabButtonAction("mehh", ReactiveCommand.Create(()=>SetTabButtonSeleted(2))),
+            new TabButtonAction("Stop", ReactiveCommand.Create(()=>SetTabButtonSeleted(3)))
         };
-        //cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
         _timer = new DispatcherTimer {
             Interval = TimeSpan.FromSeconds(1)
         };
@@ -118,7 +119,12 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
         };
     }
 
-	private void AllBindingPropertiesChanged() {
+    private void SetTabButtonSeleted(int index) {
+        foreach (var action in ButtonActions)
+            action.Selected = action == ButtonActions[index];
+    }
+
+    private void AllBindingPropertiesChanged() {
         OnPropertyChanged(nameof(DescriptionTextboxText));
         OnPropertyChanged(nameof(StartTextboxText));
         OnPropertyChanged(nameof(FinishTextboxText));

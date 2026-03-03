@@ -16,6 +16,7 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Styles.Resources>
+	
 	<Style Selector="Button.Default">
 		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
@@ -51,6 +52,7 @@
 			<Setter Property="Foreground" Value="{ DynamicResource BackgroundColor1Dark2 }" />
 		</Style>
 	</Style>
+	
 	<Style Selector="Button.Rounded">
 		<Setter Property="CornerRadius">
 			<Setter.Value>
@@ -60,6 +62,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+	
 	<Style Selector="Button.DefaultBorder">
 		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
 		<Setter Property="BorderThickness" Value="{ StaticResource DefaultBorderThickness }" />
@@ -74,6 +77,7 @@
 			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark2 }" />
 		</Style>
 	</Style>
+	
 	<Style Selector="Button.DefaultBackground">
 		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		<Style Selector="^:pointerover /template/ ContentPresenter">
@@ -83,6 +87,7 @@
 			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Dark1 }" />
 		</Style>
 	</Style>
+	
 	<Style Selector="Button.DynamicBackground">
 		<Style Selector="^:pointerover /template/ ContentPresenter">
 			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static vc:ColorConverters.ColorConverterBrighten} }" />
@@ -91,11 +96,55 @@
 			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static vc:ColorConverters.ColorConverterDarken} }" />
 		</Style>
 	</Style>
+	
 	<Style Selector="Button.Navigation">
-		<Setter Property="BorderBrush" Value ="Transparent" />
-		<Setter Property="Background" Value ="Transparent" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="Background" Value="{ DynamicResource NavigationBar }" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="Padding" Value="0,0,0,0" />
+		<Setter Property="Margin" Value="10,0" />
+		<Setter Property="CornerRadius" Value="10" />
+		<Setter Property="RenderTransformOrigin" Value="50%, 50%"/>
+		
+		<Style Selector ="^ TextBlock">
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.66 }" />
+			<Setter Property="HorizontalAlignment" Value="Center" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+		
+		<Style Selector="^:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{ DynamicResource NavigationBarLight1 }" />
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+		
+		<Style Selector="^:pressed /template/ ContentPresenter">
+			<Setter Property="Background" Value="{ DynamicResource NavigationBarLight2 }" />
+			<Setter Property="RenderTransform" Value="matrix(0.95,0.0,0.0,0.95,0,0) "/>
+		</Style>
+		
 		<Style Selector="^.Selected">
-			<Setter Property="Background" Value ="White" />
+			<Setter Property="Background" Value="{ DynamicResource NavigationBarSelected }" />
+			
+			<Style Selector ="^ TextBlock">
+				<Setter Property="Foreground" Value="Black" />
+			</Style>
+
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<Setter Property="Background" Value="{ DynamicResource NavigationBarLight1 }" />
+				<Setter Property="Cursor" Value="Hand"/>
+				<Setter Property="RenderTransform" Value="None"/>
+			</Style>
+			
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<Setter Property="Background" Value="{ DynamicResource NavigationBarSelectedLight1 }" />
+			</Style>
+
+			<Style Selector="^:pressed /template/ ContentPresenter">
+				<Setter Property="Background" Value="{ DynamicResource NavigationBarSelectedLight2 }" />
+			</Style>
 		</Style>
 	</Style>
 </Styles>

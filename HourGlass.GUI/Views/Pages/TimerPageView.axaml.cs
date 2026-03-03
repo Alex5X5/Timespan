@@ -10,6 +10,9 @@ using Hourglass.Util.Attributes;
 public partial class TimerPageView : PageViewBase {
 
 
+    [TranslateMember("Views.Pages.Timer.Labels.Title", "Timer")]
+    public string TitleLabelText { get; set; }
+	
     [TranslateMember("Views.Pages.Timer.Labels.Description", "Description")]
     public string DescriptionLabelText { get; set; }
 
