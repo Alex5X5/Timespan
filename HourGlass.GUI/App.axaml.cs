@@ -32,7 +32,7 @@ public partial class App : Application {
 		PageInstanciator instanciator = new(this);
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
-		instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
+        instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
 
 		if (!Design.IsDesignMode) {
 			HourglassDbService dbService = new();

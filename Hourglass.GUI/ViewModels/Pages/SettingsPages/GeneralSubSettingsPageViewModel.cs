@@ -27,7 +27,7 @@ public partial class GeneralSubSettingsPageViewModel : SubSettingsPageViewModelB
         if (settingsService != null) {
             settingsService.OnLanguageChanged +=
                 val => this.RaiseAndSetIfChanged(ref selectedLanguage, settingsService.Language);
-            SelectedLanguage = settingsService.Language;
+            this.RaiseAndSetIfChanged(ref selectedLanguage, settingsService.Language);
         }
     }
 

@@ -2,9 +2,10 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 	<ResourceDictionary.MergedDictionaries>
-		<ResourceInclude Source="/Themes/SrhCommon.axaml"/>
+		<ResourceInclude Source="/Assets/Themes/SrhCommon.axaml"/>
 	</ResourceDictionary.MergedDictionaries>
 
+	<Color x:Key="TextBoxBackground">#FAFAFA</Color >
 	<Color x:Key="BackgroundColor1">#D9D9D9</Color >
 	<Color x:Key="BackgroundColor1Light1">#E2E2E2</Color >
 	<Color x:Key="BackgroundColor1Light2">#E9E9E9</Color >
@@ -12,7 +13,19 @@
 	<Color x:Key="BackgroundColor1Dark2">#A1A1A1</Color >
 	<Color x:Key="BackgroundColor2">#DF4807</Color >
 
+	<Color x:Key="ButtonColor1">#DF4807</Color >
+	<Color x:Key="ButtonColor2">#D9D9D9</Color >
+
 	<Color x:Key="Foreground">#000000</Color >
 	<Color x:Key="ForegroundLight">#101010</Color >
+	
+	
+	<Color x:Key="NavigationBar">#1D1D1B</Color >
+	<Color x:Key="NavigationBarHover">#2C2C29</Color >
+	<Color x:Key="NavigationBarPressed">#363633</Color >
+	<Color x:Key="NavigationBarSelected">#FAFAFA</Color >
+	<Color x:Key="NavigationBarSelectedHover">#F0F0F0</Color >
+	<Color x:Key="NavigationBarSelectedPressed">#E0E0E0</Color >
+
 
 </ResourceDictionary>

@@ -5,8 +5,8 @@ using Hourglass.Util.Attributes;
 
 public partial class VisualsSubSettingsPageView : SubSettingsPageViewBase {
 
-    [TranslateMember("Views.Pages.Settings.Visuals.Labels.Language", "Language")]
-    public string LanguagesLabelText { get; set; } = "";
+    [TranslateMember("Views.Pages.Settings.Visuals.Labels.Themes", "Themes")]
+    public string ThemesLabelText { get; set; } = "";
 
     public VisualsSubSettingsPageView() : base() {
 		InitializeComponent();

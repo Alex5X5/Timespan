@@ -17,7 +17,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 
     private IHourglassDbService dbService;
 	private CacheService cacheService;
-    private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
 	
     private DispatcherTimer _timer;
@@ -90,10 +89,10 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
     public new event PropertyChangedEventHandler? PropertyChanged;
 
 
-	public TimerPageViewModel() : this(null, null) {
+	public TimerPageViewModel() : this(null, null, null) {
     }
 
-	public TimerPageViewModel(IHourglassDbService dbService, CacheService cacheService) : base() {
+	public TimerPageViewModel(IHourglassDbService dbService, CacheService cacheService, MainViewModel controller) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
 		if(cacheService!=null)
@@ -141,7 +140,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 
 	[RelayCommand]
 	private async System.Threading.Tasks.Task StartTask() {
-		Console.WriteLine("start task button click!");
+		Console.WriteLine("start task button event!");
 		if(dbService!=null)
 			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
@@ -157,7 +156,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 
 	[RelayCommand]
 	private async System.Threading.Tasks.Task StopTask() {
-		Console.WriteLine("stop task button click!");
+		Console.WriteLine("stop task button event!");
 		_timer.Stop();
 		if(dbService!=null)
             cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
@@ -173,14 +172,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
         AllBindingPropertiesChanged();
     }
 
-	[RelayCommand]
-	private void RestartTask() {
-		Console.WriteLine("restart task button click! (not yet implemented)");
-		AllBindingPropertiesChanged();
-	}
-
 	public void OnLoad() {
-		Console.WriteLine("loading Timer Page");
 		cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
         if (cacheService.RunningTask?.running ?? false) {
             _timer.Start();
@@ -191,7 +183,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	}
 
     public void OnUnload() {
-        Console.WriteLine("unloading Timer Page");
         _timer.Stop();
     }
 }

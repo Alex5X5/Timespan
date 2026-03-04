@@ -23,7 +23,7 @@ public partial class SettingsService {
 	public string StartDateString {
         set {
 			SetSetting(START_DATE_KEY, value);
-            OnStartDateChanged?.Invoke(nameof(StartDate));
+            OnStartDateChanged?.Invoke(StartDateString);
         }
         get => GetSetting(START_DATE_KEY);
 
@@ -34,21 +34,10 @@ public partial class SettingsService {
 	public string JobName {
 		set {
 			SetSetting(JOB_NAME_KEY, value);
-			OnJobNameChanged?.Invoke(nameof(JobName));
+			OnJobNameChanged?.Invoke(JobName);
 		}
 		get => GetSetting(JOB_NAME_KEY);
 	}
 
 	public event Action<string>? OnJobNameChanged;
-
-    public string Language {
-        set {
-            SetSetting(LANGUAGE_KEY, value);
-            OnLanguageChanged?.Invoke(nameof(Language));
-        }
-        get => GetSetting(LANGUAGE_KEY);
-    }
-
-    public event Action<string>? OnLanguageChanged = 
-        l => TranslatorService.Singleton.CurrentLanguageName = l;
 }

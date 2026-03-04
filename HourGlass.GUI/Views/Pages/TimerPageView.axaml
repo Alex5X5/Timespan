@@ -23,7 +23,7 @@
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="3*" />
-			<ColumnDefinition Width="6*" />
+			<ColumnDefinition Width="5*" />
 			<ColumnDefinition Width="3*" />
 		</Grid.ColumnDefinitions>
 		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="false">
@@ -35,7 +35,7 @@
 				<RowDefinition Height="1*" />
 				<RowDefinition Height="12*" />
 				<RowDefinition Height="1*" />
-				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
 				<RowDefinition Height="1*" />
 				<RowDefinition Height="3*" />
 				<RowDefinition Height="7*" />
@@ -72,44 +72,85 @@
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
 					 Name="DescriptionTextbox"
-					 Classes="Default Rounded"
+					 Classes="Default"
 					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.26 }"
 					 VerticalContentAlignment="Top"
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"
-					 TextWrapping="Wrap"/>
-			<Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="2*, 3*, 3*, 3*, 2*" >
+					 TextWrapping="Wrap"
+					 CornerRadius="5,5,5,5"/>
+			<Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="10*" />
+				</Grid.ColumnDefinitions>
+				<Viewbox Grid.Column="0" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundYellow }" />
+				</Viewbox>
+				<Viewbox Grid.Column="2" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }" />
+				</Viewbox>
+				<Viewbox Grid.Column="4" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
+				</Viewbox>
+				<Viewbox Grid.Column="6" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundYellow }" />
+				</Viewbox>
+				<Viewbox Grid.Column="8" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }" />
+				</Viewbox>
+				<Viewbox Grid.Column="10" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
+				</Viewbox>
+				<Viewbox Grid.Column="12" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
+				</Viewbox>
+			</Grid>
+			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 1*, 3*, 6*" >
 				<Button Name="startButton"
-						Grid.Column="1"
-						Classes="Default"
+						Grid.Column="0"
+						Classes="Default DynamicTextHeight"
 						IsEnabled="{ Binding IsStartButtonEnabled }"
 						Command="{ Binding StartTaskCommand }" >
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent"
-									   Text="{ Binding $parent[cls:TimerPageView].StartButtonText }" />
-						</Viewbox>
-					</Grid>
+					<TextBlock Text="{ Binding $parent[cls:TimerPageView].StartButtonText }" />
 				</Button>
 				<Button Name="stopButton"
-						Grid.Column="3"
-						Classes="Default"
+						Grid.Column="2"
+						Classes="Default DynamicTextHeight"
 						IsEnabled="{ Binding IsStopButtonEnabled }"
 						Command="{ Binding StopTaskCommand }" >
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent"
-									   Text="{ Binding $parent[cls:TimerPageView].StopButtonText }" />
-						</Viewbox>
-					</Grid>
+					<TextBlock Text="{ Binding $parent[cls:TimerPageView].StopButtonText }" />
 				</Button>
 			</Grid>
 		</Grid>

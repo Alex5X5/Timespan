@@ -8,20 +8,38 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 
 	private string usernameTextboxText = "";
 	public string UsernameTextboxText {
-		set => this.RaiseAndSetIfChanged(ref usernameTextboxText, value);
+        set {
+            if (value == null)
+                return;
+            if (value != usernameTextboxText)
+                HasUnsavedChanges = true;
+            this.RaiseAndSetIfChanged(ref usernameTextboxText, value);
+        }
 		get => usernameTextboxText;
 	}
 
 	private string startDateTextboxText = "";
 	public string StartDateTextboxText {
-		set => this.RaiseAndSetIfChanged(ref startDateTextboxText, value);
-		get => startDateTextboxText;
+        set {
+            if (value == null)
+                return;
+            if (value != startDateTextboxText)
+                HasUnsavedChanges = true;
+            this.RaiseAndSetIfChanged(ref startDateTextboxText, value);
+        }
+        get => startDateTextboxText;
 	}
 
 	private string jobNameTextboxText = "";
 	public string JobNameTextboxText {
-		set => this.RaiseAndSetIfChanged(ref jobNameTextboxText, value);
-		get => jobNameTextboxText;
+        set {
+            if (value == null)
+                return;
+            if (value != jobNameTextboxText)
+                HasUnsavedChanges = true;
+            this.RaiseAndSetIfChanged(ref jobNameTextboxText, value);
+        }
+        get => jobNameTextboxText;
 	}
 
 	public override string Title => TranslatorService.Singleton["Views.Pages.Settings.UserData.Title"] ?? "User Data";
@@ -42,9 +60,9 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 				val => this.RaiseAndSetIfChanged(ref jobNameTextboxText, settingsService.JobName);
 			settingsService.OnPreSettingsSave += () => {
 			};
-			UsernameTextboxText = settingsService.Username;
-			StartDateTextboxText = settingsService.StartDateString;
-			JobNameTextboxText = settingsService.JobName;
+            this.RaiseAndSetIfChanged(ref usernameTextboxText, settingsService.Username);
+            this.RaiseAndSetIfChanged(ref startDateTextboxText, settingsService.StartDateString);
+            this.RaiseAndSetIfChanged(ref jobNameTextboxText, settingsService.JobName);
 		}
 	}
 

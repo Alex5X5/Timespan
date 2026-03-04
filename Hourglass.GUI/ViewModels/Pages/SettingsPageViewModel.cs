@@ -17,14 +17,30 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
         get { return _CurrentSubSettingsPage; }
         private set {
             Console.WriteLine($"settin current sub settings page to {value?.GetType()?.Name}");
+            if(_CurrentSubSettingsPage != null)
+                _CurrentSubSettingsPage.PropertyChanged -= OnUnsavedChangesChanged;
             this.RaiseAndSetIfChanged(ref _CurrentSubSettingsPage, value);
+            if (_CurrentSubSettingsPage != null)
+                _CurrentSubSettingsPage.PropertyChanged += OnUnsavedChangesChanged;
             this.RaisePropertyChanged(nameof(Title));
+        }
+    }
+
+    private void OnUnsavedChangesChanged(object? sender, PropertyChangedEventArgs e) {
+        if(e.PropertyName == nameof(CurrentPage.HasUnsavedChanges)) {
+            this.RaiseAndSetIfChanged(ref isSaveButtonEnabled, CurrentPage?.HasUnsavedChanges ?? false);
         }
     }
 
     public override string Title => _CurrentSubSettingsPage?.Title ?? "";
 
-    public bool IsSaveButtonEnabled => _CurrentSubSettingsPage?.HasUnsavedChanges ?? false;
+    private bool isSaveButtonEnabled = false;
+    public bool IsSaveButtonEnabled {
+        get => isSaveButtonEnabled;
+        set {
+            this.RaiseAndSetIfChanged(ref isSaveButtonEnabled, value);
+        }
+    }
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -57,7 +73,7 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     [RelayCommand]
     public void Save() {
-        CurrentPage.SaveSettings();
+        CurrentPage?.SaveSettings();
         settingsService.SaveSettings();
         Cancel();
     }

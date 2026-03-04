@@ -1,5 +1,5 @@
+using Hourglass.GUI.Services;
 using ReactiveUI;
-using System.Reflection;
 
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
@@ -9,14 +9,14 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
 
 	private string selectedTheme = "";
 	public string SelectedTheme {
-		get => selectedTheme;
-		set {
-			if (value == null)
-				return;
-			if (value != selectedTheme)
-				HasUnsavedChanges = true;
-			this.RaiseAndSetIfChanged(ref selectedTheme, value);
-		}
+        set {
+            if (value == null)
+                return;
+            if (value != selectedTheme)
+                HasUnsavedChanges = true;
+            this.RaiseAndSetIfChanged(ref selectedTheme, value);
+        }
+        get => selectedTheme;
 	}
 	public List<string> AvailableThemes { get; set; }
 
@@ -25,14 +25,15 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
 	}
 
 	public VisualsSubSettingsPageViewModel(DateTimeService dateTimeService, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
-		var assembly = Assembly.GetAssembly(typeof(VisualsSubSettingsPageViewModel));
-		var themeResources = assembly.GetManifestResourceNames();
-		//.Where(name => name.Contains("Themes") && name.EndsWith(".axaml"));
-
-			foreach (var resource in themeResources) {
-				Console.WriteLine(resource);
-			}
-
+        AvailableThemes = ThemeService.Singleton.AvailableThemes;
+        if (settingsService != null) {
+            settingsService.OnThemeChanged +=
+                val => {
+                    this.RaiseAndSetIfChanged(ref selectedTheme, settingsService.Theme);
+                    ThemeService.Singleton.ApplyTheme(val);
+                };
+            this.RaiseAndSetIfChanged(ref selectedTheme, settingsService.Theme);
+        }
 	}
 
 	public void OnLoad() {
@@ -40,5 +41,6 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
 	}
 
 	public override void SaveSettings() {
-	}
+        settingsService.Theme = SelectedTheme;
+    }
 }

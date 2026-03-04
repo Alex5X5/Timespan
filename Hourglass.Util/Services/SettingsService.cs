@@ -17,6 +17,7 @@ public partial class SettingsService {
     public const string JOB_NAME_KEY = "job";
     public const string START_DATE_KEY = "date";
     public const string LANGUAGE_KEY = "language";
+    public const string THEME_KEY = "theme";
 
     private Dictionary<string, string> Settings;
 
@@ -81,4 +82,25 @@ public partial class SettingsService {
         Settings = LoadSettings();
         OnSettingsReload.Invoke();
     }
+
+    public string Language {
+        set {
+            SetSetting(LANGUAGE_KEY, value);
+            OnLanguageChanged?.Invoke(Language);
+        }
+        get => GetSetting(LANGUAGE_KEY);
+    }
+
+    public event Action<string>? OnLanguageChanged =
+        l => TranslatorService.Singleton.CurrentLanguageName = l;
+
+    public string Theme {
+        set {
+            SetSetting(THEME_KEY, value);
+            OnThemeChanged?.Invoke(Theme);
+        }
+        get => GetSetting(THEME_KEY);
+    }
+
+    public event Action<string>? OnThemeChanged;
 }
