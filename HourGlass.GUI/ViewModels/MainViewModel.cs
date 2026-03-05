@@ -104,7 +104,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		ShowSettingsIcon = true;
 		ShowNavigationBar = true;
         
-		CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
 		if(cacheService!=null)
 			cacheService.OnSelectedDayChanged+= date=>this.RaisePropertyChanged(nameof(Title));
     }
@@ -117,6 +116,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		Console.WriteLine($"chaged type of page to:{_CurrentPage?.GetType()?.Name ?? "NullType"}");
 		Console.WriteLine($"new page is {_CurrentPage?.GetType()?.IsVisible ?? false} visible");
 	}
+
 
 	public void GoBack() {
 		if (lastPage != null) {
@@ -136,17 +136,11 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	[RelayCommand]
 	public void GoToTimer() {
-        TimerButtonSelected = true;
-        GraphsButtonSelected = false;
-        ExportButtonSelected = false;
 		ChangePage<TimerPageViewModel>();
 	}
 
 	[RelayCommand]
     public void GoToGraphs() {
-		TimerButtonSelected = false;
-		GraphsButtonSelected = true;
-		ExportButtonSelected = false;
 		ChangePage<GraphPageViewModel>(
 			IsFirstGraphPageChange ? page=> {
 				page?.ChangeGraphPanel<DayGraphPanelViewModel>();
@@ -157,9 +151,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	[RelayCommand]
     public void GoToExport() {
-        TimerButtonSelected = false;
-        GraphsButtonSelected = false;
-        ExportButtonSelected = true;
 		ChangePage<ExportPageViewModel>();
 	}
 
@@ -167,5 +158,9 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		if(pageFactory==null)
 			return;
 		ChangePage<TaskDetailsPageViewModel>();
+	}
+
+    internal void OnLoad() {
+        CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
 	}
 }

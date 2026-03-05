@@ -9,7 +9,8 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="Hourglass.GUI.Views.MainView"
 			 x:DataType="vm:MainViewModel"
-			 x:CompileBindings="True"	>
+			 x:CompileBindings="True"
+			 Loaded="UserControl_Loaded">
 	<Design.DataContext>
 		<vm:MainViewModel />
 	</Design.DataContext>

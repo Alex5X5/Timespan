@@ -37,4 +37,10 @@ public partial class MainView : ViewBase {
 		if (DataContext is MainViewModel viewModel)
 			viewModel.GoToExport();
 	}
+
+
+    private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+        Console.WriteLine("Settings Page loaded!");
+        (DataContext as MainViewModel)?.OnLoad();
+    }
 }

@@ -48,8 +48,8 @@ public partial class App : Application {
 		//instanciator.RegisterComponentTransient<DocumentPreviewerViewModel>();
 
 		instanciator.AddContentBindingType<PageViewModelBase>();
-		instanciator.RegisterPageTransient<TimerPageViewModel>();
 		instanciator.RegisterPageSingleton<MainViewModel>();
+		instanciator.RegisterPageTransient<TimerPageViewModel>();
 		instanciator.RegisterPageTransient<ExportPageViewModel>();
 		instanciator.RegisterPageTransient<ProjectPageViewModel>();
 		instanciator.RegisterPageTransient<TaskDetailsPageViewModel>();
