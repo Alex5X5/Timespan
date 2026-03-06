@@ -32,11 +32,10 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
     private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;
 	private Services.CacheService cacheService;
-
-	private PageViewModelBase? lastPage;
-
-	private PageViewModelBase? _CurrentPage;
-	public PageViewModelBase? CurrentPage {
+	
+	private MainViewChildPageViewModel? lastPage;
+	private MainViewChildPageViewModel? _CurrentPage;
+	public MainViewChildPageViewModel? CurrentPage {
 		get { return _CurrentPage; }
 		private set {
 			Console.WriteLine($"settin current page to {value?.GetType()?.Name}");
@@ -108,11 +107,11 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 			cacheService.OnSelectedDayChanged+= date=>this.RaisePropertyChanged(nameof(Title));
     }
 
-    public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : PageViewModelBase {
+    public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : MainViewChildPageViewModel {
 		if (pageFactory == null)
 			return;
 		lastPage = CurrentPage;
-		CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation);
+		CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation) as MainViewChildPageViewModel;
 		Console.WriteLine($"chaged type of page to:{_CurrentPage?.GetType()?.Name ?? "NullType"}");
 		Console.WriteLine($"new page is {_CurrentPage?.GetType()?.IsVisible ?? false} visible");
 	}
@@ -142,7 +141,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	[RelayCommand]
     public void GoToGraphs() {
 		ChangePage<GraphPageViewModel>(
-			IsFirstGraphPageChange ? page=> {
+			IsFirstGraphPageChange ? page => {
 				page?.ChangeGraphPanel<DayGraphPanelViewModel>();
 				IsFirstGraphPageChange = false;
 			} : null
@@ -155,12 +154,10 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	}
 
 	public void GoToTaskdetails(Database.Models.Task task) {
-		if(pageFactory==null)
-			return;
 		ChangePage<TaskDetailsPageViewModel>();
 	}
 
     internal void OnLoad() {
-        CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
+        CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>() as MainViewChildPageViewModel;
 	}
 }

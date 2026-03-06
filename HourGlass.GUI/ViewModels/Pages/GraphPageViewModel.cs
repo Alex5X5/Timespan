@@ -2,8 +2,10 @@
 
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using ReactiveUI;
+using System.Collections.ObjectModel;
+using static Hourglass.GUI.ViewModels.MainViewModel;
 
-public class GraphPageViewModel : PageViewModelBase {
+public class GraphPageViewModel : MainViewChildPageViewModel {
 
 	private GraphPanelViewModelBase _CurrentGraphPanel;
 	public GraphPanelViewModelBase CurrentGraphPanel {
@@ -27,10 +29,10 @@ public class GraphPageViewModel : PageViewModelBase {
 	public GraphPageViewModel(ViewModelFactory<GraphPanelViewModelBase> panelFactory, MainViewModel controller) : base() {
 		this.panelFactory = panelFactory;
 		this.controller = controller;
-		Console.WriteLine("constructing graph page view model");
+        Console.WriteLine("constructing graph page view model");
     }
 
-	public void ChangeGraphPanel<PanelT>() where PanelT : GraphPanelViewModelBase {
+    public void ChangeGraphPanel<PanelT>() where PanelT : GraphPanelViewModelBase {
 		CurrentGraphPanel = panelFactory.GetPageViewModel<PanelT>();
 		Console.WriteLine($"chaged type of panel to:{_CurrentGraphPanel.GetType().Name}");
 	}

@@ -5,7 +5,6 @@
 		<ResourceInclude Source="/Assets/Themes/SrhCommon.axaml"/>
 	</ResourceDictionary.MergedDictionaries>
 
-	<Color x:Key="TextBoxBackground">#FAFAFA</Color >
 	<Color x:Key="BackgroundColor1">#D9D9D9</Color >
 	<Color x:Key="BackgroundColor1Light1">#E2E2E2</Color >
 	<Color x:Key="BackgroundColor1Light2">#E9E9E9</Color >
@@ -26,6 +25,14 @@
 	<Color x:Key="NavigationBarSelected">#FAFAFA</Color >
 	<Color x:Key="NavigationBarSelectedHover">#F0F0F0</Color >
 	<Color x:Key="NavigationBarSelectedPressed">#E0E0E0</Color >
+
+	<Color x:Key="TextBoxBackground">#FAFAFA</Color >
+	<Color x:Key="TextBoxBackgroundHover">#F0F0F0</Color >
+	<Color x:Key="TextBoxBackgroundPressed">#E0E0E0</Color >
+	<Color x:Key="TextBoxBorder">#D9D9D9</Color >
+	<Color x:Key="TextBoxBorderHover">#CFCFCF</Color >
+	<Color x:Key="TextBoxBorderPressed">#BFBFBF</Color >
+
 
 
 </ResourceDictionary>

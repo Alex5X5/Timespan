@@ -7,10 +7,8 @@ public abstract class PageViewModelBase : ViewModelBase {
 
 	public abstract string Title { get; }
 
-    public ObservableCollection<TabButtonAction> ButtonActions { protected set;  get; }
-
     public PageViewModelBase() : base() {
-			
+		
 	}
 
 }

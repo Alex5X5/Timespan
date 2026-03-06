@@ -5,14 +5,15 @@ using CommunityToolkit.Mvvm.Input;
 using Hourglass.GUI.Services;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
-
+using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using static Hourglass.GUI.ViewModels.MainViewModel;
 
-public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyChanged {
+public partial class ExportPageViewModel : MainViewChildPageViewModel, INotifyPropertyChanged {
 
 	private readonly DateTimeService? dateTimeService;
 	CacheService cacheService;
@@ -71,7 +72,7 @@ public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyCha
 		this.pdf = pdf;
 		this.pageController = pageController;
 		this.cacheService = cacheService;
-		OnTextBockClick =
+        OnTextBockClick =
 			t => {
 				cacheService.SelectedTask = t;
 				pageController.GoToTaskdetails(t);
@@ -89,6 +90,11 @@ public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyCha
                     }
             }
         );
+    }
+
+    private void SetTabButtonSeleted(int index) {
+        foreach (var action in ButtonActions)
+            action.Selected = action == ButtonActions[index];
     }
 
     protected void OnPropertyChanged(string propertyName) {

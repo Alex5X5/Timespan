@@ -7,13 +7,9 @@ using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
-using Hourglass.Util;
-using ReactiveUI;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using static Hourglass.GUI.ViewModels.MainViewModel;
 
-public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChanged {
+public partial class TimerPageViewModel : MainViewChildPageViewModel, INotifyPropertyChanged {
 
     private IHourglassDbService dbService;
 	private CacheService cacheService;
@@ -82,9 +78,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
     public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
 
-    public Project SelectedProject { get; set; }
-    public List<Project> AvailableProjects { get; set; }
-
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -98,12 +91,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 		if(cacheService!=null)
 			cacheService.OnRunningTaksChanged +=
 				task => AllBindingPropertiesChanged();
-        ButtonActions = new ObservableCollection<TabButtonAction>() {
-            new TabButtonAction("start", ReactiveCommand.Create(()=>SetTabButtonSeleted(0)), true),
-            new TabButtonAction("hallo", ReactiveCommand.Create(()=>SetTabButtonSeleted(1))),
-            new TabButtonAction("mehh", ReactiveCommand.Create(()=>SetTabButtonSeleted(2))),
-            new TabButtonAction("Stop", ReactiveCommand.Create(()=>SetTabButtonSeleted(3)))
-        };
         _timer = new DispatcherTimer {
             Interval = TimeSpan.FromSeconds(1)
         };
@@ -116,11 +103,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
                 StartTextboxText = $"Error: {ex.Message}";
             }
         };
-    }
-
-    private void SetTabButtonSeleted(int index) {
-        foreach (var action in ButtonActions)
-            action.Selected = action == ButtonActions[index];
     }
 
     private void AllBindingPropertiesChanged() {
@@ -163,7 +145,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
 				DateTimeService.ToSeconds(DateTime.Now),
 				DescriptionTextboxText,
-				SelectedProject,
+				null,
 				null
 			);
         DescriptionTextboxText = "";

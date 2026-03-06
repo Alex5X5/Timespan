@@ -10,7 +10,7 @@ using Hourglass.Util;
 
 using System.ComponentModel;
 
-public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
+public partial class TaskDetailsPageViewModel : MainViewChildPageViewModel, INotifyPropertyChanged {
 
 	private IHourglassDbService dbService;
     private CacheService cacheService;

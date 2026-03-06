@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
-public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
+public partial class SettingsPageViewModel : MainViewChildPageViewModel, INotifyPropertyChanged {
 
     private SettingsService settingsService;
     private ViewModelFactory<SubSettingsPageViewModelBase> pageFactory;

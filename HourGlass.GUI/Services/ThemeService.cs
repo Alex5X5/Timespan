@@ -27,18 +27,12 @@ public class ThemeService {
 	public void ApplyTheme(string themeName) {
 		if (!Themes.TryGetValue(themeName, out var themeUri))
 			return;
-
 		var mergedDicts = Application.Current!.Resources.MergedDictionaries;
-
-		// Remove any previously loaded theme dictionary
 		var existing = mergedDicts
 			.OfType<ResourceInclude>()
 			.FirstOrDefault(r => r.Source != null && Themes.Values.Contains(r.Source));
-
 		if (existing != null)
 			mergedDicts.Remove(existing);
-
-		// Add the new theme
 		mergedDicts.Add(new ResourceInclude(themeUri) {
 			Source = themeUri
 		});

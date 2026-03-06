@@ -49,13 +49,13 @@
 					   Text="{ Binding $parent[cls:TimerPageView].TitleLabelText }"
 					   Grid.Row="1"
 					   Grid.Column="0"/>
-			<TextBox Classes="Default Output DynamicTextHeight" 
+			<TextBox Classes="Default DynamicTextHeight" 
 					 Text="{ Binding StartTextboxText }"
 					 Grid.Row="3"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 CornerRadius="5,5,5,5"/>
-			<TextBox Classes="Default Output DynamicTextHeight" 
+			<TextBox Classes="Default DynamicTextHeight" 
 					 Text="{ Binding FinishTextboxText }"
 					 Grid.Row="3"
 					 Grid.Column="2"

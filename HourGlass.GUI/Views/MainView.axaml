@@ -45,6 +45,15 @@
 					<ColumnDefinition Width="5*"/>
 					<ColumnDefinition Width="2*"/>
 				</Grid.ColumnDefinitions>
+				<!--
+				<Viewbox Grid.Row="1"
+						 Grid.Column="1"
+						 Stretch="Uniform">
+					<Svg Width="800"
+						   Height="100"
+						   Path="avares://Hourglass.GUI/Assets/Images/title.svg" />
+				</Viewbox>
+				-->
 				<Viewbox Grid.Row="1"
 						 Grid.Column="5"
 						 Stretch="Uniform">
@@ -108,18 +117,6 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</Grid>
-		<!--
-		<StackPanel Grid.Row="1"
-					Grid.Column="1"
-					Orientation="Horizontal"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center">
-			<Rectangle Fill="Red" Height="20" Width="50"/>
-			<Rectangle Fill="Blue" Height="20" Width="50"/>
-			<Rectangle Fill="Green" Height="20" Width="100"/>
-			<Rectangle Fill="Orange" Height="20" Width="50"/>
-		</StackPanel>
-		-->
 		<ContentControl Grid.Row="2"
 						Grid.Column="1"
 						Background="White"
