@@ -53,7 +53,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	public bool ShowNavigationBar {
 		set {
 			this.RaiseAndSetIfChanged(ref navigationBarHeight, value ? new GridLength(2, GridUnitType.Star) : new GridLength(0, GridUnitType.Star));
-			this.RaisePropertyChanged(nameof(NavigationBarHeight));
 		}
 	}
 

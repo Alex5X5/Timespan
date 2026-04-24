@@ -19,8 +19,8 @@ public class ThemeService {
 		Themes = new() {
 			{ "Timespan", new Uri("avares://Hourglass.GUI/Assets/Themes/TimespanTheme.axaml") },
 			{ "TimespanDark", new Uri("avares://Hourglass.GUI/Assets/Themes/TimespanDarkTheme.axaml") },
-			{ "Srh", new Uri("avares://YourApp/Hourglass.GUI/Themes/SrhTheme.axaml") },
-			{ "SrhDark", new Uri("avares://YourApp/Hourglass.GUI/Themes/SrhDarkTheme.axaml") },
+			{ "Srh", new Uri("avares://Hourglass.GUI/Assets/Themes/SrhTheme.axaml") },
+			{ "SrhDark", new Uri("avares://Hourglass.GUI/Assets/Themes/SrhDarkTheme.axaml") },
 		};
 	}
 
