@@ -1,10 +1,6 @@
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+namespace Timespan.GUI.Views;
 
-namespace Timespan.GUI;
-
-public partial class GraphsView : UserControl
+internal partial class GraphsView : UserControl
 {
     public GraphsView()
     {

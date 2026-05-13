@@ -19,33 +19,33 @@
 		</Style>
 		
 		<Style Selector="^:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="{ DynamicResource NavigationBarHover }" />
+			<Setter Property="Background" Value="{ DynamicResource NavigationButtonHover }" />
 			<Setter Property="Cursor" Value="Hand"/>
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
 		
 		<Style Selector="^:pressed /template/ ContentPresenter">
-			<Setter Property="Background" Value="{ DynamicResource NavigationBarPressed }" />
+			<Setter Property="Background" Value="{ DynamicResource NavigationButtonPressed }" />
 			<Setter Property="RenderTransform" Value="matrix(0.95,0.0,0.0,0.95,0,0) "/>
 		</Style>
 		
 		<Style Selector="^.Selected">
-			<Setter Property="Background" Value="{ DynamicResource NavigationBarSelected }" />
+			<Setter Property="Background" Value="{ DynamicResource NavigationButtonSelected }" />
 			
 			<Style Selector ="^ TextBlock">
 				<Setter Property="Foreground" Value="Black" />
 			</Style>
 
 			<Style Selector="^:pointerover /template/ ContentPresenter">
-				<Setter Property="Background" Value="{ DynamicResource NavigationBarPressed }" />
+				<Setter Property="Background" Value="{ DynamicResource NavigationButtonPressed }" />
 			</Style>
 			
 			<Style Selector="^:pointerover /template/ ContentPresenter">
-				<Setter Property="Background" Value="{ DynamicResource NavigationBarSelectedHover }" />
+				<Setter Property="Background" Value="{ DynamicResource NavigationButtonSelectedHover }" />
 			</Style>
 
 			<Style Selector="^:pressed /template/ ContentPresenter">
-				<Setter Property="Background" Value="{ DynamicResource NavigationBarSelectedPressed }" />
+				<Setter Property="Background" Value="{ DynamicResource NavigationButtonSelectedPressed }" />
 			</Style>
 		</Style>
 	</Style>

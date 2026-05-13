@@ -1,6 +1,8 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
-public class ViewModelBase : ReactiveObject {
+using CommunityToolkit.Mvvm.ComponentModel;
+
+public class ViewModelBase : ObservableObject {
 	
 	internal ViewModelBase() : base() {
 		Console.WriteLine($"constructing ViewModelBase for view model type '{GetType().Name}'");
