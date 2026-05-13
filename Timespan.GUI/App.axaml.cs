@@ -21,6 +21,7 @@ public partial class App : Application {
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
 			desktop.MainWindow = new MainWindow() {
 				//DataContext = services.GetRequiredService<MainViewModel>(),
+				Title = "Timespan",
 				Icon = new WindowIcon(new Avalonia.Media.Imaging.Bitmap(PathService.AssetsPath("HourgalssIcon4.png")))
 			};
 		} else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform) {
