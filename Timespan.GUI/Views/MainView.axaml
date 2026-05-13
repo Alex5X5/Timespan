@@ -82,7 +82,7 @@
 			   Grid.Row="1"
 			   Grid.Column="0"
 			   Grid.ColumnSpan="3">
-			<Grid ShowGridLines="true">
+			<Grid ShowGridLines="false">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
 					<RowDefinition Height="7*" />

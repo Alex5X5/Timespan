@@ -11,6 +11,7 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="Styles/Resources/GlobalConverters.axaml"/>
 				<ResourceInclude Source="Styles/Themes/SrhTheme.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
@@ -18,5 +19,7 @@
 
 	<Application.Styles>
 		<FluentTheme />
+		<StyleInclude Source="Styles/TextContainers.axaml" />
+		<StyleInclude Source="Styles/Buttons.axaml" />
 	</Application.Styles>
 </Application>

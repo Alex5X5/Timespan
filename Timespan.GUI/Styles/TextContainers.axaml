@@ -1,0 +1,237 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vc="using:Timespan.GUI.Converters">
+	<!--
+	<Design.PreviewWith>
+		<StackPanel Width="100" Height="100">
+			<TextBlock Classes="DynamictextHeight" Width="50" Height="50" Text="test" />
+		</StackPanel>
+	</Design.PreviewWith>
+	-->
+	<Style Selector="TextBlock"> 
+		<Style Selector="^.h2">
+			<Setter Property="FontWeight" Value="700" />
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.9}" />
+		</Style>
+	</Style>
+	<Style Selector="TextBlock.Default">
+		<Setter Property="Padding" Value="0,0,0,0"/>
+		<Setter Property="MinHeight" Value="0"/>
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Anybody" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+	</Style>
+	<Style Selector="TextBlock.DynamicTextHeight">
+		<Setter Property="Padding" Value="{ Binding $self.Bounds, Converter={x:Static vc:PaddingConverters.PaddingFromBoundsAndParameterConverter} }"/>
+		<Setter Property="MinHeight" Value="0"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.66 }" />
+	</Style>
+
+	<Style Selector="TextBox.Default">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Anybody" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="BorderThickness" Value="2" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource TextBoxBorder }" />
+		<Setter Property="Background" Value="{ DynamicResource TextBoxBackground }" />
+		<Setter Property="CornerRadius" Value="0" />
+
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource TextBoxBorder }" />
+			<Setter Property="Background" Value="{ DynamicResource TextBoxBackgroundHover }" />
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
+			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
+		</Style>
+
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource TextBoxBackgroundPressed }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource TextBoxBorderPressed }" />
+		</Style>
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+	</Style>
+	
+	<Style Selector="TextBox.Output">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Anybody" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		<Setter Property="CornerRadius" Value="0" />
+
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		</Style>
+
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		</Style>
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+	</Style>
+
+	<Style Selector="TextBox.Input">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Anybody" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		<Setter Property="CornerRadius" Value="0" />
+
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		</Style>
+
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		</Style>
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+	</Style>
+
+	<Style Selector="TextBox.Rounded">
+		<Setter Property="CornerRadius">
+			<Setter.Value>
+				<MultiBinding Converter="{ StaticResource CommonBoundConverters }">
+					<Binding Path="$self.Bounds" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Style Selector="TextBox.DefaultForeground">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Anybody" />
+		<Setter Property="FontSize" Value="10" />
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+	</Style>
+	
+	<Style Selector="TextBox.DefaultBackground">
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+		</Style>
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource Focus2 }" />
+		</Style>
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+		</Style>
+	</Style>
+	
+	<Style Selector="TextBox.DynamicTextHeight">
+		<Setter Property="Padding" Value="0,0,0,0"/>
+		<Setter Property="MinHeight" Value="0"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.19 }" />
+	</Style>
+
+	<Style Selector="ComboBox.Default">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Anybody" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		<Setter Property="CornerRadius" Value="0" />
+
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
+			<Setter Property="Background" Value="{ DynamicResource Focus2 }" />
+		</Style>
+
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+		</Style>
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+	</Style>
+
+	<Style Selector="ComboBox.DefaultBorder">
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
+		<Setter Property="CornerRadius" Value="0" />
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
+		</Style>
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+		</Style>
+	</Style>
+
+	<Style Selector="ComboBox.DefaultForeground">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="FontSize" Value="10" />
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+	</Style>
+
+	<Style Selector="ComboBox.DefaultBackground">
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+		</Style>
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource Focus2 }" />
+		</Style>
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+		</Style>
+	</Style>
+
+
+	<Style Selector="ComboBox.DynamicTextHeight">
+		<Setter Property="Padding" Value="0,0,0,0"/>
+		<Setter Property="MinHeight" Value="0"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.19 }" />
+	</Style>
+</Styles>
