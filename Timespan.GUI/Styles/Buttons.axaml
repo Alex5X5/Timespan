@@ -10,10 +10,9 @@
 	-->
 	<Styles.Resources>
 		<ResourceDictionary>
-			<Thickness  x:Key="DefaultBorderThickness"> 2 </Thickness >
-			<Thickness  x:Key="HoverBorderThickness"> 3 </Thickness >
-			<Thickness  x:Key="ClickBorderThickness"> 3 </Thickness >
-			<vc:ButtonCornerConverter x:Key="CornerConverter"/>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="avares://Timespan.GUI/Styles/Resources/ButtonResources.axaml"/>
+			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Styles.Resources>
 	
@@ -101,54 +100,5 @@
 		<Setter Property="FontSize" Value="{ Binding $parent[Button].Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.1 }" />
 		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="VerticalAlignment" Value="Center" />
-	</Style>
-	
-	<Style Selector="Button.Navigation">
-		<Setter Property="BorderBrush" Value="Transparent" />
-		<Setter Property="Background" Value="{ DynamicResource NavigationBar }" />
-		<Setter Property="HorizontalAlignment" Value="Stretch" />
-		<Setter Property="VerticalAlignment" Value="Stretch" />
-		<Setter Property="Padding" Value="0,0,0,0" />
-		<Setter Property="Margin" Value="10,0" />
-		<Setter Property="CornerRadius" Value="10" />
-		<Setter Property="RenderTransformOrigin" Value="50%, 50%"/>
-		
-		<Style Selector ="^ TextBlock">
-			<Setter Property="Foreground" Value="White" />
-			<Setter Property="FontSize" Value="{ Binding $parent[Button].Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.38 }" />
-			<Setter Property="HorizontalAlignment" Value="Center" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-		</Style>
-		
-		<Style Selector="^:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="{ DynamicResource NavigationBarHover }" />
-			<Setter Property="Cursor" Value="Hand"/>
-			<Setter Property="RenderTransform" Value="None"/>
-		</Style>
-		
-		<Style Selector="^:pressed /template/ ContentPresenter">
-			<Setter Property="Background" Value="{ DynamicResource NavigationBarPressed }" />
-			<Setter Property="RenderTransform" Value="matrix(0.95,0.0,0.0,0.95,0,0) "/>
-		</Style>
-		
-		<Style Selector="^.Selected">
-			<Setter Property="Background" Value="{ DynamicResource NavigationBarSelected }" />
-			
-			<Style Selector ="^ TextBlock">
-				<Setter Property="Foreground" Value="Black" />
-			</Style>
-
-			<Style Selector="^:pointerover /template/ ContentPresenter">
-				<Setter Property="Background" Value="{ DynamicResource NavigationBarPressed }" />
-			</Style>
-			
-			<Style Selector="^:pointerover /template/ ContentPresenter">
-				<Setter Property="Background" Value="{ DynamicResource NavigationBarSelectedHover }" />
-			</Style>
-
-			<Style Selector="^:pressed /template/ ContentPresenter">
-				<Setter Property="Background" Value="{ DynamicResource NavigationBarSelectedPressed }" />
-			</Style>
-		</Style>
 	</Style>
 </Styles>

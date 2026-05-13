@@ -25,15 +25,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<AvaloniaXaml Remove="Styles\Themes\Common.axaml" />
-		<AvaloniaXaml Remove="Styles\Themes\SrhCommon.axaml" />
-		<AvaloniaXaml Remove="Styles\Themes\SrhTheme.axaml" />
-		<AvaloniaResource Include="Styles\Themes\Common.axaml" />
-		<AvaloniaResource Include="Styles\Themes\SrhCommon.axaml" />
-		<AvaloniaResource Include="Styles\Themes\SrhTheme.axaml" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Compile Update="Views\ExportView.axaml.cs">
 	    <DependentUpon>ExportView.axaml</DependentUpon>
 	  </Compile>
