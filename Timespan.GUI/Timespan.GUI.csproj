@@ -17,15 +17,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Hourglass.Util\Hourglass.Util.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Assets\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Hourglass.Util\Hourglass.Util.csproj" />
+		<AvaloniaXaml Remove="Styles\Themes\Common.axaml" />
+		<AvaloniaXaml Remove="Styles\Themes\SrhCommon.axaml" />
+		<AvaloniaXaml Remove="Styles\Themes\SrhTheme.axaml" />
+		<AvaloniaResource Include="Styles\Themes\Common.axaml" />
+		<AvaloniaResource Include="Styles\Themes\SrhCommon.axaml" />
+		<AvaloniaResource Include="Styles\Themes\SrhTheme.axaml" />
 	</ItemGroup>
 
 </Project>
