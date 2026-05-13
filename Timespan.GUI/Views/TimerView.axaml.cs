@@ -1,8 +1,8 @@
 namespace Timespan.GUI.Views;
 
-internal partial class MainView : UserControl {
+internal partial class TimerView : UserControl {
 
-    public MainView()
+    public TimerView()
     {
         InitializeComponent();
     }

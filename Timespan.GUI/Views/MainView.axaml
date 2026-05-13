@@ -2,22 +2,34 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:views="using:Timespan.GUI.Views"
 			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:CompileBindings="True"
+			 x:DataType="models:MainViewModel"
 			 x:Class="Timespan.GUI.Views.MainView">
+
+	<Design.DataContext>
+		<models:MainViewModel />
+	</Design.DataContext>
 
 	<UserControl.Styles>
 	</UserControl.Styles>
-
 
 	<UserControl.Resources>
 	</UserControl.Resources>
 
 	<UserControl.DataTemplates>
-	</UserControl.DataTemplates>
+        <DataTemplate DataType="models:TimerViewModel">
+            <views:TimerView />
+        </DataTemplate>
+        <DataTemplate DataType="models:ExportViewModel">
+            <views:ExportView />
+        </DataTemplate>
+    </UserControl.DataTemplates>
 	
-	<Grid ShowGridLines="false">
+	<Grid ShowGridLines="false"
+	      Background="Purple">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="3.5*"/>
 			<RowDefinition Height="1.5*"/>
@@ -31,11 +43,9 @@
 		</Grid.ColumnDefinitions>
 		<Panel Grid.Row="0"
 			   Grid.Column="0"
-			   Grid.ColumnSpan="3">
-<!--
-				Background="{ DynamicResource BackgroundColor2 }"
--->
-			<Grid ShowGridLines="true">
+			   Grid.ColumnSpan="3"
+			   Background="{ DynamicResource HeaderBarBackgroundColor }">
+			<Grid ShowGridLines="false">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="1*"/>
 					<RowDefinition Height="3*"/>
@@ -50,36 +60,29 @@
 					<ColumnDefinition Width="5*"/>
 					<ColumnDefinition Width="2*"/>
 				</Grid.ColumnDefinitions>
-				<!--
-				<Viewbox Grid.Row="1"
-						 Grid.Column="1"
-						 Stretch="Uniform">
-					<Svg Width="800"
-						   Height="100"
-						   Path="avares://Hourglass.GUI/Assets/Images/title.svg" />
-				</Viewbox>
-				-->
+				<TextBlock Grid.Row="1"
+						   Grid.Column="1"
+						   Text="test"/>
 				<Viewbox Grid.Row="1"
 						 Grid.Column="5"
 						 Stretch="Uniform">
-					<!--
-					<Button Command="{Binding GoToSettingsCommand}"
-							Width="80"
+					<Button Width="80"
 							Height="80"
 							BorderBrush="Transparent"
 							Background="Transparent"
 							CornerRadius="0"
 							Padding="0"
 							Margin="0">
-						<Image Source="avares://Hourglass.GUI/Assets/Images/test.png"  />
+						<Image Source="avares://Timespan.GUI/Assets/Images/test.png"  />
 					</Button>
-					-->
 				</Viewbox>
 			</Grid>
 		</Panel>
-				<!--
-		<Panel Background="{ DynamicResource NavBarBackgroundColor }" Grid.Column="0" Grid.Row="1" >
-			<Grid>
+		<Panel Background="{ DynamicResource NavigationBarBackground }"
+			   Grid.Row="1"
+			   Grid.Column="0"
+			   Grid.ColumnSpan="3">
+			<Grid ShowGridLines="true">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
 					<RowDefinition Height="7*" />
@@ -94,6 +97,7 @@
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="5*" />
 				</Grid.ColumnDefinitions>
+				<!--
 				<Button Grid.Row="1"
 						Grid.Column="1"
 						Classes="Rounded Navigation"
@@ -142,11 +146,13 @@
 								   FontWeight="DemiBold"/>
 					</Viewbox>
 				</Button>
+				-->
 			</Grid>
 		</Panel>
-				-->
-		<!--
-		<ContentControl Background="White" Content="{Binding CurrentPage}" Grid.Row="2" Grid.Column="1" />
-		-->
+		<ContentControl Grid.Row="2"
+					    Grid.Column="1"
+					    Grid.ColumnSpan="1"
+						Background="white"
+						Content="{ Binding CurrentPage }"/>
 	</Grid>
 </UserControl>

@@ -33,4 +33,13 @@
 		<AvaloniaResource Include="Styles\Themes\SrhTheme.axaml" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Views\ExportView.axaml.cs">
+	    <DependentUpon>ExportView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TimerView.axaml.cs">
+	    <DependentUpon>TimerView.axaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
 </Project>

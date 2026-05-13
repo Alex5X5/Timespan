@@ -1,5 +1,8 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
-internal class ViewModelBase {
+public class ViewModelBase : ReactiveObject {
 	
+	internal ViewModelBase() : base() {
+		Console.WriteLine($"constructing ViewModelBase for view model type '{GetType().Name}'");
+    }
 }

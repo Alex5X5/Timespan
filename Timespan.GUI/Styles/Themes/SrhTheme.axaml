@@ -19,12 +19,15 @@
 	<Color x:Key="ForegroundLight">#101010</Color >
 	
 	
-	<Color x:Key="NavigationBar">#1D1D1B</Color >
-	<Color x:Key="NavigationBarHover">#2C2C29</Color >
-	<Color x:Key="NavigationBarPressed">#363633</Color >
-	<Color x:Key="NavigationBarSelected">#FAFAFA</Color >
-	<Color x:Key="NavigationBarSelectedHover">#F0F0F0</Color >
-	<Color x:Key="NavigationBarSelectedPressed">#E0E0E0</Color >
+	<Color x:Key="HeaderBarBackgroundColor">#DF4807</Color >
+
+	<Color x:Key="NavigationBarBackground">#1D1D1B</Color >
+
+	<Color x:Key="NavigationButtonHover">#2C2C29</Color >
+	<Color x:Key="NavigationButtonPressed">#363633</Color >
+	<Color x:Key="NavigationButtonSelected">#FAFAFA</Color >
+	<Color x:Key="NavigationButtonSelectedHover">#F0F0F0</Color >
+	<Color x:Key="NavigationButtonSelectedPressed">#E0E0E0</Color >
 
 	<Color x:Key="TextBoxBackground">#FAFAFA</Color >
 	<Color x:Key="TextBoxBackgroundHover">#F0F0F0</Color >

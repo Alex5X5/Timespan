@@ -1,8 +1,8 @@
 namespace Timespan.GUI.Views;
 
-internal partial class MainView : UserControl {
+internal partial class ExportView : UserControl {
 
-    public MainView()
+	public ExportView()
     {
         InitializeComponent();
     }
