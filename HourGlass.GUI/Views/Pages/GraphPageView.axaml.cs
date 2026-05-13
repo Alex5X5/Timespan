@@ -7,7 +7,7 @@ using Hourglass.GUI.ViewModels.Pages;
 public partial class GraphPageView : PageViewBase {
 
 	public GraphPageView() : this(null) {
-
+		
 	}
 
 	public GraphPageView(GraphPageViewModel? model) : base(model) {

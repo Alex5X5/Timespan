@@ -4,12 +4,11 @@ using Avalonia.Media;
 using Avalonia;
 
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Avalonia.Data.Converters;
 
 public partial class WeekGraphPanelView : GraphPanelViewBase {
 
     public WeekGraphPanelView() : base() {
+		base.InitializeComponent();
 		InitializeComponent();
 	}
 

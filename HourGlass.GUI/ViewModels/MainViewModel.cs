@@ -44,7 +44,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		}
 	}
 
-	public string Title { get => _CurrentPage?.Title ?? ""; }
+	public string Title { get => (_CurrentPage as PageViewModelBase)?.Title ?? ""; }
 
     private GridLength navigationBarHeight = new GridLength(1, GridUnitType.Star);
 	public GridLength NavigationBarHeight {

@@ -63,7 +63,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
     #endregion fields
 
     public GraphPanelViewBase() : base() {
-		InitializeComponent();
+		//InitializeComponent();
     }
 
 	protected static double ArialHeightToPt(double height, double x = 1) =>
@@ -162,11 +162,11 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	public override void Render(DrawingContext context) {
 		if (!IsVisible)
 			return;
-        var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-        context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
-        DrawTimeline(context);
-        DrawColumnMarkers(context);
-        DrawMouseRectangle(context);
+		var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+		context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
+		DrawTimeline(context);
+		DrawColumnMarkers(context);
+		DrawMouseRectangle(context);
         base.Render(context);
 	}
 

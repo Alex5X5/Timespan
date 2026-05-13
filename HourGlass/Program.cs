@@ -1,10 +1,7 @@
 namespace Hourglass;
 
 using Avalonia;
-using ReactiveUI.Avalonia;
-
-using Hourglass.GUI;
-using Hourglass.Util.Services;
+using Timespan.GUI;
 
 public class Program {
 	/// <summary>
@@ -13,8 +10,8 @@ public class Program {
 	[STAThread]
 	public static void Main(string[] args) {
 
-        PathService.PrintDetailedInfo();
-		PathService.ExtractFiles("Hourglass");
+  //      PathService.PrintDetailedInfo();
+		//PathService.ExtractFiles("Hourglass");
 		//PrintService ps = new PrintService();
 		//ps.Print(PathService.AssetsPath("output-readable-indexers.pdf"));
 
@@ -29,6 +26,5 @@ public class Program {
 		=> AppBuilder.Configure<App>()
 			.UsePlatformDetect()
 			.WithInterFont()
-			.LogToTrace()
-			.UseReactiveUI();
+			.LogToTrace();
 }

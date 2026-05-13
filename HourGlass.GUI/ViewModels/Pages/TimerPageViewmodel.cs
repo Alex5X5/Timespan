@@ -98,7 +98,7 @@ public partial class TimerPageViewModel : MainViewChildPageViewModel, INotifyPro
             try {
                 cacheService!.RunningTask!.FinishDateTime = DateTime.Now;
                 await dbService.UpdateTaskAsync(cacheService.RunningTask);
-                FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
+                //FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
             } catch (Exception ex) {
                 StartTextboxText = $"Error: {ex.Message}";
             }
@@ -132,6 +132,7 @@ public partial class TimerPageViewModel : MainViewChildPageViewModel, INotifyPro
 				null
 			);
         StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask!.StartDateTime);
+        FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
 		AllBindingPropertiesChanged();
 		_timer.Start();
 	}
