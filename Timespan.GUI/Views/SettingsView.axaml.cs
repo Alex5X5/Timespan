@@ -1,18 +1,15 @@
+using Timespan.GUI.ViewModels;
+
 namespace Timespan.GUI.Views;
 
-public partial class SettingsView : UserControl
-{
+public partial class SettingsView : UserControl {
 
-	public static new readonly StyledProperty<object?> ContentProperty =
-		AvaloniaProperty.Register<SettingsView, object?>(nameof(Content));
-	
-	public new object? Content {
-		get => GetValue(ContentProperty);
-		set => SetValue(ContentProperty, value);
+	public SettingsView() {
+        InitializeComponent();
 	}
 
-	public SettingsView()
-    {
-        InitializeComponent();
-    }
+	private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+		Console.WriteLine("Main View loaded!");
+		(DataContext as SettingsViewModel)?.OnLoad();
+	}
 }

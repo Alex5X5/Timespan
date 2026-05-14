@@ -1,8 +1,8 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
-internal class ExportViewModel : ViewModelBase, IMainViewChild {
+public class ExportViewModel : ViewModelBase, IMainViewChild {
 
-	internal ExportViewModel() : base() {
+	public ExportViewModel() : base() {
 
 	}
 }

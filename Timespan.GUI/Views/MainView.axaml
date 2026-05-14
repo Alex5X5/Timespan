@@ -9,7 +9,8 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:CompileBindings="True"
 			 x:DataType="models:MainViewModel"
-			 x:Class="Timespan.GUI.Views.MainView">
+			 x:Class="Timespan.GUI.Views.MainView"
+			 Loaded="UserControl_Loaded">
 
 	<Design.DataContext>
 		<models:MainViewModel />
@@ -89,7 +90,8 @@
 			   Grid.Row="1"
 			   Grid.Column="0"
 			   Grid.ColumnSpan="3">
-			<Grid ShowGridLines="false">
+			<Grid ShowGridLines="false"
+				  IsVisible="{ Binding ShowNormalNavigationBar }">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
 					<RowDefinition Height="7*" />
@@ -124,6 +126,62 @@
 						Classes.Selected="{ Binding ExportButtonSelected }"
 						Command="{ Binding GoToExportCommand }">
 					<TextBlock Text="Exportieren"/>
+				</Button>
+			</Grid>
+			<Grid ShowGridLines="false"
+				  IsVisible="{ Binding ShowSettingsNavigationBar }">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="7*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="5*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="5*" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Row="1"
+						Grid.Column="1"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding GeneralSettingsButtonSelected }"
+						Command="{ Binding GoToGeneralSettingsCommand }">
+					<TextBlock Text="General"/>
+				</Button>
+				<Button Grid.Row="1"
+						Grid.Column="3"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding UserDataSettingsButtonSelected }"
+						Command="{ Binding GoToUserDataSettingsCommand }">
+					<TextBlock Text="User Data"/>
+				</Button>
+				<Button Grid.Row="1"
+						Grid.Column="5"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding AboutSettingsButtonSelected }"
+						Command="{ Binding GoToAboutSettingsCommand }">
+					<TextBlock Text="About"/>
+				</Button>
+				<Button Grid.Row="1"
+						Grid.Column="7"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding GraphicsSettingsButtonSelected }"
+						Command="{ Binding GoToGraphicsSettingsCommand }">
+					<TextBlock Text="Graphics"/>
+				</Button>
+				<Button Grid.Row="1"
+						Grid.Column="9"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding ExportSettingsButtonSelected }"
+						Command="{ Binding GoToExportSettingsCommand }">
+					<TextBlock Text="Export"/>
 				</Button>
 			</Grid>
 		</Panel>

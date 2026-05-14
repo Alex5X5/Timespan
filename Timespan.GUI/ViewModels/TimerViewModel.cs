@@ -1,8 +1,8 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
-internal class TimerViewModel : ViewModelBase, IMainViewChild {
-	
-	internal TimerViewModel() : base() { 
+public class TimerViewModel : ViewModelBase, IMainViewChild {
+
+	public TimerViewModel() : base() { 
 	
 	}
 }

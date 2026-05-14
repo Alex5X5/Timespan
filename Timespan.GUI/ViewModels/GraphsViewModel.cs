@@ -1,8 +1,8 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
-internal class GraphsViewModel : ViewModelBase, IMainViewChild {
+public class GraphsViewModel : ViewModelBase, IMainViewChild {
 
-	internal GraphsViewModel() : base() {
+	public GraphsViewModel() : base() {
 
 	}
 }

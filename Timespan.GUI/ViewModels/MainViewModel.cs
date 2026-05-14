@@ -5,9 +5,9 @@ using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 
 using Timespan.GUI.Services;
+using Timespan.GUI.ViewModels.Settings;
 
-internal partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
-
+public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	
 	internal RedirectionAnchor<IMainViewChild> CurrentPageAnchor;
 	internal IMainViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
@@ -25,23 +25,37 @@ internal partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor.IsActive<ExportViewModel>();
 
 	[ObservableProperty]
-	private bool generalSettingsButtonSelected = true;
+	internal bool showSettingsNavigationBar = false;
 	[ObservableProperty]
-	private bool userDataSettingsButtonSelected = false;
-	[ObservableProperty]
-	private bool aboutSettingsButtonSelected = false;
-	[ObservableProperty]
-	private bool visualSettingsButtonSelected = false;
-	[ObservableProperty]
-	private bool exportSettingsButtonSelected = false;
+	internal bool showNormalNavigationBar = true;
 
+	internal bool GeneralSettingsButtonSelected =>
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<GeneralSettingsViewModel>() ?? false;
+	internal bool UserDataSettingsButtonSelected =>
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<UserDataSettingsViewModel>() ?? false;
+	internal bool AboutSettingsButtonSelected =>
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<AboutSettingsViewModel>() ?? false;
+	internal bool GraphicsSettingsButtonSelected =>
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<GraphicsSettingsViewModel>() ?? false;
+	internal bool ExportSettingsButtonSelected =>
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<ExportSettingsViewModel>() ?? false;
+	
 	private readonly RedirectionService redirectionService;
 
-	internal MainViewModel(RedirectionService redirectionService) {
+	public MainViewModel(RedirectionService redirectionService, ViewModelFactory<IMainViewChild> factory) {
 		this.redirectionService = redirectionService;
-		CurrentPageAnchor = new([new TimerViewModel(), new GraphsViewModel(), new ExportViewModel(), new SettingsViewModel(redirectionService)]);
-		redirectionService.RegisterRedirectionAnchor<MainViewModel, IMainViewChild>(CurrentPageAnchor);
+		CurrentPageAnchor = new(factory);
+		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
+
 		CurrentPageAnchor.ModelChanged += () => {
+			if (CurrentPageAnchor?.CurrentModel?.GetType() == typeof(SettingsViewModel)) {
+				ShowNormalNavigationBar = false;
+				ShowSettingsNavigationBar = true;
+				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>();
+			} else {
+				ShowNormalNavigationBar = true;
+				ShowSettingsNavigationBar = false;
+			}
 			OnPropertyChanged(nameof(TimerButtonSelected));
 			OnPropertyChanged(nameof(GraphsButtonSelected));
 			OnPropertyChanged(nameof(ExportButtonSelected));
@@ -69,12 +83,44 @@ internal partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		ChangePage<SettingsViewModel>();
 	}
 
+	[RelayCommand]
+	internal void GoToGeneralSettings() {
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ChangeModel<GeneralSettingsViewModel>();
+	}
+
+	[RelayCommand]
+	internal void GoToUserDataSettings() {
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ChangeModel<UserDataSettingsViewModel>();
+	}
+
+	[RelayCommand]
+	internal void GoToAboutSettings() {
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ChangeModel<AboutSettingsViewModel>();
+	}
+
+	[RelayCommand]
+	internal void GoToGraphicsSettings() {
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ChangeModel<GraphicsSettingsViewModel>();
+	}
+
+	[RelayCommand]
+	internal void GoToExportSettings() {
+		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ChangeModel<ExportSettingsViewModel>();
+	}
+
 	private void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : IMainViewChild {
 		CurrentPageAnchor.ChangeModel<PageT>();
-		//lastPage = CurrentPage;
-		//CurrentPage = Pages.First(x => x.GetType() == typeof(PageT));
-		//CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation) as IMainViewChild;
-		//Console.WriteLine($"chaged type of page to:{_CurrentPage?.GetType()?.Name ?? "NullType"}");
-		//Console.WriteLine($"new page is {_CurrentPage?.GetType()?.IsVisible ?? false} visible");
+	}
+
+	private void UpdateSettingsNavigationBar() {
+
+	}
+
+	private void UpdatNormalNavigationBar() {
+
+	}
+
+	internal void OnLoad() {
+		CurrentPageAnchor.ChangeModel<TimerViewModel>();
 	}
 }

@@ -4,55 +4,66 @@ using System.Linq;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-internal class RedirectionService {
+public class RedirectionService {
 
-	private readonly Dictionary<Type, Dictionary<string, RedirectionAnchor<object>?>> registeredAnchors;
+
+	private interface IEntry { }
+
+
+	private sealed class Entry<TValue>(TValue value) : IEntry {
+		public TValue Value { get; set; } = value;
+	}
+
+
+	private readonly Dictionary<Type, Dictionary<string, IEntry>> _store;
 
 	public RedirectionService() {
-		registeredAnchors = [];
+		_store = [];
 	}
 
-	internal void RegisterRedirectionAnchor<OwnerT, ChildT>(RedirectionAnchor<ChildT> newAnchor, string key = "anchor") {
-		if (!registeredAnchors.TryGetValue(typeof(OwnerT), out var anchors)) {
-			registeredAnchors.Add(typeof(OwnerT), new() { { key, newAnchor as RedirectionAnchor<object> } });
-			return;
-		}
-		if (anchors.TryAdd(key, newAnchor as RedirectionAnchor<object>)) {
-			return;
-		}
-		anchors[key] = newAnchor as RedirectionAnchor<object>;
+	internal void Register<OwnerT, ChildT>(RedirectionAnchor<ChildT> newAnchor, string key = "anchor") {
+		Set<OwnerT, RedirectionAnchor<ChildT>>(key, newAnchor);
 	}
 	
-	internal RedirectionAnchor<T>? GetRedirectionAnchor<T>(string key = "anchor") {
-		if(!registeredAnchors.TryGetValue(typeof(T), out var anchors))
-			return null;
-		if(!anchors.TryGetValue(key, out var anchor))
-			return null;
-		return anchor as RedirectionAnchor<T>;
+	internal RedirectionAnchor<ChildT>? GetAnchor<OwnerT, ChildT>(string key = "anchor") {
+		return Get<OwnerT, RedirectionAnchor<ChildT>>(key);
+	}
+
+	private void Set<TOwner, TValue>(string key, TValue value) {
+		if (!_store.TryGetValue(typeof(TOwner), out var inner))
+			_store[typeof(TOwner)] = inner = new();
+		inner[key] = new Entry<TValue>(value);
+	}
+
+	private TValue? Get<TOwner, TValue>(string key) {
+		if (_store.TryGetValue(typeof(TOwner), out var inner)
+			&& inner.TryGetValue(key, out var entry)
+			&& entry is Entry<TValue> typed)
+			return typed.Value;
+		return default;
 	}
 }
 
 
-internal partial class RedirectionAnchor<ChildT> : ObservableObject {
+public partial class RedirectionAnchor<ChildT> : ObservableObject {
 
 	[ObservableProperty]
-	internal ChildT? currentModel;
+	public ChildT? currentModel;
 
 	public event Action ModelChanged = () => { };
 
-	private readonly List<ChildT> models;
+	private readonly ViewModelFactory<ChildT> factory;
 
-	internal RedirectionAnchor(List<ChildT> models) {
-		this.models = models;
-		if(models.Count > 0)
-			CurrentModel = models[0];
+	public RedirectionAnchor(ViewModelFactory<ChildT> factory) {
+		this.factory = factory;
 	}
 
-	internal bool IsActive<T>() =>
+	public bool IsActive<T>() =>
 		typeof(T) == CurrentModel?.GetType();
 
-	internal void ChangeModel<T>() {
-		CurrentModel = models.First(x => x?.GetType() == typeof(T));
+	public void ChangeModel<T>() where T : ChildT {
+		CurrentModel = factory.BuildViewModel<T>();
+		//CurrentModel = models.First(x => x?.GetType() == typeof(T));
 		ModelChanged.Invoke();
 	}
 }

@@ -1,8 +1,8 @@
 namespace Timespan.GUI.Views.Settings;
 
-public partial class Visuals : UserControl
+public partial class ExportSettingsView : UserControl
 {
-    public Visuals()
+    public ExportSettingsView()
     {
         InitializeComponent();
     }
