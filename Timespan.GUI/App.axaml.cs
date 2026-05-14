@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Timespan.GUI.Services;
 using Timespan.GUI.ViewModels;
+using Timespan.GUI.ViewModels.Graphs;
 using Timespan.GUI.ViewModels.Settings;
 using Timespan.GUI.Views;
 
@@ -46,9 +47,14 @@ public partial class App : Application {
 
 		instanciator.RegisterWindow<MainWindow>();
 
+		instanciator.AddContentBindingType<IGraphsViewChild>();
+		instanciator.RegisterPageTransient<DayViewModel>();
+		instanciator.RegisterPageTransient<WeekViewModel>();
+		instanciator.RegisterPageTransient<MonthViewModel>();
+
 		instanciator.AddContentBindingType<IMainViewChild>();
 		instanciator.RegisterPageTransient<TimerViewModel>();
-		instanciator.RegisterPageTransient<GraphsViewModel>();
+		instanciator.RegisterPageSingleton<GraphsViewModel>();
 		instanciator.RegisterPageTransient<ExportViewModel>();
 		instanciator.RegisterPageSingleton<MainViewModel>();
 
@@ -58,7 +64,8 @@ public partial class App : Application {
 		instanciator.RegisterPageTransient<AboutSettingsViewModel>();
 		instanciator.RegisterPageTransient<GraphicsSettingsViewModel>();
 		instanciator.RegisterPageTransient<ExportSettingsViewModel>();
-		instanciator.RegisterPageTransient<SettingsViewModel>();
+		instanciator.RegisterPageSingleton<SettingsViewModel>();
+
 
 		var services = instanciator.BuildPages();
 

@@ -11,10 +11,6 @@
 			 x:DataType="models:MainViewModel"
 			 x:Class="Timespan.GUI.Views.MainView"
 			 Loaded="UserControl_Loaded">
-
-	<Design.DataContext>
-		<models:MainViewModel />
-	</Design.DataContext>
 	
 	<UserControl.Styles>
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/MainView.styles.axaml" />

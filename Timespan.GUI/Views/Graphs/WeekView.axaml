@@ -4,5 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Timespan.GUI.Views.Graphs.WeekView">
-  Week View!
+    <Panel>
+        <Rectangle Fill="#D9D9D9"
+                   RadiusX="20"
+                   RadiusY="20"/>
+        <Rectangle Fill="Beige"
+                   RadiusX="90"
+                   RadiusY="90"/>
+		
+    </Panel>
 </UserControl>

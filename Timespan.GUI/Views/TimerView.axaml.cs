@@ -25,8 +25,7 @@ internal partial class TimerView : UserControl {
 	[TranslateMember("Views.Pages.Timer.Buttons.Stop", "Stop")]
     public string StopButtonText { get; set; } = "";
 
-	public TimerView()
-    {
+	public TimerView() {
 		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
         InitializeComponent();
 	}
