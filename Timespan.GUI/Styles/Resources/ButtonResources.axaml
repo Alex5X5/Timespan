@@ -5,4 +5,6 @@
 	<Thickness  x:Key="HoverBorderThickness"> 3 </Thickness >
 	<Thickness  x:Key="ClickBorderThickness"> 3 </Thickness >
 	<vc:ButtonCornerConverter x:Key="CornerConverter"/>
+	<vc:ThreeRoundedButtonCornerConverter x:Key="ThreeCornerConverter"/>
+	<vc:CircleButtonCornerConverter x:Key="CircleCornerConverter"/>
 </ResourceDictionary>

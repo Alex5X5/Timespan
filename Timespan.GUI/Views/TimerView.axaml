@@ -2,10 +2,145 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views"
 			 xmlns:views="using:Timespan.GUI.Views"
 			 xmlns:models="using:Timespan.GUI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="models:TimerViewModel"
              x:Class="Timespan.GUI.Views.TimerView">
-  Timer!
+	<Grid ShowGridLines="False">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="15*" />
+			<RowDefinition Height="2*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*" />
+			<ColumnDefinition Width="3*" />
+			<ColumnDefinition Width="2*" />
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="false">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="12*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="13*" />
+				<ColumnDefinition Width="4*" />
+				<ColumnDefinition Width="13*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Classes="Default DynamicTextHeight H2"
+					   Grid.Row="1"
+					   Grid.Column="0"/>
+			<TextBox Classes="Default DynamicTextHeight" 
+					 Grid.Row="3"
+					 Grid.Column="0"
+					 VerticalContentAlignment="Center"
+					 CornerRadius="5,5,5,5"
+					 PlaceholderText="{ Binding $parent[cls:TimerView].TitleLabelText }"/>
+			<TextBox Classes="Default DynamicTextHeight" 
+					 Grid.Row="3"
+					 Grid.Column="2"
+					 VerticalContentAlignment="Center"
+					 CornerRadius="5,5,5,5"
+					 PlaceholderText="Ende"/>
+			<TextBlock Text="{ Binding $parent[cls:TimerView].TitleLabelText }"
+					   Grid.Row="1"
+					   Grid.Column="0"
+					   Classes="h2" />
+			<TextBox Grid.Row="5"
+					 Grid.Column="0"
+					 Grid.ColumnSpan="3"
+					 Name="DescriptionTextbox"
+					 Classes="Default"
+					 VerticalContentAlignment="Top"
+					 TextWrapping="Wrap"
+					 CornerRadius="5,5,5,5"
+					 PlaceholderText="Description"/>
+			<Grid Grid.Row="7"
+				  Grid.Column="0"
+				  Grid.ColumnSpan="3"
+				  ShowGridLines="False" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="30*" />
+				</Grid.ColumnDefinitions>
+				<Viewbox Grid.Column="0" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
+				</Viewbox>
+				<Viewbox Grid.Column="2" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }" />
+				</Viewbox>
+				<Viewbox Grid.Column="4" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundYellow }" />
+				</Viewbox>
+				<Viewbox Grid.Column="6" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundDarkGreen }" />
+				</Viewbox>
+				<Viewbox Grid.Column="8" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundDarkBlue }" />
+				</Viewbox>
+				<Viewbox Grid.Column="10" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundDarkPurple }" />
+				</Viewbox>
+				<Viewbox Grid.Column="12" Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
+				</Viewbox>
+			</Grid>
+			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 1*, 3*, 6*" >
+				<Button Name="startButton"
+						Grid.Column="0"
+						Classes="DynamicBackground ThreeRounded DynamicTextHeight">
+					<TextBlock Text="{ Binding $parent[cls:TimerView].StartButtonText }" />
+				</Button>
+				<Button Name="stopButton"
+						Grid.Column="2"
+						Classes="DynamicBackground ThreeRounded DynamicTextHeight" >
+					<TextBlock Text="{ Binding $parent[cls:TimerView].StopButtonText }" />
+				</Button>
+			</Grid>
+		</Grid>
+	</Grid>
 </UserControl>

@@ -4,55 +4,75 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 
-using System.Linq;
+using Timespan.GUI.Services;
 
-public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
+internal partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
-	private List<IMainViewChild> Pages { get; set; }
-
-	private IMainViewChild? lastPage;
+	
+	internal RedirectionAnchor<IMainViewChild> CurrentPageAnchor;
+	internal IMainViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
+	
 	[ObservableProperty]
-	private IMainViewChild? currentPage;
+	private bool normalNavigationBarActive = true;
+	[ObservableProperty]
+	private bool settingsNavigationBarActive = true;
+
+	internal bool TimerButtonSelected =>
+		CurrentPageAnchor.IsActive<TimerViewModel>();
+	internal bool GraphsButtonSelected =>
+		CurrentPageAnchor.IsActive<GraphsViewModel>();
+	internal bool ExportButtonSelected =>
+		CurrentPageAnchor.IsActive<ExportViewModel>();
 
 	[ObservableProperty]
-	private bool timerButtonSelected = true;
+	private bool generalSettingsButtonSelected = true;
 	[ObservableProperty]
-	private bool graphsButtonSelected = false;
+	private bool userDataSettingsButtonSelected = false;
 	[ObservableProperty]
-	private bool exportButtonSelected = false;
+	private bool aboutSettingsButtonSelected = false;
+	[ObservableProperty]
+	private bool visualSettingsButtonSelected = false;
+	[ObservableProperty]
+	private bool exportSettingsButtonSelected = false;
 
-	public MainViewModel() {
-		Pages = [new TimerViewModel(), new GraphsViewModel(), new ExportViewModel()];
-		CurrentPage = Pages[0];
+	private readonly RedirectionService redirectionService;
+
+	internal MainViewModel(RedirectionService redirectionService) {
+		this.redirectionService = redirectionService;
+		CurrentPageAnchor = new([new TimerViewModel(), new GraphsViewModel(), new ExportViewModel(), new SettingsViewModel(redirectionService)]);
+		redirectionService.RegisterRedirectionAnchor<MainViewModel, IMainViewChild>(CurrentPageAnchor);
+		CurrentPageAnchor.ModelChanged += () => {
+			OnPropertyChanged(nameof(TimerButtonSelected));
+			OnPropertyChanged(nameof(GraphsButtonSelected));
+			OnPropertyChanged(nameof(ExportButtonSelected));
+			OnPropertyChanged(nameof(CurrentPage));
+		};
 	}
 
 	[RelayCommand]
-	public void GoToTimer() {
+	internal void GoToTimer() {
 		ChangePage<TimerViewModel>();
-		TimerButtonSelected = true;
-		GraphsButtonSelected = false;
-		ExportButtonSelected = false;
 	}
 
 	[RelayCommand]
-	public void GoToGraphs() {
+	internal void GoToGraphs() {
 		ChangePage<GraphsViewModel>();
-		TimerButtonSelected = false;
-		GraphsButtonSelected = true;
-		ExportButtonSelected = false;
 	}
 
 	[RelayCommand]
-	public void GoToExport() {
+	internal void GoToExport() {
 		ChangePage<ExportViewModel>();
-		TimerButtonSelected = false;
-		GraphsButtonSelected = false;
-		ExportButtonSelected = true;
+	}
+
+	[RelayCommand]
+	internal void GoToSettings() {
+		ChangePage<SettingsViewModel>();
 	}
 
 	private void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : IMainViewChild {
-		lastPage = CurrentPage;
-		CurrentPage = Pages.First(x => x.GetType() == typeof(PageT));
+		CurrentPageAnchor.ChangeModel<PageT>();
+		//lastPage = CurrentPage;
+		//CurrentPage = Pages.First(x => x.GetType() == typeof(PageT));
 		//CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation) as IMainViewChild;
 		//Console.WriteLine($"chaged type of page to:{_CurrentPage?.GetType()?.Name ?? "NullType"}");
 		//Console.WriteLine($"new page is {_CurrentPage?.GetType()?.IsVisible ?? false} visible");

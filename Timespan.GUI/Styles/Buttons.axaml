@@ -62,6 +62,26 @@
 		</Setter>
 	</Style>
 	
+	<Style Selector="Button.ThreeRounded">
+		<Setter Property="CornerRadius">
+			<Setter.Value>
+				<MultiBinding Converter="{ StaticResource ThreeCornerConverter }">
+					<Binding Path="$self.Bounds" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Style Selector="Button.Circle">
+		<Setter Property="CornerRadius">
+			<Setter.Value>
+				<MultiBinding Converter="{ StaticResource CircleCornerConverter}">
+					<Binding Path="$self.Bounds" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
 	<Style Selector="Button.DefaultBorder">
 		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
 		<Setter Property="BorderThickness" Value="{ StaticResource DefaultBorderThickness }" />
@@ -95,9 +115,9 @@
 			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static vc:ColorConverters.ColorConverterDarken} }" />
 		</Style>
 	</Style>
-	
+
 	<Style Selector="Button.DynamicTextHeight TextBlock">
-		<Setter Property="FontSize" Value="{ Binding $parent[Button].Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.1 }" />
+		<Setter Property="FontSize" Value="{ Binding $parent[Button].Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.79 }" />
 		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
