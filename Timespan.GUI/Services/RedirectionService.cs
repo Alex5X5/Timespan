@@ -50,6 +50,8 @@ public partial class RedirectionAnchor<ChildT> : ObservableObject {
 	[ObservableProperty]
 	public ChildT? currentModel;
 
+	private ChildT lastModel;
+
 	public event Action ModelChanged = () => { };
 
 	private readonly ViewModelFactory<ChildT> factory;
@@ -62,8 +64,16 @@ public partial class RedirectionAnchor<ChildT> : ObservableObject {
 		typeof(T) == CurrentModel?.GetType();
 
 	public void ChangeModel<T>() where T : ChildT {
+		lastModel = CurrentModel;
 		CurrentModel = factory.BuildViewModel<T>();
 		//CurrentModel = models.First(x => x?.GetType() == typeof(T));
 		ModelChanged.Invoke();
+	}
+
+	public void GoBack() {
+		if (lastModel != null) {
+			CurrentModel = lastModel;
+			ModelChanged.Invoke();
+		}
 	}
 }

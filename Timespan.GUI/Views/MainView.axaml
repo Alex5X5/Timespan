@@ -86,6 +86,19 @@
 			   Grid.Row="1"
 			   Grid.Column="0"
 			   Grid.ColumnSpan="3">
+			<Grid ShowGridLines="True">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="15*"/>
+				</Grid.ColumnDefinitions>
+				<Viewbox Stretch="Uniform">
+					<Button Classes="Default DynamicBackground Circle"
+							Width="100"
+							Height="100"
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }"
+							Command="{ Binding GoBackCommand }"/>
+				</Viewbox>
+			</Grid>
 			<Grid ShowGridLines="false"
 				  IsVisible="{ Binding ShowNormalNavigationBar }">
 				<Grid.RowDefinitions>

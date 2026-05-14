@@ -17,6 +17,9 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	[ObservableProperty]
 	private bool settingsNavigationBarActive = true;
 
+	[ObservableProperty]
+	private bool showBackButton = true;
+
 	internal bool TimerButtonSelected =>
 		CurrentPageAnchor.IsActive<TimerViewModel>();
 	internal bool GraphsButtonSelected =>
@@ -51,10 +54,13 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 			if (CurrentPageAnchor?.CurrentModel?.GetType() == typeof(SettingsViewModel)) {
 				ShowNormalNavigationBar = false;
 				ShowSettingsNavigationBar = true;
-				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>();
+				ShowBackButton = true;
+				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged += UpdateSettingsNavigationBar;
 			} else {
 				ShowNormalNavigationBar = true;
 				ShowSettingsNavigationBar = false;
+				ShowBackButton = false;
+				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged -= UpdateSettingsNavigationBar;
 			}
 			OnPropertyChanged(nameof(TimerButtonSelected));
 			OnPropertyChanged(nameof(GraphsButtonSelected));
@@ -108,16 +114,24 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ChangeModel<ExportSettingsViewModel>();
 	}
 
+	[RelayCommand]
+	internal void GoBack() {
+		CurrentPageAnchor.GoBack();
+	}
+
 	private void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : IMainViewChild {
 		CurrentPageAnchor.ChangeModel<PageT>();
 	}
 
 	private void UpdateSettingsNavigationBar() {
-
+		OnPropertyChanged(nameof(GeneralSettingsButtonSelected));
+		OnPropertyChanged(nameof(UserDataSettingsButtonSelected));
+		OnPropertyChanged(nameof(AboutSettingsButtonSelected));
+		OnPropertyChanged(nameof(GraphicsSettingsButtonSelected));
+		OnPropertyChanged(nameof(ExportSettingsButtonSelected));
 	}
 
 	private void UpdatNormalNavigationBar() {
-
 	}
 
 	internal void OnLoad() {
