@@ -46,13 +46,13 @@
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 CornerRadius="5,5,5,5"
-					 PlaceholderText="{ Binding $parent[cls:TimerView].TitleLabelText }"/>
+					 PlaceholderText="{ Binding $parent[cls:TimerView].StartLabelText }"/>
 			<TextBox Classes="Default DynamicTextHeight" 
 					 Grid.Row="3"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
 					 CornerRadius="5,5,5,5"
-					 PlaceholderText="Ende"/>
+					 PlaceholderText="{ Binding $parent[cls:TimerView].FinishLabelText }"/>
 			<TextBlock Text="{ Binding $parent[cls:TimerView].TitleLabelText }"
 					   Grid.Row="1"
 					   Grid.Column="0"
@@ -65,7 +65,7 @@
 					 VerticalContentAlignment="Top"
 					 TextWrapping="Wrap"
 					 CornerRadius="5,5,5,5"
-					 PlaceholderText="Description"/>
+					 PlaceholderText="{ Binding $parent[cls:TimerView].DescriptionLabelText }"/>
 			<Grid Grid.Row="7"
 				  Grid.Column="0"
 				  Grid.ColumnSpan="3"
@@ -129,14 +129,24 @@
 							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
 				</Viewbox>
 			</Grid>
-			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 1*, 3*, 6*" >
+			<Grid Grid.Row="9" 
+				  Grid.Column="0"
+				  Grid.ColumnSpan="3"
+				  ColumnDefinitions="3*, 1*, 3*, 6*"
+				  ShowGridLines="True">
 				<Button Name="startButton"
 						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Background="{ StaticResource ResourceKey=StartButtonColor }"
 						Classes="DynamicBackground ThreeRounded DynamicTextHeight">
 					<TextBlock Text="{ Binding $parent[cls:TimerView].StartButtonText }" />
 				</Button>
 				<Button Name="stopButton"
 						Grid.Column="2"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Background="{ StaticResource ResourceKey=StopButtonColor }"
 						Classes="DynamicBackground ThreeRounded DynamicTextHeight" >
 					<TextBlock Text="{ Binding $parent[cls:TimerView].StopButtonText }" />
 				</Button>

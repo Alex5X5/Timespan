@@ -36,6 +36,6 @@
 	<Color x:Key="TextBoxBorderHover">#CFCFCF</Color >
 	<Color x:Key="TextBoxBorderPressed">#BFBFBF</Color >
 
-
-
+	<Color x:Key="StartButtonColor">#D94807</Color >
+	<Color x:Key="StopButtonColor">#DFD9D9</Color >
 </ResourceDictionary>
