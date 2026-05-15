@@ -7,6 +7,6 @@ public class WeekViewModel : ViewModelBase, IGraphsViewChild {
 	}
 
 	public string GetDateString() {
-		return "";
+		return "KW 8";
 	}
 }

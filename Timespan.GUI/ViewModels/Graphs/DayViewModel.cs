@@ -7,6 +7,6 @@ public class DayViewModel : ViewModelBase, IGraphsViewChild {
 	}
 
 	public string GetDateString() {
-		return "";
+		return "Montag 14.3.";
 	}
 }

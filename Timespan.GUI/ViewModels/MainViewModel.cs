@@ -18,7 +18,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	private bool settingsNavigationBarActive = true;
 
 	[ObservableProperty]
-	private bool showBackButton = true;
+	internal bool showBackButton = true;
 
 	internal bool TimerButtonSelected =>
 		CurrentPageAnchor.IsActive<TimerViewModel>();

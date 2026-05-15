@@ -25,7 +25,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	public ObservableCollection<string> Items { get; }
 	
-	public string DateString => CurrentPage?.GetDateString() ?? "";
+	public string DateString => CurrentPage?.GetDateString() ?? "Date";
 
 	public GraphsViewModel(RedirectionService redirectionService, ViewModelFactory<IGraphsViewChild> factory) : base() {
 		CurrentPageAnchor = new(factory);

@@ -7,6 +7,6 @@ public class MonthViewModel : ViewModelBase, IGraphsViewChild {
 	}
 
 	public string GetDateString() {
-		return "";
+		return "Ferbruar 3036";
 	}
 }

@@ -1,0 +1,23 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vc="using:Timespan.GUI.Converters">
+	
+	<Style Selector="TextBlock.P1">
+		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter }, ConverterParameter=1.38 }" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="Padding" Value="0" />
+	</Style>
+
+	<Style Selector="TextBlock.P2">
+		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter }, ConverterParameter=2.0 }" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="Padding" Value="0" />
+	</Style>
+
+	<Style Selector="TextBlock.P3">
+		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter }, ConverterParameter=2.0 }" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="Padding" Value="0" />
+	</Style>
+
+</Styles>

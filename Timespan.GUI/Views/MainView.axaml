@@ -86,19 +86,6 @@
 			   Grid.Row="1"
 			   Grid.Column="0"
 			   Grid.ColumnSpan="3">
-			<Grid ShowGridLines="True">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="15*"/>
-				</Grid.ColumnDefinitions>
-				<Viewbox Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundRed }"
-							Command="{ Binding GoBackCommand }"/>
-				</Viewbox>
-			</Grid>
 			<Grid ShowGridLines="false"
 				  IsVisible="{ Binding ShowNormalNavigationBar }">
 				<Grid.RowDefinitions>
@@ -137,6 +124,7 @@
 					<TextBlock Text="Exportieren"/>
 				</Button>
 			</Grid>
+
 			<Grid ShowGridLines="false"
 				  IsVisible="{ Binding ShowSettingsNavigationBar }">
 				<Grid.RowDefinitions>
@@ -191,6 +179,29 @@
 						Classes.Selected="{ Binding ExportSettingsButtonSelected }"
 						Command="{ Binding GoToExportSettingsCommand }">
 					<TextBlock Text="Export"/>
+				</Button>
+			</Grid>
+
+			<Grid ShowGridLines="False"
+				  IsVisible="{ Binding ShowBackButton }">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="5*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="5*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="83*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Row="1"
+						Grid.Column="1"
+						Classes="OnlyClick"
+						Command="{ Binding GoBackCommand }">
+					<Viewbox Stretch="Uniform">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/pfeil-link-white.svg" />
+					</Viewbox>
 				</Button>
 			</Grid>
 		</Panel>
