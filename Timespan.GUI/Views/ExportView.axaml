@@ -2,8 +2,414 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:cls="using:Timespan.GUI.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="models:ExportViewModel"
              x:Class="Timespan.GUI.Views.ExportView"
-             Background="Blue">
-  Export!
+			 Loaded="UserControlLoaded">
+
+	<Grid RowDefinitions="3*, 35*, *, 4*, *" ColumnDefinitions="*, 10*, *">
+		<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+			  VerticalScrollBarVisibility="Visible"
+			  Grid.Row="1"
+			  Grid.Column="1">
+			<Viewbox Stretch="Uniform">
+				<Panel Background="Beige" Width="595" Height="842" >
+					<Canvas >
+						<Canvas.Styles>
+							<Style Selector="Line">
+								<Setter Property="StrokeThickness" Value="2" />
+								<Setter Property="Stroke" Value="Black" />
+							</Style>
+							<Style Selector="Line.Fat">
+								<Setter Property="StrokeThickness" Value="3" />
+							</Style>
+							<Style Selector="TextBlock">
+								<Setter Property="Foreground" Value="Black" />
+							</Style>
+							<Style Selector="TextBlock.Description">
+								<Setter Property="FontSize" Value="10" />
+							</Style>
+							<Style Selector="TextBlock.Description2">
+								<Setter Property="FontSize" Value="9" />
+							</Style>
+							<Style Selector="TextBlock.Fat">
+								<Setter Property="FontSize" Value="13" />
+								<Setter Property="FontWeight" Value="Bold"/>
+							</Style>
+							<Style Selector="TextBlock.Day">
+								<Setter Property="FontSize" Value="14" />
+							</Style>
+						</Canvas.Styles>
+						<Line StartPoint="327, 28.7" EndPoint="548.9, 28.7" />
+						<Line StartPoint="327, 50.4" EndPoint="548.9, 50.4" />
+						<Line StartPoint="201, 72.8" EndPoint="238.6, 72.8" />
+						<Line StartPoint="327, 72.8" EndPoint="388.9, 72.8" />
+						<Line StartPoint="427.2, 72.8" EndPoint="489.1, 72.8" />
+
+						<Line StartPoint="61, 87" EndPoint="548, 87" Classes="Fat" />
+						<Line StartPoint="62, 755" EndPoint="548, 755" Classes="Fat" />
+						<Line StartPoint="62, 692" EndPoint="548, 692" />
+						<Line StartPoint="61, 803" EndPoint="548, 803" Classes="Fat" />
+
+
+						<Line StartPoint="62, 85.5" EndPoint="62, 804.5" Classes="Fat" />
+						<Line StartPoint="547, 85.5" EndPoint="547, 804.5" Classes="Fat" />
+						<Line StartPoint="385.3, 87" EndPoint="385.3, 692" Classes="Fat" />
+						<Line StartPoint="424.4, 87.5" EndPoint="424.4, 692" Classes="Fat" />
+
+						<Line StartPoint="211, 754" EndPoint="211, 803" />
+						<Line StartPoint="314, 754" EndPoint="314, 803" />
+						<Line StartPoint="426, 754" EndPoint="426, 803" />
+						<Line StartPoint="42.3, 117.3" EndPoint="547.6, 117.3" Classes="Fat" />
+						<Line StartPoint="62, 135.8" EndPoint="547.6, 135.8" />
+						<Line StartPoint="62, 154.3" EndPoint="547.6, 154.3" />
+						<Line StartPoint="62, 172.8" EndPoint="547.6, 172.8" />
+						<Line StartPoint="62, 191.3" EndPoint="547.6, 191.3" />
+						<Line StartPoint="62, 209.8" EndPoint="547.6, 209.8" />
+						<Line StartPoint="42.3, 228.3" EndPoint="547.6, 228.3" Classes="Fat" />
+						<Line StartPoint="62, 246.8" EndPoint="547.6, 246.8" />
+						<Line StartPoint="62, 265.3" EndPoint="547.6, 265.3" />
+						<Line StartPoint="62, 283.8" EndPoint="547.6, 283.8" />
+						<Line StartPoint="62, 302.3" EndPoint="547.6, 302.3" />
+						<Line StartPoint="62, 320.8" EndPoint="547.6, 320.8" />
+						<Line StartPoint="42.3, 339.3" EndPoint="547.6, 339.3" Classes="Fat" />
+						<Line StartPoint="62, 357.8" EndPoint="547.6, 357.8" />
+						<Line StartPoint="62, 376.3" EndPoint="547.6, 376.3" />
+						<Line StartPoint="62, 394.8" EndPoint="547.6, 394.8" />
+						<Line StartPoint="62, 413.3" EndPoint="547.6, 413.3" />
+						<Line StartPoint="62, 431.8" EndPoint="547.6, 431.8" />
+						<Line StartPoint="42.3, 450.3" EndPoint="547.6, 450.3" Classes="Fat" />
+						<Line StartPoint="62, 468.8" EndPoint="547.6, 468.8" />
+						<Line StartPoint="62, 487.3" EndPoint="547.6, 487.3" />
+						<Line StartPoint="62, 505.8" EndPoint="547.6, 505.8" />
+						<Line StartPoint="62, 524.3" EndPoint="547.6, 524.3" />
+						<Line StartPoint="62, 542.8" EndPoint="547.6, 542.8" />
+						<Line StartPoint="42.3, 561.3" EndPoint="547.6, 561.3" Classes="Fat" />
+						<Line StartPoint="62, 579.8" EndPoint="547.6, 579.8" />
+						<Line StartPoint="62, 598.3" EndPoint="547.6, 598.3" />
+						<Line StartPoint="62, 616.8" EndPoint="547.6, 616.8" />
+						<Line StartPoint="62, 635.3" EndPoint="547.6, 635.3" />
+						<Line StartPoint="62, 653.8" EndPoint="547.6, 653.8" />
+						<Line StartPoint="42.3, 672.3" EndPoint="547.6, 672.3" Classes="Fat" />
+
+						<Line StartPoint="200, 710" EndPoint="238, 710" />
+						<Line StartPoint="200, 735" EndPoint="238, 735" />
+						<Line StartPoint="200, 709" EndPoint="200, 736" />
+						<Line StartPoint="238, 709" EndPoint="238, 736" />
+
+						<Line StartPoint="290, 710" EndPoint="328, 710" />
+						<Line StartPoint="290, 735" EndPoint="328, 735" />
+						<Line StartPoint="290, 709" EndPoint="290, 736" />
+						<Line StartPoint="328, 709" EndPoint="328, 736" />
+
+						<Line StartPoint="500, 710" EndPoint="538, 710" />
+						<Line StartPoint="500, 735" EndPoint="538, 735" />
+						<Line StartPoint="500, 709" EndPoint="500, 736" />
+						<Line StartPoint="538, 709" EndPoint="538, 736" />
+
+						<TextBlock Text="Montag"
+								   Canvas.Left="42"
+								   Canvas.Top="100"
+								   RenderTransformOrigin="50,50"
+								   Classes="Day" >
+							<TextBlock.RenderTransform>
+								<RotateTransform Angle="-90" />
+							</TextBlock.RenderTransform>
+						</TextBlock>
+						<TextBlock Text="Dienstag"
+								   Canvas.Left="42"
+								   Canvas.Top="215"
+								   RenderTransformOrigin="50,50"
+								   Classes="Day" >
+							<TextBlock.RenderTransform>
+								<RotateTransform Angle="-90" />
+							</TextBlock.RenderTransform>
+						</TextBlock>
+						<TextBlock Text="Mittwoch"
+								   Canvas.Left="42"
+								   Canvas.Top="325"
+								   RenderTransformOrigin="50,50"
+								   Classes="Day" >
+							<TextBlock.RenderTransform>
+								<RotateTransform Angle="-90" />
+							</TextBlock.RenderTransform>
+						</TextBlock>
+						<TextBlock Text="Donnerstag"
+								   Canvas.Left="42"
+								   Canvas.Top="445"
+								   RenderTransformOrigin="50,50"
+								   Classes="Day" >
+							<TextBlock.RenderTransform>
+								<RotateTransform Angle="-90" />
+							</TextBlock.RenderTransform>
+						</TextBlock>
+						<TextBlock Text="Freitag"
+								   Canvas.Left="42"
+								   Canvas.Top="540"
+								   RenderTransformOrigin="50,50"
+								   Classes="Day" >
+							<TextBlock.RenderTransform>
+								<RotateTransform Angle="-90" />
+							</TextBlock.RenderTransform>
+						</TextBlock>
+
+						<TextBlock Text="Ausbildungsnachweis Nr."
+							   Canvas.Left="30"
+							   Canvas.Top="55"
+							   Classes="Fat" />
+						<TextBlock Text="Woche vom"
+								   Canvas.Left="265"
+								   Canvas.Top="60"
+								   Classes="Description" />
+						<TextBlock Text="bis"
+								   Canvas.Left="406"
+								   Canvas.Top="60"
+								   Classes="Description" />
+						<TextBlock Text="Name und Vorname:"
+								   Canvas.Left="225"
+								   Canvas.Top="16"
+								   Classes="Description" />
+						<TextBlock Text="Ausbildungsabteilung:"
+								   Canvas.Left="216"
+								   Canvas.Top="38"
+								   Classes="Description" />
+						<TextBlock Text="bis"
+								   Canvas.Left="406"
+								   Canvas.Top="60"
+								   Classes="Description" />
+						<TextBlock Text="Art der ausgeführten Arbeit"
+								   Canvas.Left="164"
+								   Canvas.Top="97"
+								   Classes="Description" />
+						<TextBlock Text="Einzel-"
+								   Canvas.Left="391"
+								   Canvas.Top="92"
+								   Classes="Description2" />
+						<TextBlock Text="stunden"
+								   Canvas.Left="387"
+								   Canvas.Top="102"
+								   Classes="Description2" />
+						<TextBlock Text="krank"
+								   Canvas.Left="170"
+								   Canvas.Top="717"
+								   Classes="Description" />
+						<TextBlock Text="Gesamtstunden"
+								   Canvas.Left="433"
+								   Canvas.Top="676"
+								   Classes="Description" />
+						<TextBlock Text="krank"
+								   Canvas.Left="170"
+								   Canvas.Top="717"
+								   Classes="Description" />
+						<TextBlock Text="Fehltage"
+								   Canvas.Left="245"
+								   Canvas.Top="717"
+								   Classes="Description" />
+						<TextBlock Text="Ausfallzeiten"
+								   Canvas.Left="423"
+								   Canvas.Top="705"
+								   Classes="Description" />
+						<TextBlock Text="kumulativ im"
+								   Canvas.Left="424"
+								   Canvas.Top="717"
+								   Classes="Description" />
+						<TextBlock Text="Ausfallzeiten"
+								   Canvas.Left="68"
+								   Canvas.Top="697"
+								   Classes="Description" />
+						<TextBlock Text="Ausbilungsjahr"
+								   Canvas.Left="420"
+								   Canvas.Top="728"
+								   Classes="Description" />
+						<TextBlock Text="Datum"
+								   Canvas.Left="68"
+								   Canvas.Top="759"
+								   Classes="Description" />
+						<TextBlock Text="Auszubildende/-r"
+								   Canvas.Left="103"
+								   Canvas.Top="787"
+								   Classes="Description" />
+						<TextBlock Text="Ausbilder/-in"
+								   Canvas.Left="235"
+								   Canvas.Top="787"
+								   Classes="Description" />
+						<TextBlock Text="Gesetzl. Vertreter/-in"
+								   Canvas.Left="320"
+								   Canvas.Top="789"
+								   Classes="Description" />
+						<TextBlock Text="Berufsschule"
+								   Canvas.Left="461"
+								   Canvas.Top="787"
+								   Classes="Description" />
+						<TextBlock Text="{ Binding WeekCount }"
+								   Canvas.Left="210"
+								   Canvas.Top="56"
+								   FontSize="14"
+								   Classes="Fat" />
+						<TextBlock Text="{ Binding DateFromText }"
+								   Canvas.Left="333"
+								   Canvas.Top="58"
+								   FontSize="10" />
+						<TextBlock Text="{ Binding UserNameText }"
+								   Canvas.Left="333"
+								   Canvas.Top="13"
+								   FontSize="10" />
+						<TextBlock Text="{ Binding JobNameText }"
+								   Canvas.Left="333"
+								   Canvas.Top="35"
+								   FontSize="10" />
+						<TextBlock Text="{ Binding DateToText }"
+								   Canvas.Left="433"
+								   Canvas.Top="58"
+								   FontSize="10" />
+						<TextBlock Text="{ Binding TotalTime }"
+								   Canvas.Left="392"
+								   Canvas.Top="676"
+								   Classes="Description" />
+						<TextBlock Text="{ Binding SickDays }"
+								   Canvas.Left="214"
+								   Canvas.Top="715"
+								   FontSize="14"
+								   Classes="Description" />
+						<TextBlock Text="{ Binding MissingDays }"
+								   Canvas.Left="305"
+								   Canvas.Top="715"
+								   FontSize="14"
+								   Classes="Description" />
+						<TextBlock Text="{ Binding TotalMissingDays }"
+								   Canvas.Left="516"
+								   Canvas.Top="715"
+								   FontSize="14"
+								   Classes="Description" />
+					</Canvas>
+					<!--
+						<Grid RowDefinitions="7.3*, 672.3*, 187*" ColumnDefinitions="*" Grid.Row="1" Grid.Column="1" Background="red" Opacity="0.9" >
+										<Setter Property="Margin" Value="3,3,3,3" />
+						</Grid>
+					-->
+					<Grid RowDefinitions="18.75*, 88.25*, 27.1*" ColumnDefinitions="60*, 471*, 47*" >
+						<ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TableItems}">
+							<ItemsControl.Styles>
+								<Style x:DataType="models:TextboxItem" Selector="ItemsControl > ContentPresenter">
+									<Setter Property="Grid.Row" Value="{ Binding RowIndex }" />
+									<Setter Property="Grid.Column" Value="{ Binding ColumnIndex }" />
+								</Style>
+								<Style x:DataType="models:DescriptionItem" Selector="ItemsControl > ContentPresenter">
+								</Style>
+							</ItemsControl.Styles>
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<Grid>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+										</Grid.RowDefinitions>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="66*" />
+											<ColumnDefinition Width="8*" />
+											<ColumnDefinition Width="25*" />
+										</Grid.ColumnDefinitions>
+									</Grid>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.ItemTemplate >
+								<DataTemplate>
+									<TextBox Classes="Default"
+											 BorderThickness="0"
+											 FontSize="7"
+											 Text="{ Binding Text }"
+											 GotFocus="TextBoxFocused"
+											 IsReadOnly="true"
+											 Padding="2,2,0,0"
+											 Margin="3,3,3,3"
+											 MinHeight="0"
+											 MinWidth="0"
+											 HorizontalAlignment="Stretch"
+											 VerticalAlignment="Stretch"/>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</Grid>
+				</Panel>
+			</Viewbox>
+		</ScrollViewer>
+		<Grid Grid.Row="3"
+			  Grid.Column="1"
+			  ColumnDefinitions="1*, 3*, 2*, 3*, 2*, 3*, 1*">
+			<Button Grid.Column="1"
+					Classes="Default"
+					IsEnabled="false"
+					Command="{ Binding ExportCommand }" >
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent"
+								   Text="{ Binding $parent[cls:ExportView].ImportButtonText }" />
+					</Viewbox>
+				</Grid>
+			</Button>
+			<Button Grid.Column="3"
+					Classes="Default"
+					Command="{ Binding ExportCommand }" >
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent"
+								   Text="{ Binding $parent[cls:ExportView].ExportButtonText }" />
+					</Viewbox>
+				</Grid>
+			</Button>
+			<Button Grid.Column="5"
+					Classes="Default"
+					Command="{ Binding OpenExplorerCommand }" >
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent"
+								   Text="{ Binding $parent[cls:ExportView].FolderButtonText }" />
+					</Viewbox>
+				</Grid>
+			</Button>
+		</Grid>
+	</Grid>
 </UserControl>

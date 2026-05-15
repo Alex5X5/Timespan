@@ -1,6 +1,7 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using System.Collections.ObjectModel;
 
@@ -36,6 +37,11 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		};
 		Items = new() { "Day", "Week", "Month" };
 		SelectedItem = Items[0];
+	}
+
+	[RelayCommand]
+	internal void ShowTask() {
+		CurrentPageAnchor.GoBack();
 	}
 
 	private void UpdateMode(string mode) {
