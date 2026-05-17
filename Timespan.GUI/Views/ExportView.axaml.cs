@@ -19,8 +19,8 @@ internal partial class ExportView : UserControl {
 	public string FolderButtonText { get; set; } = "";
 
 	public ExportView() {
-        InitializeComponent();
 		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
+        InitializeComponent();
 	}
 
 	private void UserControlLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {

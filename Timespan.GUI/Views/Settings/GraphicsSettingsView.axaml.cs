@@ -1,9 +1,16 @@
+using Timespan.Util.Attributes;
+using Timespan.Util.Services;
+
 namespace Timespan.GUI.Views.Settings;
 
-public partial class GraphicsSettingsView : UserControl
-{
-    public GraphicsSettingsView()
-    {
-        InitializeComponent();
+public partial class GraphicsSettingsView : UserControl {
+
+
+	[TranslateMember("Views.Pages.Settings.Graphics.Labels.Title", "Graphics")]
+	public string TitleLabelText { get; set; } = "";
+
+	public GraphicsSettingsView() {
+		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
+		InitializeComponent();
     }
 }

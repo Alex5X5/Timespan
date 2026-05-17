@@ -5,7 +5,7 @@
 		<ResourceInclude Source="/Styles/Themes/Common.axaml"/>
 	</ResourceDictionary.MergedDictionaries>
 	
-	<FontFamily x:Key="Text">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_Rg.ttf#Srh Text</FontFamily>
-	<FontFamily x:Key="Title">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_Bd.ttf#Srh Text</FontFamily>
+	<FontFamily x:Key="Text">avares://Timespan.GUI/Assets/Fonts/srh/SRHText_Rg.ttf#Srh Text</FontFamily>
+	<FontFamily x:Key="Title">avares://Timespan.GUI/Assets/Fonts/srh/SRHText_Bd.ttf#Srh Text</FontFamily>
 
 </ResourceDictionary>

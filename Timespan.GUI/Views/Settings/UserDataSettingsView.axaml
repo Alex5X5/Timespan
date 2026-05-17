@@ -15,7 +15,7 @@
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/UserDataSettingsView.styles.axaml" />
 	</UserControl.Styles>
 
-	<Grid ShowGridLines="True">
+	<Grid ShowGridLines="False">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="2*" />

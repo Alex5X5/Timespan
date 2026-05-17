@@ -5,8 +5,43 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Timespan.GUI.Views.Graphs.DayView">
     <Panel>
-        <Rectangle Fill="#D9D9D9"
-                   RadiusX="20"
-                   RadiusY="20"/>
+		<Rectangle Fill="#D9D9D9"
+					RadiusX="20"
+					RadiusY="20"/>
+        <Viewbox Stretch="Fill">
+			<Canvas Width="500"
+					Height="230">
+				<Canvas.Styles>
+					<Style Selector="Line">
+						<Setter Property="StrokeThickness" Value="2" />
+						<Setter Property="Stroke" Value="Black" />
+					</Style>
+					<Style Selector="Line.Fat">
+						<Setter Property="StrokeThickness" Value="3" />
+					</Style>
+					<Style Selector="TextBlock">
+						<Setter Property="Foreground" Value="Black" />
+					</Style>
+					<Style Selector="TextBlock.Description">
+						<Setter Property="FontSize" Value="10" />
+					</Style>
+					<Style Selector="TextBlock.Description2">
+						<Setter Property="FontSize" Value="9" />
+					</Style>
+					<Style Selector="TextBlock.Fat">
+						<Setter Property="FontSize" Value="13" />
+						<Setter Property="FontWeight" Value="Bold"/>
+					</Style>
+					<Style Selector="TextBlock.Day">
+						<Setter Property="FontSize" Value="14" />
+					</Style>
+				</Canvas.Styles>
+				<Line StartPoint="20, 10" EndPoint="20, 200" />
+				<Line StartPoint="327, 50.4" EndPoint="548.9, 50.4" />
+				<Line StartPoint="201, 72.8" EndPoint="238.6, 72.8" />
+				<Line StartPoint="327, 72.8" EndPoint="388.9, 72.8" />
+				<Line StartPoint="427.2, 72.8" EndPoint="489.1, 72.8" />
+			</Canvas>
+		</Viewbox>
     </Panel>
 </UserControl>

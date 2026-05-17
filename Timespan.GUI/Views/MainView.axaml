@@ -6,6 +6,7 @@
 			 xmlns:models="using:Timespan.GUI.ViewModels"
 			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
 			 xmlns:settingsModels="using:Timespan.GUI.ViewModels.Settings"
+			 xmlns:vc="using:Timespan.GUI.Converters"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:CompileBindings="True"
 			 x:DataType="models:MainViewModel"
@@ -57,7 +58,7 @@
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="2*"/>
 					<ColumnDefinition Width="15*"/>
-					<ColumnDefinition Width="39*"/>
+					<ColumnDefinition Width="29*"/>
 					<ColumnDefinition Width="5*"/>
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="5*"/>
@@ -65,7 +66,15 @@
 				</Grid.ColumnDefinitions>
 				<TextBlock Grid.Row="1"
 						   Grid.Column="1"
-						   Text="test"/>
+						   FontFamily="{StaticResource CustomBoldonseFont}"
+						   FontWeight="Medium"
+						   LetterSpacing="1.5"
+						   Foreground="White"
+						   FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.1 }"
+						   Padding="0"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"
+						   Text="timespan "/>
 				<Viewbox Grid.Row="1"
 						 Grid.Column="5"
 						 Stretch="Uniform">

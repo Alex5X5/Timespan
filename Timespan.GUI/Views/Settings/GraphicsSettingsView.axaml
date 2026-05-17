@@ -2,7 +2,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views.Settings"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
+			 xmlns:settingsModels="using:Timespan.GUI.ViewModels.Settings"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="settingsModels:GraphicsSettingsViewModel"
              x:Class="Timespan.GUI.Views.Settings.GraphicsSettingsView">
-  Graphics Settings
+  
+
+	<Grid ShowGridLines="True">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="10*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="6*" />
+			<ColumnDefinition Width="8*" />
+			<ColumnDefinition Width="6*" />
+		</Grid.ColumnDefinitions>
+		<TextBlock Text="{ Binding $parent[cls:GraphicsSettingsView].TitleLabelText }"
+					Grid.Row="1"
+					Grid.Column="1"
+					Classes="h2" />
+	</Grid>
 </UserControl>
