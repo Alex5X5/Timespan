@@ -42,7 +42,6 @@
 			<ColumnDefinition Width="15*"/>
 		</Grid.ColumnDefinitions>
 		<ContentControl Grid.ColumnSpan="1"
-						Background="green"
 						Content="{ Binding CurrentPage }"/>
 		<Grid Grid.Row="9" 
 				Grid.Column="0"

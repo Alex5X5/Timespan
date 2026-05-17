@@ -10,6 +10,11 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="settingsModels:UserDataSettingsViewModel"
              x:Class="Timespan.GUI.Views.Settings.UserDataSettingsView">
+	
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/UserDataSettingsView.styles.axaml" />
+	</UserControl.Styles>
+
 	<Grid ShowGridLines="True">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
@@ -20,8 +25,7 @@
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="1*" />
 			<RowDefinition Height="2*" />
-			<RowDefinition Height="3*" />
-			<RowDefinition Height="4*" />
+			<RowDefinition Height="10*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="6*" />
@@ -37,22 +41,26 @@
 				 Grid.Row="3"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
-				 CornerRadius="5,5,5,5"
+				 CornerRadius="5"
+				 TextWrapping="NoWrap"
 				 Text="{ Binding UsernameTextboxText }"
 				 PlaceholderText="{ Binding $parent[cls:UserDataSettingsView].UsernamePlaceholderText }"/>
 		<TextBox Classes="Default DynamicTextHeight" 
 				 Grid.Row="5"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
-				 CornerRadius="5,5,5,5"
+				 CornerRadius="5"
+				 TextWrapping="NoWrap"
 				 Text="{ Binding StartDateTextboxText }"
 				 PlaceholderText="{ Binding $parent[cls:UserDataSettingsView].StartDatePlaceholderText }"/>
 		<TextBox Classes="Default DynamicTextHeight" 
 				 Grid.Row="7"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
-				 CornerRadius="5,5,5,5"
+				 CornerRadius="5"
+				 TextWrapping="NoWrap"
 				 Text="{ Binding JobNameTextboxText }"
 				 PlaceholderText="{ Binding $parent[cls:UserDataSettingsView].JobNamePlaceholderText }"/>
 	</Grid>
 </UserControl>
+
