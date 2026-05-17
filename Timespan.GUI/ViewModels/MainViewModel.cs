@@ -19,6 +19,8 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	[ObservableProperty]
 	internal bool showBackButton = true;
+	[ObservableProperty]
+	internal bool showSettingsButton = true;
 
 	internal bool TimerButtonSelected =>
 		CurrentPageAnchor.IsActive<TimerViewModel>();
@@ -55,11 +57,13 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 				ShowNormalNavigationBar = false;
 				ShowSettingsNavigationBar = true;
 				ShowBackButton = true;
+				ShowSettingsButton = false;
 				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged += UpdateSettingsNavigationBar;
 			} else {
 				ShowNormalNavigationBar = true;
 				ShowSettingsNavigationBar = false;
 				ShowBackButton = false;
+				ShowSettingsButton = true;
 				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged -= UpdateSettingsNavigationBar;
 			}
 			OnPropertyChanged(nameof(TimerButtonSelected));

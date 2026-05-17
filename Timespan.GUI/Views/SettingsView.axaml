@@ -2,6 +2,7 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views"
 			 xmlns:views="using:Timespan.GUI.Views"
 			 xmlns:models="using:Timespan.GUI.ViewModels"
 			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
@@ -32,10 +33,38 @@
 	</UserControl.DataTemplates>
 
 	<Grid>
-		<ContentControl Grid.Row="2"
-					    Grid.Column="1"
-					    Grid.ColumnSpan="1"
-						Background="white"
+		<Grid.RowDefinitions>
+			<RowDefinition Height="22*"/>
+			<RowDefinition Height="1*"/>
+			<RowDefinition Height="1.5*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="15*"/>
+		</Grid.ColumnDefinitions>
+		<ContentControl Grid.ColumnSpan="1"
+						Background="green"
 						Content="{ Binding CurrentPage }"/>
+		<Grid Grid.Row="9" 
+				Grid.Column="0"
+				Grid.ColumnSpan="3"
+				ColumnDefinitions="6*, 3*, 2*, 3*, 6*"
+				ShowGridLines="false">
+			<Button Grid.Column="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Background="{ StaticResource ResourceKey=StartButtonColor }"
+					Classes="DynamicBackground ThreeRounded DynamicTextHeight"
+					Command="{ Binding CancelCommand }">
+				<TextBlock Text="{ Binding $parent[cls:SettingsView].SaveButtonText }" />
+			</Button>
+			<Button Grid.Column="3"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Background="{ StaticResource ResourceKey=StopButtonColor }"
+					Classes="DynamicBackground ThreeRounded DynamicTextHeight"
+					Command="{ Binding SaveCommand }">
+				<TextBlock Text="{ Binding $parent[cls:SettingsView].CancelButtonText }" />
+			</Button>
+		</Grid>
 	</Grid>
 </UserControl>

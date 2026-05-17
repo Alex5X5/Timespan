@@ -22,12 +22,13 @@ public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	[RelayCommand]
-	internal void GoToGeneral() {
-		ChangePage<GeneralSettingsViewModel>();
+	internal void OnSave() {
+		redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.GoBack();
 	}
 
-	private void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : ISettingsViewChild {
-		CurrentPageAnchor.ChangeModel<PageT>();
+	[RelayCommand]
+	internal void OnCancel() {
+		redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.GoBack();
 	}
 
 	internal void OnLoad() {

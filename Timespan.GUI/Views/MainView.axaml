@@ -76,6 +76,7 @@
 							CornerRadius="0"
 							Padding="0"
 							Margin="0"
+							IsVisible="{ Binding ShowSettingsButton }"
 							Command="{ Binding GoToSettingsCommand}">
 						<Image Source="avares://Timespan.GUI/Assets/Images/test.png"  />
 					</Button>
