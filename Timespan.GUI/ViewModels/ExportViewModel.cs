@@ -103,7 +103,7 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	public void OnLoad() {
 		Dispatcher.UIThread.InvokeAsync(
 			() => {
-				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
+				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new Types.PdfDocumentData();
 				JobNameText = data.JobName;
 				UserNameText = data.UserName;
 				DateFromText = data.DateFrom;
@@ -111,8 +111,8 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 				WeekCount = data.Week;
 				TableItems = [];
 				for (int day = 0; day < 5; day++)
-					for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
-						int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
+					for (int i = 0; i < Types.PdfDocumentData.DAY_LINE_COUNT; i++) {
+						int line = day * Types.PdfDocumentData.DAY_LINE_COUNT + i;
 						TableItems.Add(new DescriptionItem { RowIndex = line, Text = data.Data[line].Item1, Task = data.Data[line].Item4 });
 						TableItems.Add(new HourItem { RowIndex = line, Text = data.Data[line].Item2, Task = data.Data[line].Item4 });
 						TableItems.Add(new HourRangeItem { RowIndex = line, Text = data.Data[line].Item3, Task = data.Data[line].Item4 });
