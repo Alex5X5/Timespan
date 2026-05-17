@@ -7,9 +7,9 @@ public partial class SettingsService {
 	public string Username {
         set {
             SetSetting(USER_NAME_KEY, value);
-            OnUsernameChanged?.Invoke(nameof(JobName));
+            OnUsernameChanged?.Invoke(nameof(Username));
         }
-        get => GetSetting(JOB_NAME_KEY);
+        get => GetSetting(USER_NAME_KEY);
     }
 	public event Action<string>? OnUsernameChanged;
 
