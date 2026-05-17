@@ -2,9 +2,9 @@
 
 using System;
 
-using Util = Hourglass.Util;
-using Hourglass.Database.Services.Interfaces;
-using Models = Hourglass.Database.Models;
+using Util = Timespan.Util;
+using Timespan.Database.Services.Interfaces;
+using Models = Timespan.Database.Models;
 
 
 public class CacheService : Util.Services.CacheService {

@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Hourglass.Database.Services.Interfaces;
+using Timespan.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;

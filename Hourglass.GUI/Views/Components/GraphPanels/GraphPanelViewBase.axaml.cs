@@ -6,10 +6,10 @@ using Avalonia.Media;
 
 using CommunityToolkit.Mvvm.Input;
 
-using Hourglass.Database;
-using Hourglass.Database.Models;
+using Timespan.Database;
+using Timespan.Database.Models;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.Util.Services;
+using Timespan.Util.Services;
 
 
 public abstract partial class GraphPanelViewBase : ViewBase {

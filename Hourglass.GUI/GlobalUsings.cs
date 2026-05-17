@@ -1,4 +1,4 @@
 global using System;
 global using System.Collections.Generic;
 global using System.Linq;
-global using Hourglass.Util.Services;
+global using Timespan.Util.Services;

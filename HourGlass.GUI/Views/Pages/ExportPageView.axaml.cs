@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util.Attributes;
+using Timespan.Util.Attributes;
 
 namespace Hourglass.GUI.Views.Pages;
 

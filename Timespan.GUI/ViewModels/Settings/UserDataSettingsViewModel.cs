@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using Hourglass.Util.Services;
+using Timespan.Util.Services;
 
 namespace Timespan.GUI.ViewModels.Settings;
 

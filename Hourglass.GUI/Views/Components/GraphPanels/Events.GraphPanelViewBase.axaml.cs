@@ -4,7 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 
-using Hourglass.Database.Models;
+using Timespan.Database.Models;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 public abstract partial class GraphPanelViewBase : ViewBase {

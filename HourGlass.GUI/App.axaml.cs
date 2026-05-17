@@ -5,8 +5,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
-using Hourglass.Database.Services;
-using Hourglass.Database.Services.Interfaces;
+using Timespan.Database.Services;
+using Timespan.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components;
@@ -15,8 +15,8 @@ using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 using Hourglass.GUI.Views;
 using Hourglass.PDF;
-using Hourglass.PDF.Services.Interfaces;
-using Hourglass.Util.Services;
+using Timespan.PDF.Services.Interfaces;
+using Timespan.Util.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 public partial class App : Application {

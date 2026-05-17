@@ -3,8 +3,8 @@
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 
-using Hourglass.Database.Models;
-using Hourglass.Database.Services.Interfaces;
+using Timespan.Database.Models;
+using Timespan.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
 

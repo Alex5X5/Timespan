@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util.Attributes;
+using Timespan.Util.Attributes;
 
 public partial class TaskDetailsPageView : PageViewBase {
 

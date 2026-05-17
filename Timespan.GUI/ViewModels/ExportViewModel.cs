@@ -5,9 +5,9 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Hourglass.PDF;
-using Hourglass.PDF.Services.Interfaces;
-using Hourglass.Util.Services;
+using Timespan.PDF.Services.Interfaces;
+using Timespan.PDF.Services;
+using Timespan.Util.Services;
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -17,7 +17,7 @@ using System.Threading;
 using Timespan.GUI.Services;
 using Timespan.GUI.ViewModels.Graphs;
 
-using Database = Hourglass.Database;
+using Database = Timespan.Database;
 
 public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 

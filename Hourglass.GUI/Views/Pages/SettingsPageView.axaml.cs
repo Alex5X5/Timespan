@@ -1,7 +1,7 @@
 ﻿namespace Hourglass.GUI.Views.Pages;
 
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util.Attributes;
+using Timespan.Util.Attributes;
 
 public partial class SettingsPageView : PageViewBase {
 

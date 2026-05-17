@@ -1,6 +1,6 @@
 ﻿namespace Hourglass.GUI.Services;
 
-using Hourglass.Database.Services.Interfaces;
+using Timespan.Database.Services.Interfaces;
 
 using System;
 

@@ -18,9 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\HourGlass.Database\Hourglass.Database.csproj" />
-		<ProjectReference Include="..\HourGlass.PDF\Hourglass.PDF.csproj" />
-		<ProjectReference Include="..\Hourglass.Util\Hourglass.Util.csproj" />
+		<ProjectReference Include="..\Timespan.Database\Timespan.Database.csproj" />
+		<ProjectReference Include="..\Timespan.PDF\Timespan.PDF.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

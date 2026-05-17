@@ -8,17 +8,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.GUI", "HourGlass.
 		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270} = {3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.PDF", "HourGlass.PDF\Hourglass.PDF.csproj", "{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.PDF", "Timespan.PDF\Timespan.PDF.csproj", "{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass", "HourGlass\Hourglass.csproj", "{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan", "Timespan\Timespan.csproj", "{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Database", "HourGlass.Database\Hourglass.Database.csproj", "{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Database", "Timespan.Database\Timespan.Database.csproj", "{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseUtil", "DatabaseUtil\DatabaseUtil.csproj", "{61941540-77D3-ECD2-7EB7-6DD8EC39E515}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Util", "Hourglass.Util\Hourglass.Util.csproj", "{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Installer", "Hourglass.Installer\Hourglass.Installer.csproj", "{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Installer", "Timespan.Installer\Timespan.Installer.csproj", "{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{698A4CC3-1BBA-4C16-AB23-44FF777E9367}"
 	ProjectSection(SolutionItems) = preProject
@@ -26,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.GUI", "Timespan.GUI\Timespan.GUI.csproj", "{312698D7-A170-4F2F-BF83-95F5A7FDA982}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Util", "Timespan.Util\Timespan.Util.csproj", "{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,6 @@ Global
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Release|Any CPU.Build.0 = Release|Any CPU
 		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,6 +61,10 @@ Global
 		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

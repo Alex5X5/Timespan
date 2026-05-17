@@ -1,7 +1,7 @@
 namespace Timespan.GUI.Views;
 
-using Hourglass.Util.Attributes;
-using Hourglass.Util.Services;
+using Timespan.Util.Attributes;
+using Timespan.Util.Services;
 
 internal partial class TimerView : UserControl {
 

@@ -1,6 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
-using Hourglass.Database.Models;
+using Timespan.Database.Models;
 
 public class ProjectPageViewModel : PageViewModelBase {
 

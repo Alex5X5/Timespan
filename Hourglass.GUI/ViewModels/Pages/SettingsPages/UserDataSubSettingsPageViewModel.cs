@@ -1,6 +1,6 @@
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
-using Hourglass.Util.Services;
+using Timespan.Util.Services;
 using ReactiveUI;
 using System.ComponentModel;
 

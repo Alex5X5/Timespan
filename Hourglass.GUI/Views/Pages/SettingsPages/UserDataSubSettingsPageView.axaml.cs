@@ -3,7 +3,7 @@ namespace Hourglass.GUI.Views.Pages.SettingsPages;
 using Avalonia.Controls;
 
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.Util.Attributes;
+using Timespan.Util.Attributes;
 
 public partial class UserDataSubSettingsPageView : SubSettingsPageViewBase {
 

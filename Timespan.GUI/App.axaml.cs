@@ -5,11 +5,11 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-using Hourglass.Database.Services;
-using Hourglass.Database.Services.Interfaces;
-using Hourglass.PDF;
-using Hourglass.PDF.Services.Interfaces;
-using Hourglass.Util.Services;
+using Timespan.Database.Services;
+using Timespan.Database.Services.Interfaces;
+using Timespan.PDF.Services;
+using Timespan.PDF.Services.Interfaces;
+using Timespan.Util.Services;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,7 +41,7 @@ public partial class App : Application {
 			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>(dbService);
 			Services.CacheService cacheService = new(dbService);
 			instanciator.AddCommonServiceSingleton<Services.CacheService, Services.CacheService>(cacheService);
-			instanciator.AddCommonServiceSingleton<Hourglass.Util.Services.CacheService, Services.CacheService>(cacheService);
+			instanciator.AddCommonServiceSingleton<Timespan.Util.Services.CacheService, Services.CacheService>(cacheService);
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
 		}
 

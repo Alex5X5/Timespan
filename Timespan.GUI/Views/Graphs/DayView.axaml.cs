@@ -2,8 +2,8 @@ namespace Timespan.GUI.Views.Graphs;
 
 using Avalonia.Controls;
 
-using Hourglass.Util.Attributes;
-using Hourglass.Util.Services;
+using Timespan.Util.Attributes;
+using Timespan.Util.Services;
 
 public partial class DayView : UserControl {
 

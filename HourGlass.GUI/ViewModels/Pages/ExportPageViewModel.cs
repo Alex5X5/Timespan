@@ -4,7 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Hourglass.GUI.Services;
 using Hourglass.PDF;
-using Hourglass.PDF.Services.Interfaces;
+using Timespan.PDF.Services.Interfaces;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

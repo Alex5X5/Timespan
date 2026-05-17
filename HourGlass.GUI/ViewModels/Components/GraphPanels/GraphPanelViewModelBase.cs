@@ -4,10 +4,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
-using Hourglass.Database;
-using Hourglass.Database.Services.Interfaces;
+using Timespan.Database;
+using Timespan.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util.Services;
+using Timespan.Util.Services;
 
 using System;
 using System.Collections.Generic;

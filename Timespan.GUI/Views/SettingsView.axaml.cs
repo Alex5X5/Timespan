@@ -1,5 +1,5 @@
-using Hourglass.Util.Attributes;
-using Hourglass.Util.Services;
+using Timespan.Util.Attributes;
+using Timespan.Util.Services;
 
 using Timespan.GUI.ViewModels;
 

@@ -1,6 +1,6 @@
 namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
-using Hourglass.Database.Services.Interfaces;
+using Timespan.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
 using System;
