@@ -41,10 +41,10 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
         : base(graphFactory, dbService, dateTimeService, null, pageController, cacheService) { }
 
 
-    public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
+    public async override Task<List<Database.Types.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(cacheService.SelectedDay) : [];
 
-	//public override void OnClick(Database.Models.Task task) {
+	//public override void OnClick(Database.Types.Task task) {
 	//	pageController.ChangePage<TaskDetailsPageViewModel>();
 	//	Console.WriteLine("month graph panel model click");
 	//}

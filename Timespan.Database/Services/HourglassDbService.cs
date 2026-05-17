@@ -3,7 +3,7 @@
 using Avalonia.Media;
 using DatabaseUtil;
 
-using Timespan.Database.Models;
+using Types = Timespan.Types.Models;
 using Timespan.Database.Services.Interfaces;
 using Timespan.Util.Services;
 using System;
@@ -16,19 +16,19 @@ public partial class HourglassDbService : IHourglassDbService {
 		new(PathService.FilesPath("database"), DatabasePathFormat.FileName, null);
 
 
-    public async Task<bool> UpdateTaskAsync(Models.Task updatedTask) =>
+    public async Task<bool> UpdateTaskAsync(Types.Task updatedTask) =>
         await _accessor.UpdateAsync(updatedTask, false);
 
-    public async System.Threading.Tasks.Task DeleteTaskAsync(Models.Task task) =>
+    public async Task DeleteTaskAsync(Types.Task task) =>
         await _accessor.DeleteAsync(task);
 
 
-    public async Task<Models.Task> StartNewTaskAsnc(string description, Color color, Project? project, Worker worker, Ticket? ticket) {
+    public async Task<Types.Task> StartNewTaskAsnc(string description, Color color, Types.Project? project, Types.Worker worker, Types.Ticket? ticket) {
         long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-        Models.Task task = new() {
+        Types.Task task = new() {
             DisplayColor = color,
             description = description,
-            blocksTime = BlockedTimeIntervallType.None,
+            blocksTime = Types.BlockedTimeIntervallType.None,
             owner = worker,
             project = project,
             running = true,
@@ -39,8 +39,8 @@ public partial class HourglassDbService : IHourglassDbService {
         return task;
     }
 
-    public async Task<Models.Task> ContiniueTaskAsync(Models.Task taskToContiniue) { 
-		Models.Task? runningTask = await QueryCurrentTaskAsync();
+    public async Task<Types.Task> ContiniueTaskAsync(Types.Task taskToContiniue) { 
+		Types.Task? runningTask = await QueryCurrentTaskAsync();
 		if (runningTask != null)
 			await FinishCurrentTaskAsync(
 				runningTask.start,
@@ -55,8 +55,8 @@ public partial class HourglassDbService : IHourglassDbService {
 		return taskToContiniue;
 	}
 
-	public async Task<Models.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Project? project, Ticket? ticket) {
-		Models.Task? current = await QueryCurrentTaskAsync();
+	public async Task<Types.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Types.Project? project, Types.Ticket? ticket) {
+		Types.Task? current = await QueryCurrentTaskAsync();
 		if (current == null)
 			return null;
 		if (start != null)
@@ -70,16 +70,16 @@ public partial class HourglassDbService : IHourglassDbService {
 	}
 
 
-    public async Task<Models.Task> CreateIntervallBlockingTaskAsync(BlockedTimeIntervallType type, DateTime date, long duration) {
+    public async Task<Types.Task> CreateIntervallBlockingTaskAsync(Types.BlockedTimeIntervallType type, DateTime date, long duration) {
         string reason = type switch {
-            BlockedTimeIntervallType.Vacant => "Urlaub",
-            BlockedTimeIntervallType.Holiday => "Feiertag",
-            BlockedTimeIntervallType.Sick => "Krank",
-            BlockedTimeIntervallType.NoExcuse => "Unentschuldigt",
-            BlockedTimeIntervallType.None => "",
+            Types.BlockedTimeIntervallType.Vacant => "Urlaub",
+			Types.BlockedTimeIntervallType.Holiday => "Feiertag",
+			Types.BlockedTimeIntervallType.Sick => "Krank",
+            Types.BlockedTimeIntervallType.NoExcuse => "Unentschuldigt",
+            Types.BlockedTimeIntervallType.None => "",
             _ => ""
         };
-        Models.Task task = new() {
+        Types.Task task = new() {
             description = reason,
             blocksTime = type,
             owner = null,

@@ -2,32 +2,33 @@
 
 using System;
 
-using Util = Timespan.Util;
 using Timespan.Database.Services.Interfaces;
-using Models = Timespan.Database.Models;
+
+using Types = Timespan.Types.Models;
+using Util = Timespan.Util;
 
 
 public class CacheService : Util.Services.CacheService {
 
-    private Models.Task? runningTask;
-    public Models.Task? RunningTask {
+    private Types.Task? runningTask;
+    public Types.Task? RunningTask {
         set {
             runningTask = value?.Clone();
             OnRunningTaksChanged?.Invoke(runningTask);
         }
         get => runningTask;
     }
-    public event Action<Models.Task?>? OnRunningTaksChanged;
+    public event Action<Types.Task?>? OnRunningTaksChanged;
 
-    private Models.Task? selectedTask;
-    public Models.Task? SelectedTask {
+    private Types.Task? selectedTask;
+    public Types.Task? SelectedTask {
         set {
             selectedTask = value?.Clone();
             OnSelectedTaksChanged?.Invoke(selectedTask);
         }
         get => selectedTask;
     }
-    public event Action<Models.Task?>? OnSelectedTaksChanged;
+    public event Action<Types.Task?>? OnSelectedTaksChanged;
 
     public CacheService(IHourglassDbService dbService) : base() {
         RunningTask = dbService.QueryCurrentTaskAsync().Result;

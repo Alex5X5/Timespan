@@ -114,7 +114,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		}
 	}
 
-	private void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
+	private void DrawTaskGraph(DrawingContext context, Database.Types.Task task, int i) {
 		Rect rect = GetTaskRectanlge(task, 0, 0, i);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(20, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
@@ -136,7 +136,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		DrawTaskDescriptionStub(context, task, rect);
 	}
 
-	private void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, Rect taskRect) {
+	private void DrawTaskDescriptionStub(DrawingContext context, Database.Types.Task task, Rect taskRect) {
 		var formattedText = new FormattedText(
 			task.description.Length <= MAX_TASK_DESCRIPTION_CHARS ? task.description : task.description[..MAX_TASK_DESCRIPTION_CHARS] + "...",
 			System.Globalization.CultureInfo.CurrentCulture,

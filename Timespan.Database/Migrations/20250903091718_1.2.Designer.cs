@@ -30,7 +30,7 @@ namespace Timespan.Database.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("Timespan.Database.Models.Task", b =>
+            modelBuilder.Entity("Timespan.Database.Types.Task", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,7 +122,7 @@ namespace Timespan.Database.Migrations
                     b.ToTable("Worker");
                 });
 
-            modelBuilder.Entity("Timespan.Database.Models.Task", b =>
+            modelBuilder.Entity("Timespan.Database.Types.Task", b =>
                 {
                     b.HasOne("Timespan.Database.Models.Worker", "owner")
                         .WithMany()

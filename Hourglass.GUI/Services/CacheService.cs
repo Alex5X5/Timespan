@@ -6,25 +6,25 @@ using System;
 
 public class CacheService : Util.Services.CacheService {
 
-    private Database.Models.Task? runningTask;
-    public Database.Models.Task? RunningTask {
+    private Database.Types.Task? runningTask;
+    public Database.Types.Task? RunningTask {
         set {
             runningTask = value?.Clone();
             OnRunningTaksChanged?.Invoke(runningTask);
         }
         get => runningTask;
     }
-    public event Action<Database.Models.Task?>? OnRunningTaksChanged;
+    public event Action<Database.Types.Task?>? OnRunningTaksChanged;
 
-    private Database.Models.Task? selectedTask;
-    public Database.Models.Task? SelectedTask {
+    private Database.Types.Task? selectedTask;
+    public Database.Types.Task? SelectedTask {
         set {
             selectedTask = value?.Clone();
             OnSelectedTaksChanged?.Invoke(selectedTask);
         }
         get => selectedTask;
     }
-    public event Action<Database.Models.Task?>? OnSelectedTaksChanged;
+    public event Action<Database.Types.Task?>? OnSelectedTaksChanged;
 
     public CacheService(IHourglassDbService dbService) : base() {
         RunningTask = dbService.QueryCurrentTaskAsync().Result;

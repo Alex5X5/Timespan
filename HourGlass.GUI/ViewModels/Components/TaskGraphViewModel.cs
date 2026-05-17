@@ -5,8 +5,8 @@ using ReactiveUI;
 
 public class TaskGraphViewModel : ViewModelBase {
 
-	private Database.Models.Task task;
-	public Database.Models.Task Task {
+	private Database.Types.Task task;
+	public Database.Types.Task Task {
         set => this.RaiseAndSetIfChanged(ref task, value);
         get => task;
     }
@@ -75,9 +75,9 @@ public class TaskGraphViewModel : ViewModelBase {
         get => index;
     }
 
-    public TaskGraphViewModel() : this(new Database.Models.Task()) { }
+    public TaskGraphViewModel() : this(new Database.Types.Task()) { }
 
-	public TaskGraphViewModel(Database.Models.Task task) {
+	public TaskGraphViewModel(Database.Types.Task task) {
 		this.task = task;
     }
 }

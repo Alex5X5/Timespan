@@ -21,7 +21,7 @@ public partial class TaskGraph : UserControl {
 		//}
 	}
 
-	public Database.Models.Task? Task {
+	public Database.Types.Task? Task {
 		set; get;
 	}
 

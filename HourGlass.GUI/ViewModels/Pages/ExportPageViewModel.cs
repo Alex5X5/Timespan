@@ -55,7 +55,7 @@ public partial class ExportPageViewModel : MainViewChildPageViewModel, INotifyPr
     public string SickDays => pdfData?.SickDays ?? "";
 	public string TotalMissingDays => pdfData?.TotalMissingDays ?? "";
 
-    private Action<Database.Models.Task> OnTextBockClick;
+    private Action<Database.Types.Task> OnTextBockClick;
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -135,7 +135,7 @@ public partial class ExportPageViewModel : MainViewChildPageViewModel, INotifyPr
 		}
     }
 
-    public void OnTaskRedirect(Database.Models.Task task) {
+    public void OnTaskRedirect(Database.Types.Task task) {
 		cacheService.SelectedTask = task;
 		pageController.ChangePage<TaskDetailsPageViewModel>();
 		Console.WriteLine($"redirect event for task {task}");
@@ -149,7 +149,7 @@ public abstract partial class TextboxItem {
 
 	public string Text { get; set; } = "";
 
-	public Database.Models.Task Task {
+	public Database.Types.Task Task {
 		set;
 		get;
 	}

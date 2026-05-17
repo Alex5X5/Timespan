@@ -17,7 +17,7 @@ using System.Threading;
 using Timespan.GUI.Services;
 using Timespan.GUI.ViewModels.Graphs;
 
-using Database = Timespan.Database;
+using Types = Timespan.Types.Models;
 
 public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 
@@ -93,7 +93,7 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 		}
 	}
 
-	public void OnTaskRedirect(Database.Models.Task task) {
+	public void OnTaskRedirect(Types.Task task) {
 		cacheService.SelectedTask = task;
 		redirectionService.GetAnchor<GraphsViewModel, IGraphsViewChild>()?.ChangeModel<DayViewModel>();
 		redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.ChangeModel<GraphsViewModel>(x=>x?.ShowTask());
@@ -130,7 +130,7 @@ public abstract class TextboxItem {
 
 	public string Text { get; set; } = "";
 
-	public Database.Models.Task Task { set; get; }
+	public Types.Task Task { set; get; }
 }
 
 public class DescriptionItem : TextboxItem {

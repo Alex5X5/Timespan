@@ -1,9 +1,6 @@
 ﻿namespace Timespan.PDF.Services;
 
-using Timespan.Database.Models;
-using Timespan.Database.Services.Interfaces;
-using Timespan.PDF.Services.Interfaces;
-using Timespan.Util.Services;
+using Avalonia.Styling;
 
 using System;
 using System.Collections.Generic;
@@ -11,6 +8,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+
+using Timespan.Database.Services.Interfaces;
+using Timespan.PDF.Services.Interfaces;
+using Timespan.Util.Services;
+
+using Types = Timespan.Types.Models;
 
 public unsafe partial class PdfService : IPdfService, IDisposable {
 
@@ -126,7 +129,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Stopwatch prepareContentStopwatch = new();
 		prepareContentStopwatch.Start();
 		Console.WriteLine("started preparing content for the document");
-		List<Database.Models.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
+		List<Types.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
 		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
 			{ "monday", DayOfWeek.Monday },
 			{ "tuesday", DayOfWeek.Tuesday },
@@ -144,10 +147,10 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
-			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
+			List<Types.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
 			if (tasks_.Count == 0)
 				continue;
-			foreach (Database.Models.Task task in tasks_) {
+			foreach (Types.Task task in tasks_) {
 				if (progressReporter.IsCancellationRequested) {
 					progressReporter.ReportProgress(currentStep, "Cancelling...");
 					Thread.Sleep(500);
@@ -220,7 +223,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Stopwatch prepareContentStopwatch = new();
 		prepareContentStopwatch.Start();
 		Console.WriteLine("started preparing content for the document");
-		List<Database.Models.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
+		List<Types.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
 		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
 			{ "monday", DayOfWeek.Monday },
 			{ "tuesday", DayOfWeek.Tuesday },
@@ -238,10 +241,10 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
-			List<Database.Models.Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
+			List<Types.Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
 			if (tasks_.Count == 0)
 				continue;
-			foreach (Database.Models.Task task in tasks_) {
+			foreach (Types.Task task in tasks_) {
 				if (task.running)
 					continue;
 				string[] compiledTask = CompileTask(task);
@@ -299,7 +302,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			if (!WaitForIndexing())
 				return null;
 		PdfDocumentData data = new PdfDocumentData();
-		List<Database.Models.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
+		List<Types.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
 		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
 			{ "monday", DayOfWeek.Monday },
 			{ "tuesday", DayOfWeek.Tuesday },
@@ -312,20 +315,20 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
-			Task[] lineTaks = new Task[lines.Length];
+			Types.Task[] lineTaks = new Types.Task[lines.Length];
 			string[] hours = ["", "", "", "", "", ""];
 			string[] hourRanges = ["", "", "", "", "", ""];
-			List<Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
+			List<Types.Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
             if (tasks_.Count == 0) {
 				dayCounter++;
 				continue;
 			}
 			DateTime date_ = DateTimeService.FloorDay(DateTimeService.FloorWeek(selectedWeek).AddDays(dayCounter));
-            Task? blockedBy = _dbService.QueryBlockingTasksAtDateAsync(date_).Result.FirstOrDefault();
+            Types.Task? blockedBy = _dbService.QueryBlockingTasksAtDateAsync(date_).Result.FirstOrDefault();
 			if (blockedBy != null) {
 				lines[0] = blockedBy.description;
 			} else {
-				foreach (Task task in tasks_) {
+				foreach (Types.Task task in tasks_) {
 					if (task.running)
 						continue;
 					string[] compiledTask = CompileTaskPreview(task);
@@ -366,23 +369,23 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		bool[] missingDays = new bool[5000];
 		long startDateSeconds = DateTimeService.ToSeconds(settingsService.StartDate);
 		long maxDateSeconds = DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay));
-		List<Task> blockingTasks = _dbService.QueryBlockingTasksInIntervallAsync(startDateSeconds, maxDateSeconds).Result;
-        foreach (Task t in blockingTasks) {
+		List<Types.Task> blockingTasks = _dbService.QueryBlockingTasksInIntervallAsync(startDateSeconds, maxDateSeconds).Result;
+        foreach (Types.Task t in blockingTasks) {
 			long taskStartOffsetSeconds = t.start - startDateSeconds;
 			int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
-			if(t.blocksTime==Database.BlockedTimeIntervallType.Sick | t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+			if(t.blocksTime==Types.BlockedTimeIntervallType.Sick | t.blocksTime == Types.BlockedTimeIntervallType.NoExcuse)
 				missingDays[taskStartOffsetDays] = true;
         }
 		data.TotalMissingDays=Convert.ToString(missingDays.Count(c => c ==true));
         startDateSeconds = DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
         bool[] newMissingDays = new bool[7];
         bool[] newSickDays = new bool[7];
-        foreach (Task t in blockingTasks.Where(x=>x.start>startDateSeconds).ToList()) {
+        foreach (Types.Task t in blockingTasks.Where(x=>x.start>startDateSeconds).ToList()) {
             long taskStartOffsetSeconds = t.start - startDateSeconds;
             int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
-            if (t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+            if (t.blocksTime == Types.BlockedTimeIntervallType.NoExcuse)
                 newMissingDays[taskStartOffsetDays] = true;
-            if (t.blocksTime == Database.BlockedTimeIntervallType.Sick)
+            if (t.blocksTime == Types.BlockedTimeIntervallType.Sick)
                 newSickDays[taskStartOffsetDays] = true;
         }
         data.TotalMissingDays = Convert.ToString(missingDays.Count(c => c == true));
@@ -399,7 +402,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		throw new NotImplementedException();
 	}
 
-	public static string[] CompileTask(Database.Models.Task task) {
+	public static string[] CompileTask(Types.Task task) {
 		string source = "";
 		List<string> res = [];
 		if (task.project != null)
@@ -422,7 +425,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		return res.ToArray();
 	}
 
-    public static string[] CompileTaskPreview(Task task) {
+    public static string[] CompileTaskPreview(Types.Task task) {
         string source = "";
         List<string> res = [];
         if (task.project != null)
@@ -462,22 +465,22 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
         bool[] missingDays = new bool[5000];
         long startDateSeconds = DateTimeService.ToSeconds(settingsService.StartDate);
         long maxDateSeconds = DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay));
-        List<Task> blockingTasks = _dbService.QueryBlockingTasksInIntervallAsync(startDateSeconds, maxDateSeconds).Result;
-        foreach (Task t in blockingTasks) {
+        List<Types.Task> blockingTasks = _dbService.QueryBlockingTasksInIntervallAsync(startDateSeconds, maxDateSeconds).Result;
+        foreach (Types.Task t in blockingTasks) {
             long taskStartOffsetSeconds = t.start - startDateSeconds;
             int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
-            if (t.blocksTime == Database.BlockedTimeIntervallType.Sick | t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+            if (t.blocksTime == Types.BlockedTimeIntervallType.Sick | t.blocksTime == Types.BlockedTimeIntervallType.NoExcuse)
                 missingDays[taskStartOffsetDays] = true;
         }
         startDateSeconds = DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
         bool[] newMissingDays = new bool[7];
         bool[] newSickDays = new bool[7];
-        foreach (Task t in blockingTasks.Where(x => x.start > startDateSeconds).ToList()) {
+        foreach (Types.Task t in blockingTasks.Where(x => x.start > startDateSeconds).ToList()) {
             long taskStartOffsetSeconds = t.start - startDateSeconds;
             int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
-            if (t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+            if (t.blocksTime == Types.BlockedTimeIntervallType.NoExcuse)
                 newMissingDays[taskStartOffsetDays] = true;
-            if (t.blocksTime == Database.BlockedTimeIntervallType.Sick)
+            if (t.blocksTime == Types.BlockedTimeIntervallType.Sick)
                 newSickDays[taskStartOffsetDays] = true;
         }
 		int totalMissingDaysCount = missingDays.Count(c => c == true);
@@ -516,7 +519,7 @@ public class PdfDocumentData {
 	public const int TOTAL_MISSING_DAYS_INDEX = WEEK_LINE_COUNT + 7;
 	public const int TOTAL_TIME_INDEX = WEEK_LINE_COUNT + 8;
 
-	public ValueTuple<string, string, string, Task>[] Data = new ValueTuple<string, string, string, Task>[DOCUMENT_FIELD_COUNT];
+	public ValueTuple<string, string, string, Types.Task>[] Data = new ValueTuple<string, string, string, Types.Task>[DOCUMENT_FIELD_COUNT];
 
 	public string UserName {
 		set => Data[USER_NAME_INDEX].Item1 = value;
@@ -557,7 +560,7 @@ public class PdfDocumentData {
 
 	public PdfDocumentData() {
         for (int i = 0; i < DOCUMENT_FIELD_COUNT; i++)
-            Data[i] = new ValueTuple<string, string, string, Task>();
+            Data[i] = new ValueTuple<string, string, string, Types.Task>();
         JobName = "Example Job Name";
 		UserName = "Example User";
 		DateFrom = "1.10.1999";

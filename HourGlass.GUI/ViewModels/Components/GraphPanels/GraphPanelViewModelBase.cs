@@ -110,7 +110,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	}
 
 	protected void SetTasks(TimeIntervalchange change) {
-		List<Database.Models.Task> tasks = GetTasksAsync().Result;
+		List<Database.Types.Task> tasks = GetTasksAsync().Result;
 		int skippedCounter = 0;
 		for (int i = 0; i < tasks.Count; i++) {
 			if (tasks[i].blocksTime != BlockedTimeIntervallType.None) {
@@ -182,7 +182,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public void UpdateColumnMarkers() {
 		long start = TIME_INTERVALL_START_SECONDS;
 		long finish = start + X_AXIS_SEGMENT_DURATION;
-		List<Database.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
+		List<Database.Types.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
 		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
 			BlockedColumns[i] = tasks
 				.Where(x => x.start >= start && x.start <= finish)
@@ -193,11 +193,11 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		}
 	}
 
-	public abstract Task<List<Database.Models.Task>> GetTasksAsync();
+	public abstract Task<List<Database.Types.Task>> GetTasksAsync();
 
 	protected abstract string GetTitle();
 
-	public virtual void OnTaskClicked(Database.Models.Task task) {
+	public virtual void OnTaskClicked(Database.Types.Task task) {
 		cacheService.SelectedTask = task;
 		pageController.GoToTaskdetails(task);
 	}
@@ -224,10 +224,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		}
 		long start = TIME_INTERVALL_START_SECONDS;
 		long finish = start + X_AXIS_SEGMENT_DURATION;
-		List<Database.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
+		List<Database.Types.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
 		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
 			if (MarkedColumns[i]) {
-				IEnumerable<Database.Models.Task> tasks_ = tasks
+				IEnumerable<Database.Types.Task> tasks_ = tasks
 					.Where(x => x.start >= start && x.start <= finish)
 						.Where(x => x.finish >= start && x.finish <= finish);
 				if (!tasks_.Any()) {
@@ -242,10 +242,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public async Task SetTimeIntervallUnblocked() {
 		long start = TIME_INTERVALL_START_SECONDS;
 		long finish = start + X_AXIS_SEGMENT_DURATION;
-		List<Database.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
+		List<Database.Types.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
 		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
 			if (MarkedColumns[i]) {
-				IEnumerable<Database.Models.Task> tasks_ = tasks
+				IEnumerable<Database.Types.Task> tasks_ = tasks
 					.Where(x => x.start >= start && x.start <= finish)
 						.Where(x => x.finish >= start && x.finish <= finish);
 				foreach (var task in tasks_)

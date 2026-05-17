@@ -1,14 +1,17 @@
 ﻿namespace Timespan.Database;
 
+using System;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using System;
+
+using Types = Timespan.Types.Models;
 
 public class HourglassDbContext : DbContext {
 
-	public DbSet<Models.Task> Tasks { get; set; }
-	public DbSet<Models.Project> Projects { get; set; }
-	public DbSet<Models.Ticket> Tickets { get; set; }
+	public DbSet<Types.Task> Tasks { get; set; }
+	public DbSet<Types.Project> Projects { get; set; }
+	public DbSet<Types.Ticket> Tickets { get; set; }
 
 	public HourglassDbContext(DbContextOptions options) : base(options) {
 		foreach (var entityType in Model.GetEntityTypes()) {

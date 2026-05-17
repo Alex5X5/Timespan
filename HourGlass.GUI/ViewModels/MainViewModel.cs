@@ -152,7 +152,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		ChangePage<ExportPageViewModel>();
 	}
 
-	public void GoToTaskdetails(Database.Models.Task task) {
+	public void GoToTaskdetails(Database.Types.Task task) {
 		ChangePage<TaskDetailsPageViewModel>();
 	}
 

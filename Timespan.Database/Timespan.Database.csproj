@@ -16,6 +16,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DatabaseUtil\DatabaseUtil.csproj" />
 		<ProjectReference Include="..\Timespan.Util\Timespan.Util.csproj" />
+		<ProjectReference Include="..\Timespan.Types\Timespan.Types.csproj" />
 	</ItemGroup>
 
 </Project>

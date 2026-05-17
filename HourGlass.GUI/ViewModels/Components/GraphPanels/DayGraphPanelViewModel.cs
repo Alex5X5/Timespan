@@ -40,7 +40,7 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 	public DayGraphPanelViewModel(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
 		: base(graphFactory, dbService, dateTimeService, panelController, pageController, cacheService) { }
 
-	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
+	public async override Task<List<Database.Types.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(cacheService.SelectedDay) : [];
 
 	public override void OnDoubleClick(DateTime clickedTime) {
