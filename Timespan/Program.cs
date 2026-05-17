@@ -1,4 +1,4 @@
-namespace Hourglass;
+namespace Timespan;
 
 using Avalonia;
 using Timespan.GUI;
