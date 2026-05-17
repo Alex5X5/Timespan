@@ -49,7 +49,7 @@
 			   Grid.Column="0"
 			   Grid.ColumnSpan="3"
 			   Background="{ DynamicResource HeaderBarBackgroundColor }">
-			<Grid ShowGridLines="false">
+			<Grid ShowGridLines="False">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="1*"/>
 					<RowDefinition Height="3*"/>
@@ -57,26 +57,34 @@
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="15*"/>
-					<ColumnDefinition Width="29*"/>
+					<ColumnDefinition Width="4*"/>
+					<ColumnDefinition Width="10*"/>
+					<ColumnDefinition Width="30*"/>
 					<ColumnDefinition Width="5*"/>
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="5*"/>
 					<ColumnDefinition Width="2*"/>
 				</Grid.ColumnDefinitions>
+				<Viewbox Grid.Row="1"
+						 Grid.Column="1"
+						 Stretch="Uniform">
+					<!--
+					<Image Source="avares://Timespan.GUI/Assets/Images/test.png"  />
+					-->
+				</Viewbox>
 				<TextBlock Grid.Row="1"
-						   Grid.Column="1"
+						   Grid.Column="2"
 						   FontFamily="{StaticResource CustomBoldonseFont}"
 						   FontWeight="Medium"
-						   LetterSpacing="1.5"
+						   LetterSpacing="1.55"
 						   Foreground="White"
-						   FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.1 }"
+						   FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.0 }"
 						   Padding="0"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"
-						   Text="timespan "/>
+						   Text="timespan"/>
 				<Viewbox Grid.Row="1"
-						 Grid.Column="5"
+						 Grid.Column="6"
 						 Stretch="Uniform">
 					<Button Width="80"
 							Height="80"
