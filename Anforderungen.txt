@@ -5,3 +5,8 @@
 ? einfügen von Tasks aus der zwischenablage
 
 keine start stop beschriftung -> start/stop newuestart symbole neben timer feldern
+
+
+!Typefaces beachten
+!Textgrößen genau beachten
+!Navigation Bar zu "zerbrechlich" -> Font genau nachmachen
