@@ -24,7 +24,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\HourGlass.PDF\Timespan.PDF.csproj" />
+	  <ProjectReference Include="..\Timespan.PDF\Timespan.PDF.csproj" />
 	  <ProjectReference Include="..\Timespan.Database\Timespan.Database.csproj" />
   </ItemGroup>
 
