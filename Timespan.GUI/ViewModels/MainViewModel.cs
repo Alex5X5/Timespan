@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 
 using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.ViewModels.Settings;
 
 public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
@@ -71,6 +72,9 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 			OnPropertyChanged(nameof(ExportButtonSelected));
 			OnPropertyChanged(nameof(CurrentPage));
 		};
+
+		if (GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
+			dispatcher += args => CurrentPageAnchor.ChangeModel<GraphsViewModel>();
 	}
 
 	[RelayCommand]

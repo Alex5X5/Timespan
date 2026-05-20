@@ -5,17 +5,18 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Timespan.PDF.Services.Interfaces;
-using Timespan.PDF.Services;
-using Timespan.Util.Services;
-
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
 using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.ViewModels.Graphs;
+using Timespan.PDF.Services;
+using Timespan.PDF.Services.Interfaces;
+using Timespan.Types.Models;
+using Timespan.Util.Services;
 
 using Types = Timespan.Types.Models;
 
@@ -64,6 +65,18 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 		this.pdf = pdf;
 		this.cacheService = cacheService;
 		TableItems = [];
+		Dispatcher.UIThread.InvokeAsync(
+			() => {
+				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
+				for (int day = 0; day < 5; day++)
+					for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
+						int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
+						TableItems.Add(new DescriptionItem { RowIndex = line, Text = data.Data[line].Item1, Task = data.Data[line].Item4 });
+						TableItems.Add(new HourItem { RowIndex = line, Text = data.Data[line].Item2, Task = data.Data[line].Item4 });
+						TableItems.Add(new HourRangeItem { RowIndex = line, Text = data.Data[line].Item3, Task = data.Data[line].Item4 });
+					}
+			}
+		);
 	}
 
 	[RelayCommand]
@@ -94,10 +107,8 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	public void OnTaskRedirect(Types.Task task) {
-		cacheService.SelectedTask = task;
-		redirectionService.GetAnchor<GraphsViewModel, IGraphsViewChild>()?.ChangeModel<DayViewModel>();
-		redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.ChangeModel<GraphsViewModel>(x=>x?.ShowTask());
 		Console.WriteLine($"redirect event for task {task}");
+		GlobalEventService.Raise(new ShowTaksEventArgs(task));
 	}
 
 	public void OnLoad() {

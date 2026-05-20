@@ -1,53 +1,46 @@
 ﻿namespace Timespan.GUI.Services; 
 
-using System.Linq;
-
-using CommunityToolkit.Mvvm.ComponentModel;
-
 public class GlobalEventService {
-
-
-	private interface IEntry { }
-
-
-	private sealed class Entry<TValue>(TValue value) : IEntry {
-		public TValue Value { get; set; } = value;
-	}
-
-
-	private readonly Dictionary<Type, Dictionary<string, IEntry>> _store;
-
-	public GlobalEventService() {
-		_store = [];
-	}
-
-	internal void Register<OwnerT, ChildT>(RedirectionAnchor<ChildT> newAnchor, string key = "anchor") {
-		Set<OwnerT, RedirectionAnchor<ChildT>>(key, newAnchor);
-	}
 	
-	internal RedirectionAnchor<ChildT>? GetAnchor<OwnerT, ChildT>(string key = "anchor") {
-		return Get<OwnerT, RedirectionAnchor<ChildT>>(key);
+	private static readonly Dictionary<Type, EventDispatcherBase> _store = [];
+
+	public static EventDispatcher<T> GetEvent<T>() where T : EventArgs {
+		var key = typeof(T);
+		if(!_store.ContainsKey(key))
+			_store[key] = new EventDispatcher<T>();
+		return (EventDispatcher<T>)_store[key];
 	}
 
-	private void Set<TOwner, TValue>(string key, TValue value) {
-		if (!_store.TryGetValue(typeof(TOwner), out var inner))
-			_store[typeof(TOwner)] = inner = new();
-		inner[key] = new Entry<TValue>(value);
-	}
-
-	private TValue? Get<TOwner, TValue>(string key) {
-		if (_store.TryGetValue(typeof(TOwner), out var inner)
-			&& inner.TryGetValue(key, out var entry)
-			&& entry is Entry<TValue> typed)
-			return typed.Value;
-		return default;
+	public static void Raise<T>(T args) where T : EventArgs {
+		GetEvent<T>().Invoke(args);
 	}
 }
 
+public class EventDispatcherBase {
+}
 
-public partial class EventRouter : ObservableObject {
+public partial class EventDispatcher<T> : EventDispatcherBase where T : EventArgs {
 
-	public EventRouter() {
-		
+	private Action<T>? callback;
+
+	public static EventDispatcher<T> operator +(EventDispatcher<T> dispatcher, Action<T> handler) {
+		dispatcher.callback += handler;
+		return dispatcher;
+	}
+
+	public static EventDispatcher<T> operator -(EventDispatcher<T> dispatcher, Action<T> handler) {
+		dispatcher.callback = (dispatcher.callback - handler) ?? (args => {});
+		return dispatcher;
+	}
+
+	public EventDispatcher() {
+	}
+
+	public EventDispatcher(Action<T> callback) {
+		this.callback += callback as Action<EventArgs>;
+	}
+
+	public void Invoke(T args) {
+		callback?.Invoke(args);
 	}
 }

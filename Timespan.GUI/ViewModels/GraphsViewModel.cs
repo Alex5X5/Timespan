@@ -5,10 +5,15 @@ using CommunityToolkit.Mvvm.Input;
 
 using System.Collections.ObjectModel;
 
+using Timespan.Database.Services;
+using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.ViewModels.Graphs;
 
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
+
+	private IHourglassDbService dbService;
 
 	public RedirectionAnchor<IGraphsViewChild> CurrentPageAnchor;
 	public IGraphsViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
@@ -28,7 +33,14 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	
 	public string DateString => CurrentPage?.GetDateString() ?? "Date";
 
-	public GraphsViewModel(RedirectionService redirectionService, ViewModelFactory<IGraphsViewChild> factory) : base() {
+	[ObservableProperty]
+	private GridLength spacerWidth = new(0, GridUnitType.Star);
+
+	[ObservableProperty]
+	private GridLength taskPanelWidth = new(0, GridUnitType.Star);
+
+	public GraphsViewModel(RedirectionService redirectionService, ViewModelFactory<IGraphsViewChild> factory, IHourglassDbService dbService) : base() {
+		this.dbService = dbService;
 		CurrentPageAnchor = new(factory);
 		redirectionService.Register<GraphsViewModel, IGraphsViewChild>(CurrentPageAnchor);
 		CurrentPageAnchor.ModelChanged += () => {
@@ -37,11 +49,41 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		};
 		Items = new() { "Day", "Week", "Month" };
 		SelectedItem = Items[0];
+		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
+			dispatcher += ShowTask;
 	}
 
 	[RelayCommand]
-	internal void ShowTask() {
-		CurrentPageAnchor.GoBack();
+	internal void HideTask() {
+		SpacerWidth = new GridLength(0, GridUnitType.Star);
+		TaskPanelWidth = new GridLength(0, GridUnitType.Star);
+	}
+
+	[RelayCommand]
+	internal void ShowTask(ShowTaksEventArgs args) {
+		Console.WriteLine("[GraphsView]:showing task");
+		if (args.Task is null) {
+			SpacerWidth = new GridLength(0, GridUnitType.Star);
+			TaskPanelWidth = new GridLength(0, GridUnitType.Star);
+		} else {
+			SpacerWidth = new GridLength(2, GridUnitType.Star);
+			TaskPanelWidth = new GridLength(24, GridUnitType.Star);
+
+		}
+	}
+
+	[RelayCommand]
+	internal void Select() {
+		if (dbService.QueryCurrentTaskAsync().Result is Timespan.Types.Models.Task task) {
+			var args = new ShowTaksEventArgs(task);
+			GlobalEventService.Raise(args);
+		}
+	}
+
+	[RelayCommand]
+	internal void Delete() {
+		var args = new ShowTaksEventArgs();
+		GlobalEventService.Raise(args);
 	}
 
 	private void UpdateMode(string mode) {

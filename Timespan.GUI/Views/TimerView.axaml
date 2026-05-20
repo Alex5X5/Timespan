@@ -43,13 +43,15 @@
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 CornerRadius="5,5,5,5"
-					 PlaceholderText="{ Binding $parent[cls:TimerView].StartLabelText }"/>
+					 PlaceholderText="{ Binding $parent[cls:TimerView].StartLabelText }"
+					 Text="{ Binding StartTextboxText }"/>
 			<TextBox Classes="Default DynamicTextHeight" 
 					 Grid.Row="3"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
 					 CornerRadius="5,5,5,5"
-					 PlaceholderText="{ Binding $parent[cls:TimerView].FinishLabelText }"/>
+					 PlaceholderText="{ Binding $parent[cls:TimerView].FinishLabelText }"
+					 Text="{ Binding FinishTextboxText }"/>
 			<TextBlock Text="{ Binding $parent[cls:TimerView].TitleLabelText }"
 					   Grid.Row="1"
 					   Grid.Column="0"
@@ -62,7 +64,8 @@
 					 VerticalContentAlignment="Top"
 					 TextWrapping="Wrap"
 					 CornerRadius="5,5,5,5"
-					 PlaceholderText="{ Binding $parent[cls:TimerView].DescriptionLabelText }"/>
+					 PlaceholderText="{ Binding $parent[cls:TimerView].DescriptionLabelText }"
+					 Text="{ Binding DescriptionTextboxText }"/>
 			<Grid Grid.Row="7"
 				  Grid.Column="0"
 				  Grid.ColumnSpan="3"
@@ -136,7 +139,8 @@
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Background="{ StaticResource ResourceKey=StartButtonColor }"
-						Classes="DynamicBackground ThreeRounded DynamicTextHeight">
+						Classes="DynamicBackground ThreeRounded DynamicTextHeight"
+						Command="{ Binding StartTaskCommand}">
 					<TextBlock Text="{ Binding $parent[cls:TimerView].StartButtonText }" />
 				</Button>
 				<Button Name="stopButton"
@@ -144,7 +148,8 @@
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Background="{ StaticResource ResourceKey=StopButtonColor }"
-						Classes="DynamicBackground ThreeRounded DynamicTextHeight" >
+						Classes="DynamicBackground ThreeRounded DynamicTextHeight"
+						Command="{ Binding StopTaskCommand  }" >
 					<TextBlock Text="{ Binding $parent[cls:TimerView].StopButtonText }" />
 				</Button>
 			</Grid>

@@ -28,115 +28,151 @@
         </DataTemplate>
     </UserControl.DataTemplates>
 
-    <Grid ShowGridLines="False">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="6*" />
-			<RowDefinition Height="8*" />
-			<RowDefinition Height="3*" />
-			<RowDefinition Height="76*" />
-		</Grid.RowDefinitions>
+	
+	<Grid ShowGridLines="False">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="24*" />
+			<ColumnDefinition Width="61*" />
+			<ColumnDefinition Width="{ Binding SpacerWidth }" />
+			<ColumnDefinition Width="{ Binding TaskPanelWidth }" />
 		</Grid.ColumnDefinitions>
 
-		<Grid Grid.Row="1"
-			  ShowGridLines="False">
+		<Grid ShowGridLines="False">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="6*" />
+				<RowDefinition Height="8*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="76*" />
+			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="12*" />
-				<ColumnDefinition Width="1*" />
-				<ColumnDefinition Width="5*" />
-				<ColumnDefinition Width="1*" />
-				<ColumnDefinition Width="16*" />
-				<ColumnDefinition Width="1*" />
-				<ColumnDefinition Width="9*" />
-				<ColumnDefinition Width="1*" />
-				<ColumnDefinition Width="9*" />
-				<ColumnDefinition Width="5*" />
-				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="24*" />
 			</Grid.ColumnDefinitions>
 
-			<TextBlock Text="{ Binding $parent[cls:GraphsView].TitleLabelText }"
-					   Classes="h2" />
-			
-			<Grid Grid.Column="4"
-				  RowDefinitions="9*, 18*, 9*"
-				  ColumnDefinitions="15*, 4*, 4*"
+			<Grid Grid.Row="1"
 				  ShowGridLines="False">
-				<TextBlock Grid.Row="1"
-						   Grid.Column="0"
-						   Text="{ Binding DateString }"
-						   Classes="P1"
-						   TextAlignment="Right" />
-				<Button Grid.Row="1"
-						Grid.Column="1"
-						Classes="OnlyClick"
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="12*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="5*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="16*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="9*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="9*" />
+					<ColumnDefinition Width="5*" />
+					<ColumnDefinition Width="10*" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Text="{ Binding $parent[cls:GraphsView].TitleLabelText }"
+						   Classes="h2" />
+			
+				<Grid Grid.Column="4"
+					  RowDefinitions="9*, 18*, 9*"
+					  ColumnDefinitions="15*, 4*, 4*"
+					  ShowGridLines="False">
+					<TextBlock Grid.Row="1"
+							   Grid.Column="0"
+							   Text="{ Binding DateString }"
+							   Classes="P1"
+							   TextAlignment="Right" />
+					<Button Grid.Row="1"
+							Grid.Column="1"
+							Classes="OnlyClick"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch">
+						<Svg HorizontalAlignment="Stretch"
+							 VerticalAlignment="Stretch"
+							 Path="avares://Timespan.GUI/Assets/Images/pfeil-link.svg" />
+					</Button>
+					<Button Grid.Row="1"
+							Grid.Column="2"
+							Classes="OnlyClick"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch">
+						<Svg HorizontalAlignment="Stretch"
+							 VerticalAlignment="Stretch"
+							 Path="avares://Timespan.GUI/Assets/Images/pfeil-rechts.svg" />
+					</Button>
+				</Grid>
+
+				<Button	Grid.Column="6"
 						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch">
-					<Svg HorizontalAlignment="Stretch"
-						 VerticalAlignment="Stretch"
-						 Path="avares://Timespan.GUI/Assets/Images/pfeil-link.svg" />
+						VerticalAlignment="Stretch"
+						Padding="0,0,0,0"
+						Background="{ Binding $parent.Background }"
+						Command="{ Binding SelectCommand }">
+					<Grid RowDefinitions="*, 2*, 6*, 2*, *"
+						  ColumnDefinitions="2*, 8*, *, 18*, 2*"
+						  ShowGridLines="False">
+						<TextBlock Grid.Row="2"
+								   Grid.Column="3"
+								   Text="{ Binding $parent[cls:GraphsView].SelectButtonText }"
+								   Classes="P1" />
+						<Viewbox Grid.Row="2"
+								 Grid.Column="1"
+								 Stretch="Uniform">
+							<Svg Path="avares://Timespan.GUI/Assets/Images/haken-kreis.svg" />
+						</Viewbox>
+					</Grid>
 				</Button>
-				<Button Grid.Row="1"
-						Grid.Column="2"
-						Classes="OnlyClick"
+
+				<Button	Grid.Column="8"
 						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch">
-					<Svg HorizontalAlignment="Stretch"
-						 VerticalAlignment="Stretch"
-						 Path="avares://Timespan.GUI/Assets/Images/pfeil-rechts.svg" />
+						VerticalAlignment="Stretch"
+						Padding="0,0,0,0"
+						Background="{ Binding $parent.Background }"
+						Command="{ Binding DeleteCommand }">
+					<Grid RowDefinitions="*, 2*, 6*, 2*, *"
+						  ColumnDefinitions="2*, 8*, *, 18*, 2*"
+						  ShowGridLines="False">
+						<TextBlock Grid.Row="2"
+								   Grid.Column="3"
+								   Text="{ Binding $parent[cls:GraphsView].DeleteButtonText }"
+								   Classes="P1" />
+						<Viewbox Grid.Row="2"
+								 Grid.Column="1"
+								 Stretch="Uniform">
+							<Svg Path="avares://Timespan.GUI/Assets/Images/loeschen.svg" />
+						</Viewbox>
+					</Grid>
 				</Button>
+
+				<ComboBox Grid.Column="10"
+						  Classes="Default"
+						  ItemsSource="{ Binding Items }"
+						  SelectedItem="{ Binding SelectedItem }">
+				</ComboBox>
 			</Grid>
-
-			<Button	Grid.Column="6"
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Padding="0,0,0,0"
-					Background="{ Binding $parent.Background }">
-				<Grid RowDefinitions="*, 2*, 6*, 2*, *"
-					  ColumnDefinitions="2*, 8*, *, 18*, 2*"
-					  ShowGridLines="False">
-					<TextBlock Grid.Row="2"
-							   Grid.Column="3"
-							   Text="{ Binding $parent[cls:GraphsView].SelectButtonText }"
-							   Classes="P1" />
-					<Viewbox Grid.Row="2"
-							 Grid.Column="1"
-							 Stretch="Uniform">
-						<Svg Path="avares://Timespan.GUI/Assets/Images/haken-kreis.svg" />
-					</Viewbox>
-				</Grid>
-			</Button>
-
-			<Button	Grid.Column="8"
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Padding="0,0,0,0"
-					Background="{ Binding $parent.Background }">
-				<Grid RowDefinitions="*, 2*, 6*, 2*, *"
-					  ColumnDefinitions="2*, 8*, *, 18*, 2*"
-					  ShowGridLines="False">
-					<TextBlock Grid.Row="2"
-							   Grid.Column="3"
-							   Text="{ Binding $parent[cls:GraphsView].DeleteButtonText }"
-							   Classes="P1" />
-					<Viewbox Grid.Row="2"
-							 Grid.Column="1"
-							 Stretch="Uniform">
-						<Svg Path="avares://Timespan.GUI/Assets/Images/loeschen.svg" />
-					</Viewbox>
-				</Grid>
-			</Button>
-
-			<ComboBox Grid.Column="10"
-					  Classes="Default"
-					  ItemsSource="{ Binding Items }"
-					  SelectedItem="{ Binding SelectedItem }">
-			</ComboBox>
+			<ContentControl Grid.Row="3"
+							Grid.Column="1"
+							Grid.ColumnSpan="1"
+							Content="{ Binding CurrentPage }"/>
 		</Grid>
+		<Grid Grid.Row="0"
+			  Grid.Column="2"
+			  Grid.ColumnSpan="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="17*" />
+				<RowDefinition Height="76*" />
+			</Grid.RowDefinitions>
+			<Rectangle Fill="#D9D9D9"
+					   RadiusX="20"
+					   Grid.Row="1"
+					   RadiusY="20"/>
+			<Grid Grid.Row="1"
+				  ShowGridLines="True">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="2*" />
+					<RowDefinition Height="75*" />
+					<RowDefinition Height="2*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="52*" />
+					<ColumnDefinition Width="2*" />
+				</Grid.ColumnDefinitions>
 
-		<ContentControl Grid.Row="3"
-					    Grid.Column="1"
-					    Grid.ColumnSpan="1"
-						Content="{ Binding CurrentPage }"/>
+			</Grid>
+		</Grid>
 	</Grid>
 </UserControl>
