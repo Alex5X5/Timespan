@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 
 using System.Collections.ObjectModel;
 
-using Timespan.Database.Services;
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
 using Timespan.GUI.Types;
@@ -54,12 +53,6 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	[RelayCommand]
-	internal void HideTask() {
-		SpacerWidth = new GridLength(0, GridUnitType.Star);
-		TaskPanelWidth = new GridLength(0, GridUnitType.Star);
-	}
-
-	[RelayCommand]
 	internal void ShowTask(ShowTaksEventArgs args) {
 		Console.WriteLine("[GraphsView]:showing task");
 		if (args.Task is null) {
@@ -70,6 +63,23 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 			TaskPanelWidth = new GridLength(24, GridUnitType.Star);
 
 		}
+	}
+
+	[RelayCommand]
+	internal void HideTask() {
+		Console.WriteLine("[GraphsView]:hiding task");
+		SpacerWidth = new GridLength(0, GridUnitType.Star);
+		TaskPanelWidth = new GridLength(0, GridUnitType.Star);
+	}
+
+	[RelayCommand]
+	internal void DeleteTask() {
+		HideTask();
+	}
+
+	[RelayCommand]
+	internal void EditTask() {
+		
 	}
 
 	[RelayCommand]
