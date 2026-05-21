@@ -11,9 +11,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 
 using Timespan.GUI.Services;
-using Timespan.GUI.Types;
-using Timespan.GUI.ViewModels.Graphs;
-using Timespan.PDF.Services;
+using Timespan.GUI.Types.Events;
 using Timespan.PDF.Services.Interfaces;
 using Timespan.Types.Models;
 using Timespan.Util.Services;

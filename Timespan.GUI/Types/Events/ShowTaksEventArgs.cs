@@ -1,6 +1,6 @@
-﻿using Timespan.Types.Models;
+﻿namespace Timespan.GUI.Types.Events; 
 
-namespace Timespan.GUI.Types; 
+using Timespan.Types.Models;
 
 public class ShowTaksEventArgs(Task? task = null): EventArgs {
 	public Task? Task { get; set; } = task;

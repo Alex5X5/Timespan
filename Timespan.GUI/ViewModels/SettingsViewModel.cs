@@ -3,7 +3,9 @@
 using CommunityToolkit.Mvvm.Input;
 
 using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.ViewModels.Settings;
+using Timespan.Util.Services;
 
 public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 
@@ -11,9 +13,11 @@ public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 	internal ISettingsViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
 
 	private readonly RedirectionService redirectionService;
+	private readonly SettingsService settingsService;
 
-	public SettingsViewModel(RedirectionService redirectionService, ViewModelFactory<ISettingsViewChild> factory) : base() {
+	public SettingsViewModel(RedirectionService redirectionService, ViewModelFactory<ISettingsViewChild> factory, SettingsService settingsService) : base() {
 		this.redirectionService = redirectionService;
+		this.settingsService = settingsService;
 		CurrentPageAnchor = new(factory);
 		redirectionService.Register<SettingsViewModel, ISettingsViewChild>(CurrentPageAnchor);
 		CurrentPageAnchor.ModelChanged += () => {
@@ -23,6 +27,7 @@ public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	internal void OnSave() {
+		settingsService.SaveSettings();
 		redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.GoBack();
 	}
 

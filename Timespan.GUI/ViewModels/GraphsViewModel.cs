@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
-using Timespan.GUI.Types;
+using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Graphs;
 
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {

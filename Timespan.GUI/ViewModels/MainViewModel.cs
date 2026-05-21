@@ -2,10 +2,11 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
 using System.ComponentModel;
 
 using Timespan.GUI.Services;
-using Timespan.GUI.Types;
+using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Settings;
 
 public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
