@@ -2,13 +2,12 @@
 
 using Avalonia.Media;
 using Avalonia.Threading;
-
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using System.ComponentModel;
-
+using System.Threading.Tasks;
 using Timespan.Database.Services.Interfaces;
-using Timespan.Types.Models;
 using Timespan.Util.Services;
 
 
@@ -16,109 +15,83 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 
 	private IHourglassDbService dbService;
 	private Services.CacheService cacheService;
-	private MainViewModel controller;
 
-	private DispatcherTimer _timer;
+	private readonly DispatcherTimer _timer;
+	
+	[ObservableProperty]
+	private string descriptionTextboxText = "";
 
-	private string FallbackTaskDescription = "";
+	[ObservableProperty]
+	private string projectTextboxText = "";
 
-	public string DescriptionTextboxText {
-		set {
-			if (cacheService?.RunningTask != null)
-				cacheService.RunningTask.description = value;
-			else
-				FallbackTaskDescription = value;
-			OnPropertyChanged(nameof(DescriptionTextboxText));
-		}
-		get => cacheService?.RunningTask?.description ?? FallbackTaskDescription;
-	}
-	public string ProjectTextboxText {
-		set {
-			if (cacheService?.RunningTask != null)
-				cacheService.RunningTask.description = value;
-			OnPropertyChanged(nameof(ProjectTextboxText));
-		}
-		get => cacheService?.RunningTask?.project?.Name ?? "";
-	}
-	public string TicketTextboxText {
-		get => cacheService?.RunningTask?.ticket?.name ?? "";
-	}
-
-
+	[ObservableProperty]
 	private string startTextboxText = "";
-	public string StartTextboxText {
-		set {
-			startTextboxText = value;
-			OnPropertyChanged(nameof(FinishTextboxText));
-			DateTime? start = DateTimeService.InterpretDayAndTimeString(value);
-			if (start == null)
-				return;
-			if (cacheService?.RunningTask == null)
-				return;
-			cacheService.RunningTask.StartDateTime = start ?? cacheService.RunningTask.StartDateTime;
-		}
-		get => startTextboxText;
-	}
 
+	[ObservableProperty]
 	private string finishTextboxText = "";
-	public string FinishTextboxText {
-		set {
-			finishTextboxText = value;
-			OnPropertyChanged(nameof(FinishTextboxText));
-			DateTime? finish = DateTimeService.InterpretDayAndTimeString(value);
-			if (finish == null)
-				return;
-			if (cacheService?.RunningTask == null)
-				return;
-			cacheService.RunningTask.FinishDateTime = finish ?? cacheService.RunningTask.FinishDateTime;
-		}
-		get => finishTextboxText;
-	}
 
 	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
-    public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
-    public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
+	public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
+	public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
 
 
 	public TimerViewModel(IHourglassDbService dbService, Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
-		if (cacheService != null)
-			cacheService.OnRunningTaksChanged +=
-				task => AllBindingPropertiesChanged();
 		_timer = new DispatcherTimer {
 			Interval = TimeSpan.FromSeconds(1)
 		};
-		_timer.Tick += async (s, e) => {
-			try {
-				cacheService!.RunningTask!.FinishDateTime = DateTime.Now;
-				await dbService.UpdateTaskAsync(cacheService.RunningTask);
-				AllBindingPropertiesChanged();
-				//FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
-			} catch (Exception ex) {
-				StartTextboxText = $"Error: {ex.Message}";
-			}
-		};
+		_timer.Tick += TimerTick;
+	}
+
+	private void UpdateDisplayTask() {
+		if (cacheService.RunningTask is not Timespan.Types.Models.Task running)
+			return;
+		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime);
+		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
+		DescriptionTextboxText = cacheService.RunningTask.description;
+	}
+
+	private async Task UpdateCacheTask() {
+		if (cacheService.RunningTask is not Timespan.Types.Models.Task running)
+			return;
+		running.StartDateTime = DateTimeService.InterpretDayAndTimeString(StartTextboxText) ?? running.StartDateTime;
+		running.FinishDateTime = DateTimeService.InterpretDayAndTimeString(FinishTextboxText) ?? running.FinishDateTime;
+		running.description = DescriptionTextboxText;
+		cacheService.RunningTask = running;
+		await dbService.UpdateTaskAsync(running);
+	}
+
+	private async void TimerTick(object? sender, EventArgs args) {
+		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(DateTime.Now);
+        await UpdateCacheTask();
+		UpdateDisplayTask();
+	}
+
+	partial void OnDescriptionTextboxTextChanged(string value) {
+		if (cacheService.RunningTask is not Timespan.Types.Models.Task running)
+			return;
+		running.description = DescriptionTextboxText;
 	}
 
 	[RelayCommand]
-	private async System.Threading.Tasks.Task StartTask() {
+	private async Task StartTask() {
 		Console.WriteLine("model start task button event!");
 		if (dbService != null)
 			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
 				new Color(255, 79, 79, 79),
 				null,
-				new Worker { name = "new user" },
+				new Timespan.Types.Models.Worker { name = "new user" },
 				null
 			);
-		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask!.StartDateTime);
-		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
+		UpdateDisplayTask();
 		_timer.Start();
+		UpdateButtons();
 	}
 
 	[RelayCommand]
-	private async System.Threading.Tasks.Task StopTask() {
+	private async Task StopTask() {
 		Console.WriteLine("model stop task button event!");
 		_timer.Stop();
 		if (dbService != null)
@@ -132,14 +105,10 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		DescriptionTextboxText = "";
 		StartTextboxText = "";
 		FinishTextboxText = "";
+		UpdateButtons();
 	}
 
-	private void AllBindingPropertiesChanged() {
-		OnPropertyChanged(nameof(DescriptionTextboxText));
-		OnPropertyChanged(nameof(StartTextboxText));
-		OnPropertyChanged(nameof(FinishTextboxText));
-		OnPropertyChanged(nameof(TicketTextboxText));
-		OnPropertyChanged(nameof(ProjectTextboxText));
+	private void UpdateButtons() {
 		OnPropertyChanged(nameof(IsStartButtonEnabled));
 		OnPropertyChanged(nameof(IsStopButtonEnabled));
 		OnPropertyChanged(nameof(IsRestartButtonEnabled));
@@ -147,10 +116,10 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 
 	public void OnLoad() {
 		cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
+		UpdateButtons();
 		if (cacheService.RunningTask?.running ?? false) {
+			UpdateDisplayTask();
 			_timer.Start();
-			StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime);
-			FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
 		}
 	}
 

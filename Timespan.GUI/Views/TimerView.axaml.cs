@@ -1,5 +1,6 @@
 namespace Timespan.GUI.Views;
 
+using Timespan.GUI.ViewModels;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
 
@@ -28,5 +29,11 @@ internal partial class TimerView : UserControl {
 	public TimerView() {
 		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
         InitializeComponent();
-	}
+    }
+
+    private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        Console.WriteLine("Main View loaded!");
+        (DataContext as TimerViewModel)?.OnLoad();
+    }
 }

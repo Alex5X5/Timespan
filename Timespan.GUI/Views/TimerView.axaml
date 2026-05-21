@@ -7,7 +7,8 @@
 			 xmlns:models="using:Timespan.GUI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="models:TimerViewModel"
-             x:Class="Timespan.GUI.Views.TimerView">
+             x:Class="Timespan.GUI.Views.TimerView"
+			 Loaded="UserControl_Loaded">
 	<Grid ShowGridLines="False">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
@@ -43,7 +44,6 @@
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 CornerRadius="5,5,5,5"
-					 PlaceholderText="{ Binding $parent[cls:TimerView].StartLabelText }"
 					 Text="{ Binding StartTextboxText }"/>
 			<TextBox Classes="Default DynamicTextHeight" 
 					 Grid.Row="3"
