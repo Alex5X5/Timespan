@@ -33,6 +33,15 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	public string DateString => CurrentPage?.GetDateString() ?? "Date";
 
 	[ObservableProperty]
+	private bool showTaskPanel = false;
+
+	partial void OnShowTaskPanelChanged(bool value)
+	{
+		SpacerWidth = new(value ? 2 : 0, GridUnitType.Star);
+		TaskPanelWidth = new(value ? 24 : 0, GridUnitType.Star);
+	}
+
+	[ObservableProperty]
 	private GridLength spacerWidth = new(0, GridUnitType.Star);
 
 	[ObservableProperty]
@@ -56,20 +65,16 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	internal void ShowTask(ShowTaksEventArgs args) {
 		Console.WriteLine("[GraphsView]:showing task");
 		if (args.Task is null) {
-			SpacerWidth = new GridLength(0, GridUnitType.Star);
-			TaskPanelWidth = new GridLength(0, GridUnitType.Star);
+			HideTask();
 		} else {
-			SpacerWidth = new GridLength(2, GridUnitType.Star);
-			TaskPanelWidth = new GridLength(24, GridUnitType.Star);
-
+			ShowTaskPanel = true;
 		}
 	}
 
 	[RelayCommand]
 	internal void HideTask() {
 		Console.WriteLine("[GraphsView]:hiding task");
-		SpacerWidth = new GridLength(0, GridUnitType.Star);
-		TaskPanelWidth = new GridLength(0, GridUnitType.Star);
+		ShowTaskPanel = false;
 	}
 
 	[RelayCommand]

@@ -149,19 +149,23 @@
 			</Grid>
 			<ContentControl Grid.Row="3"
 							Grid.Column="1"
-							Grid.ColumnSpan="1"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
 							Content="{ Binding CurrentPage }"/>
 		</Grid>
 		<Grid Grid.Row="0"
 			  Grid.Column="2"
-			  Grid.ColumnSpan="1">
+			  Grid.ColumnSpan="1"
+			  IsVisible="{ Binding ShowTaskPanel }">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="17*" />
 				<RowDefinition Height="76*" />
 			</Grid.RowDefinitions>
 			<Rectangle Fill="#D9D9D9"
-					   RadiusX="20"
 					   Grid.Row="1"
+					   HorizontalAlignment="Stretch"
+					   VerticalAlignment="Stretch"
+					   RadiusX="20"
 					   RadiusY="20"/>
 			<Grid Grid.Row="1"
 				  ShowGridLines="False">
