@@ -44,6 +44,7 @@
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 CornerRadius="5,5,5,5"
+					 PlaceholderText="{ Binding $parent[cls:TimerView].StartLabelText }"
 					 Text="{ Binding StartTextboxText }"/>
 			<TextBox Classes="Default DynamicTextHeight" 
 					 Grid.Row="3"
@@ -140,6 +141,7 @@
 						VerticalAlignment="Stretch"
 						Background="{ StaticResource ResourceKey=StartButtonColor }"
 						Classes="DynamicBackground ThreeRounded DynamicTextHeight"
+						IsEnabled="{ Binding IsStartButtonEnabled }"
 						Command="{ Binding StartTaskCommand}">
 					<TextBlock Text="{ Binding $parent[cls:TimerView].StartButtonText }" />
 				</Button>
@@ -149,7 +151,8 @@
 						VerticalAlignment="Stretch"
 						Background="{ StaticResource ResourceKey=StopButtonColor }"
 						Classes="DynamicBackground ThreeRounded DynamicTextHeight"
-						Command="{ Binding StopTaskCommand  }" >
+						IsEnabled="{ Binding IsStopButtonEnabled }"
+						Command="{ Binding StopTaskCommand }" >
 					<TextBlock Text="{ Binding $parent[cls:TimerView].StopButtonText }" />
 				</Button>
 			</Grid>

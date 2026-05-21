@@ -32,7 +32,6 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 
 	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
 	public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
-	public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
 
 
 	public TimerViewModel(IHourglassDbService dbService, Services.CacheService cacheService) : base() {
@@ -111,7 +110,6 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	private void UpdateButtons() {
 		OnPropertyChanged(nameof(IsStartButtonEnabled));
 		OnPropertyChanged(nameof(IsStopButtonEnabled));
-		OnPropertyChanged(nameof(IsRestartButtonEnabled));
 	}
 
 	public void OnLoad() {
