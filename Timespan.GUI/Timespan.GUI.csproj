@@ -30,6 +30,9 @@
 	  <Compile Update="Views\ExportView.axaml.cs">
 	    <DependentUpon>ExportView.axaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Graphs\DayColumn.axaml.cs">
+	    <DependentUpon>DayColumn.axaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\Graphs\MonthView.axaml.cs">
 	    <DependentUpon>MonthView.axaml</DependentUpon>
 	  </Compile>
