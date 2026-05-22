@@ -10,7 +10,7 @@
              x:Class="Timespan.GUI.Views.ExportView"
 			 Loaded="UserControlLoaded">
 
-	<Grid RowDefinitions="3*, 35*, *, 4*, *" ColumnDefinitions="*, 10*, *">
+	<Grid RowDefinitions="2*, 38*, *, 3*" ColumnDefinitions="*, 10*, *">
 		<ScrollViewer HorizontalScrollBarVisibility="Disabled"
 			  VerticalScrollBarVisibility="Visible"
 			  Grid.Row="1"

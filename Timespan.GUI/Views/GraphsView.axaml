@@ -170,15 +170,15 @@
 					   RadiusX="20"
 					   RadiusY="20"/>
 			<Grid Grid.Row="1"
-				  ShowGridLines="True">
+				  ShowGridLines="False">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="2*" />
 					<RowDefinition Height="5*" />
 					<RowDefinition Height="3*" />
-					<RowDefinition Height="5*" />
+					<RowDefinition Height="4*" />
 					<RowDefinition Height="3*" />
 					<RowDefinition Height="20*" />
-					<RowDefinition Height="39*" />
+					<RowDefinition Height="40*" />
 					<RowDefinition Height="2*" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
@@ -227,6 +227,8 @@
 				</Grid>
 				<TextBlock Grid.Row="3"
 						   Grid.Column="1"
+						   HorizontalAlignment="Stretch"
+						   VerticalAlignment="Stretch"
 						   Classes="Default DynamicTextHeight"
 						   Text="{ Binding ShowingTaskDateString }"/>
 				<TextBlock Grid.Row="5"
