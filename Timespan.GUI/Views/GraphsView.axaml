@@ -39,7 +39,7 @@
 			<ColumnDefinition Width="24*" />
 			-->
 		</Grid.ColumnDefinitions>
-
+		
 		<Grid ShowGridLines="False">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="6*" />
@@ -51,6 +51,7 @@
 				<ColumnDefinition Width="24*" />
 			</Grid.ColumnDefinitions>
 
+			<!--task bar-->
 			<Grid Grid.Row="1"
 				  ShowGridLines="False">
 				<Grid.ColumnDefinitions>
@@ -153,6 +154,7 @@
 							VerticalAlignment="Stretch"
 							Content="{ Binding CurrentPage }"/>
 		</Grid>
+		<!--task details panel-->
 		<Grid Grid.Row="0"
 			  Grid.Column="2"
 			  Grid.ColumnSpan="1"
@@ -168,11 +170,15 @@
 					   RadiusX="20"
 					   RadiusY="20"/>
 			<Grid Grid.Row="1"
-				  ShowGridLines="False">
+				  ShowGridLines="True">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="2*" />
 					<RowDefinition Height="5*" />
-					<RowDefinition Height="70*" />
+					<RowDefinition Height="3*" />
+					<RowDefinition Height="5*" />
+					<RowDefinition Height="3*" />
+					<RowDefinition Height="20*" />
+					<RowDefinition Height="39*" />
 					<RowDefinition Height="2*" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
@@ -219,6 +225,17 @@
 						</Viewbox>
 					</Button>
 				</Grid>
+				<TextBlock Grid.Row="3"
+						   Grid.Column="1"
+						   Classes="Default DynamicTextHeight"
+						   Text="{ Binding ShowingTaskDateString }"/>
+				<TextBlock Grid.Row="5"
+						   Grid.Column="1"
+						   Classes="Default"
+						   HorizontalAlignment="Stretch"
+						   VerticalAlignment="Stretch"
+						   TextWrapping="Wrap"
+						   Text="{ Binding ShowingTaskDescription }"/>
 			</Grid>
 		</Grid>
 	</Grid>

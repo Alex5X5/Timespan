@@ -9,6 +9,7 @@ using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Graphs;
+using Timespan.Util.Services;
 
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
@@ -35,7 +36,19 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	private bool showTaskPanel = false;
 
-	partial void OnShowTaskPanelChanged(bool value)
+    [ObservableProperty]
+    private string showingTaskTitle = "a title";
+
+    [ObservableProperty]
+    private string showingTaskDescription = "lorem ipsum dolor sit amet condecteter";
+
+    [ObservableProperty]
+    private string showingTaskDateString = "Mi. 18. Feb. 2026";
+
+    [ObservableProperty]
+    private string showingTaskTimeString = "07:34 - 11:53";
+
+    partial void OnShowTaskPanelChanged(bool value)
 	{
 		SpacerWidth = new(value ? 2 : 0, GridUnitType.Star);
 		TaskPanelWidth = new(value ? 24 : 0, GridUnitType.Star);
@@ -68,6 +81,8 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 			HideTask();
 		} else {
 			ShowTaskPanel = true;
+			ShowingTaskDescription = args.Task.description;
+			
 		}
 	}
 
