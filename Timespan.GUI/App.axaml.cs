@@ -26,10 +26,6 @@ public partial class App : Application {
 	}
 
 	public override void OnFrameworkInitializationCompleted() {
-
-		PathService.PrintDetailedInfo();
-		PathService.ExtractFiles("Hourglass");
-
 		PageInstanciator instanciator = new(this);
 
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();

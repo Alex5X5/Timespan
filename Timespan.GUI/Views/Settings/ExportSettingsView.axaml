@@ -4,5 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Timespan.GUI.Views.Settings.ExportSettingsView">
-  Export Settings
+	
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/SettingsViewCommon.axaml" />
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/ExportSettingsView.styles.axaml" />
+	</UserControl.Styles>
 </UserControl>

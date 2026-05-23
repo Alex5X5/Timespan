@@ -8,8 +8,8 @@ using System.Text;
 
 public static class PathService {
 
-	public const string ASSETS_VERSION = "3";
-	public const string APP_NAME = "Hourglass";
+	public const int ASSETS_VERSION = 4;
+	public const string APP_NAME = "Timespan";
 
 	public static readonly string APP_FILES_DIRECTORY = Path.Combine(GetMainEntryPointDirectory(), APP_NAME);
 
@@ -23,10 +23,17 @@ public static class PathService {
 		if (!Directory.Exists(AssetsPath("")))
 			Directory.CreateDirectory(AssetsPath(""));
 		if (!File.Exists(fileName)) {
-			File.WriteAllText(fileName, ASSETS_VERSION);
+			File.WriteAllText(fileName, Convert.ToString(ASSETS_VERSION));
 			return true;
 		}
-		return File.ReadAllText(fileName) != ASSETS_VERSION;
+		string content = File.ReadAllText(fileName);
+		try {
+			var version = Convert.ToInt32(content);
+			return version < ASSETS_VERSION;
+		} catch(FormatException) {
+			File.WriteAllText(fileName, Convert.ToString(ASSETS_VERSION));
+			return true;
+		} 
 	}
 
     public static void ExtractFiles(string resourceNamespacePrefix) {

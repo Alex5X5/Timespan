@@ -5,7 +5,6 @@ namespace Timespan.GUI.Views.Settings;
 
 public partial class UserDataSettingsView : UserControl {
 
-
 	[TranslateMember("Views.Pages.Settings.UserData.Labels.Title", "User Data")]
 	public string TitleLabelText { get; set; } = "";
 

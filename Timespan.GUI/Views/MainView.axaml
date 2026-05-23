@@ -2,6 +2,7 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views"
 			 xmlns:views="using:Timespan.GUI.Views"
 			 xmlns:models="using:Timespan.GUI.ViewModels"
 			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
@@ -125,21 +126,21 @@
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding TimerButtonSelected }"
 						Command="{ Binding GoToTimerCommand}">
-					<TextBlock Text="Timer"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].TimerButtonText }"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="3"
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding GraphsButtonSelected }"
 						Command="{ Binding GoToGraphsCommand }">
-					<TextBlock Text="Graphen"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].GraphsButtonText }"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="5"
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding ExportButtonSelected }"
 						Command="{ Binding GoToExportCommand }">
-					<TextBlock Text="Exportieren"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].ExportButtonText }"/>
 				</Button>
 			</Grid>
 
@@ -168,35 +169,35 @@
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding GeneralSettingsButtonSelected }"
 						Command="{ Binding GoToGeneralSettingsCommand }">
-					<TextBlock Text="General"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].GeneralSettingsButtonText }"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="3"
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding UserDataSettingsButtonSelected }"
 						Command="{ Binding GoToUserDataSettingsCommand }">
-					<TextBlock Text="User Data"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].UserDataSettingsButtonText }"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="5"
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding AboutSettingsButtonSelected }"
 						Command="{ Binding GoToAboutSettingsCommand }">
-					<TextBlock Text="About"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].AboutSettingsButtonText }"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="7"
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding GraphicsSettingsButtonSelected }"
 						Command="{ Binding GoToGraphicsSettingsCommand }">
-					<TextBlock Text="Graphics"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].GraphicsSettingsButtonText }"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="9"
 						Classes="Rounded Navigation"
 						Classes.Selected="{ Binding ExportSettingsButtonSelected }"
 						Command="{ Binding GoToExportSettingsCommand }">
-					<TextBlock Text="Export"/>
+					<TextBlock Text="{ Binding $parent[cls:MainView].ExportSettingsButtonText }"/>
 				</Button>
 			</Grid>
 

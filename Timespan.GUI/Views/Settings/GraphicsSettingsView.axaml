@@ -10,9 +10,14 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="settingsModels:GraphicsSettingsViewModel"
              x:Class="Timespan.GUI.Views.Settings.GraphicsSettingsView">
+	
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/SettingsViewCommon.axaml" />
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/GraphicsSettingsView.styles.axaml" />
+	</UserControl.Styles>
   
 
-	<Grid ShowGridLines="True">
+	<Grid ShowGridLines="False">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="2*" />
@@ -30,8 +35,14 @@
 			<ColumnDefinition Width="6*" />
 		</Grid.ColumnDefinitions>
 		<TextBlock Text="{ Binding $parent[cls:GraphicsSettingsView].TitleLabelText }"
-					Grid.Row="1"
-					Grid.Column="1"
-					Classes="h2" />
+				   Grid.Row="1"
+				   Grid.Column="1"
+				   Classes="h2" />
+		<ComboBox Classes="Default Input" 
+				  Grid.Row="3"
+				  Grid.Column="1"
+				  ItemsSource="{ Binding AvailableThemes }"
+				  SelectedItem="{ Binding SelectedTheme }"
+				  PlaceholderText="{ Binding $parent[cls:GraphicsSettingsView].ThemeLabelText }" />
 	</Grid>
 </UserControl>

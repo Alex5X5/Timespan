@@ -1,12 +1,12 @@
-Views.Pages.Export.Title:Export
-Views.Pages.TaskDetails.Title:Details
-Views.Pages.Timer.Title:Timer
+Views.Pages.Export.Labels.Title:Export
+Views.Pages.Graphs.Labels.Title:Graphs
+Views.Pages.Timer.Labels.Title:Timer
 
-Views.Pages.Settings.About.Title:About Us
-Views.Pages.Settings.Export.Title:Export Settings
-Views.Pages.Settings.General.Title:General Settings
-Views.Pages.Settings.UserData.Title:User Data
-Views.Pages.Settings.Visuals.Title:Graphics Settings
+Views.Pages.Settings.About.Labels.Title:About Us
+Views.Pages.Settings.Export.Labels.Title:Export Settings
+Views.Pages.Settings.General.Labels.Title:General Settings
+Views.Pages.Settings.UserData.Labels.Title:User Data
+Views.Pages.Settings.Visuals.Labels.Title:Graphics Settings
 
 Views.MainView.Buttons.Timer:Timer
 Views.MainView.Buttons.Graphs:Graphs
@@ -54,6 +54,14 @@ Days.Thursday:Thursday
 Days.Friday:Friday
 Days.Saturday:Saturday
 Days.Sunday:Sunday
+
+Days.Monday:Mo
+Days.Tuesday:Tu
+Days.Wednesday:We
+Days.Thursday:Th
+Days.Friday:Fr
+Days.Saturday:Sa
+Days.Sunday:Su
 
 Months.January:January
 Months.February:February

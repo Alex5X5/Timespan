@@ -1,12 +1,12 @@
-Views.Pages.Export.Title:Exportieren
-Views.Pages.TaskDetails.Title:Details
-Views.Pages.Timer.Title:Zeitmessung
+Views.Pages.Export.Labels.Title:Exportieren
+Views.Pages.Graphs.Labels.Title:Graphen
+Views.Pages.Timer.Labels.Title:Zeitmessung
 
-Views.Pages.Settings.About.Title:Über Uns
-Views.Pages.Settings.Export.Title:Export Einstellungen
-Views.Pages.Settings.General.Title:Allgemeine Einstellungen
-Views.Pages.Settings.UserData.Title:Nutzerdaten
-Views.Pages.Settings.Visuals.Title:Graphik Einstellungen
+Views.Pages.Settings.About.Labels.Title:Über Uns
+Views.Pages.Settings.Export.Labels.Title:Export
+Views.Pages.Settings.General.Labels.Title:Allgemein
+Views.Pages.Settings.UserData.Labels.Title:Nutzerdaten
+Views.Pages.Settings.Visuals.Labels.Title:Graphik
 
 Views.MainView.Buttons.Timer:Zeitmessung
 Views.MainView.Buttons.Graphs:Übersicht
@@ -47,13 +47,21 @@ Views.Pages.TaskDetails.Labels.Start:Anfang
 Views.Pages.TaskDetails.Labels.Stop:Ende
 Views.Pages.TaskDetails.Labels.Description:Beschreibung
 
-Days.Monday:Montag
-Days.Tuesday:Dienstag
-Days.Wednesday:Mittwoch
-Days.Thursday:Donnerstag
-Days.Friday:Freitag
-Days.Saturday:Samstag
-Days.Sunday:Sonntag
+Days.Monday:Mo
+Days.Tuesday:Di
+Days.Wednesday:Mi
+Days.Thursday:Do
+Days.Friday:Fr
+Days.Saturday:Sa
+Days.Sunday:So
+
+Days.Short.Monday:Monday
+Days.Short.Tuesday:Tuesday
+Days.Short.Wednesday:Wendsday
+Days.Short.Thursday:Thursday
+Days.Short.Friday:Friday
+Days.Short.Saturday:Saturday
+Days.Short.Sunday:Sunday
 
 Months.January:Januar
 Months.February:Februar

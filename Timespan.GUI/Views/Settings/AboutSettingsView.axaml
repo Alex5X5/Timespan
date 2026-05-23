@@ -3,6 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Timespan.GUI.Views.Settings.AboutSettingsView">
-    About Settings
+             x:Class="Timespan.GUI.Views.Settings.AboutSettingsView"
+			 Unloaded="UserControl_Unloaded">
+	
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/SettingsViewCommon.axaml" />
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/AboutSettingsView.styles.axaml" />
+	</UserControl.Styles>
 </UserControl>

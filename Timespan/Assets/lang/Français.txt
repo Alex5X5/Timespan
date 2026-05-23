@@ -55,6 +55,14 @@ Days.Friday:vendredi
 Days.Saturday:samedi
 Days.Sunday:dimanche
 
+Days.Monday:Mo
+Days.Tuesday:Tu
+Days.Wednesday:We
+Days.Thursday:Th
+Days.Friday:Fr
+Days.Saturday:Sa
+Days.Sunday:Su
+
 Months.January:Janvier
 Months.February:Février
 Months.March:Mars

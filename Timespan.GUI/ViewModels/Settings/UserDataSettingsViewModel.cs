@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using Timespan.GUI.Services;
-using Timespan.GUI.Types;
 using Timespan.Util.Services;
 
 namespace Timespan.GUI.ViewModels.Settings;
@@ -21,25 +19,19 @@ public partial class UserDataSettingsViewModel : ViewModelBase, ISettingsViewChi
 
 	public UserDataSettingsViewModel(DateTimeService dateTimeService, SettingsService settingsService) : base() {
 		this.settingsService = settingsService;
-		settingsService.OnPreSettingsSave += () => {
-			settingsService.Username = UsernameTextboxText;
-			settingsService.StartDateString = StartDateTextboxText;
-			settingsService.JobName = JobNameTextboxText;
-		};
+		settingsService.OnPreSettingsSave += OnPreSettingsSave;
 		UsernameTextboxText = settingsService.Username;
 		StartDateTextboxText = settingsService.StartDateString;
 		JobNameTextboxText = settingsService.JobName;
 	}
 
-	partial void OnUsernameTextboxTextChanged(string value) {
-		settingsService.Username = value;
+	private void OnPreSettingsSave() {
+		settingsService.Username = UsernameTextboxText;
+		settingsService.StartDateString = StartDateTextboxText;
+		settingsService.JobName = JobNameTextboxText;
 	}
 
-	partial void OnStartDateTextboxTextChanged(string value) {
-		settingsService.StartDateString = value;
-	}
-
-	partial void OnJobNameTextboxTextChanged(string value) {
-		settingsService.JobName = value;
+	public void OnUnload() {
+		settingsService.OnPreSettingsSave -= OnPreSettingsSave;
 	}
 }

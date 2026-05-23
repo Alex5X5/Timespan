@@ -82,6 +82,34 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		} else {
 			ShowTaskPanel = true;
 			ShowingTaskDescription = args.Task.description;
+			string day = args.Task.StartDateTime.DayOfWeek switch {
+				DayOfWeek.Monday => TranslatorService.Singleton["Days.Short.Monday"] ?? "Mo",
+				DayOfWeek.Tuesday => TranslatorService.Singleton["Days.Short.Tuesday"] ?? "Tu",
+				DayOfWeek.Wednesday => TranslatorService.Singleton["Days.Short.Wednesday"] ?? "We",
+				DayOfWeek.Thursday => TranslatorService.Singleton["Days.Short.Thursday"] ?? "Th",
+				DayOfWeek.Friday => TranslatorService.Singleton["Days.Short.Friday"] ?? "Fr",
+				DayOfWeek.Saturday => TranslatorService.Singleton["Days.Short.Saturday"] ?? "Sa",
+				DayOfWeek.Sunday => TranslatorService.Singleton["Days.Short.Sunday"] ?? "Su",
+				_ => ""
+			};
+
+			string month = args.Task.StartDateTime.Month switch {
+				1 => TranslatorService.Singleton["Months.January"] ?? "January",
+				2 => TranslatorService.Singleton["Days.Short.February"] ?? "February",
+				3 => TranslatorService.Singleton["Days.Short.March"] ?? "March",
+				4 => TranslatorService.Singleton["Days.Short.April"] ?? "April",
+				5 => TranslatorService.Singleton["Days.Short.May"] ?? "May",
+				6 => TranslatorService.Singleton["Days.Short.June"] ?? "June",
+				7 => TranslatorService.Singleton["Days.Short.July"] ?? "July",
+				8 => TranslatorService.Singleton["Days.Short.August"] ?? "August",
+				9 => TranslatorService.Singleton["Days.Short.September"] ?? "September",
+				10 => TranslatorService.Singleton["Days.Short.October"] ?? "October",
+				11 => TranslatorService.Singleton["Days.Short.November"] ?? "November",
+				12 => TranslatorService.Singleton["Days.Short.December"] ?? "December",
+				_ => ""
+			};
+
+			ShowingTaskDateString = $"{day}. {args.Task.StartDateTime.Day}. {month}. {args.Task.StartDateTime.Year}";
 			
 		}
 	}

@@ -12,6 +12,7 @@
              x:Class="Timespan.GUI.Views.Settings.UserDataSettingsView">
 	
 	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/SettingsViewCommon.axaml" />
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/UserDataSettingsView.styles.axaml" />
 	</UserControl.Styles>
 
@@ -37,7 +38,7 @@
 				   Grid.Column="1"
 				   Classes="h2" />
 
-		<TextBox Classes="Default DynamicTextHeight" 
+		<TextBox Classes="Default Input" 
 				 Grid.Row="3"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
@@ -45,7 +46,7 @@
 				 TextWrapping="NoWrap"
 				 Text="{ Binding UsernameTextboxText }"
 				 PlaceholderText="{ Binding $parent[cls:UserDataSettingsView].UsernamePlaceholderText }"/>
-		<TextBox Classes="Default DynamicTextHeight" 
+		<TextBox Classes="Default Input" 
 				 Grid.Row="5"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
@@ -53,7 +54,7 @@
 				 TextWrapping="NoWrap"
 				 Text="{ Binding StartDateTextboxText }"
 				 PlaceholderText="{ Binding $parent[cls:UserDataSettingsView].StartDatePlaceholderText }"/>
-		<TextBox Classes="Default DynamicTextHeight" 
+		<TextBox Classes="Default Input" 
 				 Grid.Row="7"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
