@@ -1,7 +1,9 @@
 namespace Timespan;
 
 using Avalonia;
+
 using Timespan.GUI;
+using Timespan.Util.Services;
 
 public class Program {
 	/// <summary>
@@ -10,8 +12,9 @@ public class Program {
 	[STAThread]
 	public static void Main(string[] args) {
 
-  //      PathService.PrintDetailedInfo();
-		//PathService.ExtractFiles("Hourglass");
+		//PathService.PrintDetailedInfo();
+		PathService.ExtractFiles("Timespan");
+	
 		//PrintService ps = new PrintService();
 		//ps.Print(PathService.AssetsPath("output-readable-indexers.pdf"));
 
