@@ -64,7 +64,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		this.dbService = dbService;
 		CurrentPageAnchor = new(factory);
 		redirectionService.Register<GraphsViewModel, IGraphsViewChild>(CurrentPageAnchor);
-		CurrentPageAnchor.ModelChanged += () => {
+		CurrentPageAnchor.ModelChanged += (from, to) => {
 			OnPropertyChanged(nameof(CurrentPage));
 			OnPropertyChanged(nameof(DateString));
 		};

@@ -3,9 +3,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
 using System.ComponentModel;
 
 using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Settings;
 
@@ -54,25 +57,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor = new(factory);
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
 
-		CurrentPageAnchor.ModelChanged += () => {
-			if (CurrentPageAnchor?.CurrentModel?.GetType() == typeof(SettingsViewModel)) {
-				ShowNormalNavigationBar = false;
-				ShowSettingsNavigationBar = true;
-				ShowBackButton = true;
-				ShowSettingsButton = false;
-				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged += UpdateSettingsNavigationBar;
-			} else {
-				ShowNormalNavigationBar = true;
-				ShowSettingsNavigationBar = false;
-				ShowBackButton = false;
-				ShowSettingsButton = true;
-				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged -= UpdateSettingsNavigationBar;
-			}
-			OnPropertyChanged(nameof(TimerButtonSelected));
-			OnPropertyChanged(nameof(GraphsButtonSelected));
-			OnPropertyChanged(nameof(ExportButtonSelected));
-			OnPropertyChanged(nameof(CurrentPage));
-		};
+		CurrentPageAnchor.ModelChanged += OnPageChanged;
 
 		if (GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
 			dispatcher += args => CurrentPageAnchor.ChangeModel<GraphsViewModel>();
@@ -132,7 +117,32 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor.ChangeModel<PageT>();
 	}
 
-	private void UpdateSettingsNavigationBar() {
+	private void OnPageChanged(Type? from, Type to) {
+		if (to == typeof(SettingsViewModel)) {
+			ShowNormalNavigationBar = false;
+			ShowSettingsNavigationBar = true;
+			ShowBackButton = true;
+			ShowSettingsButton = false;
+			redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged += UpdateSettingsNavigationBar;
+			GlobalEventService.Raise<OpenSettingsEventArgs>();
+		} else {
+			ShowNormalNavigationBar = true;
+			ShowSettingsNavigationBar = false;
+			ShowBackButton = false;
+			ShowSettingsButton = true;
+			if (from == typeof(SettingsViewModel) && to != typeof(SettingsViewModel)) {
+				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged -= UpdateSettingsNavigationBar;
+				GlobalEventService.Raise<CloseSettingsEventArgs>();
+			}
+		}
+
+		OnPropertyChanged(nameof(TimerButtonSelected));
+		OnPropertyChanged(nameof(GraphsButtonSelected));
+		OnPropertyChanged(nameof(ExportButtonSelected));
+		OnPropertyChanged(nameof(CurrentPage));
+	}
+
+	private void UpdateSettingsNavigationBar(Type? from, Type to) {
 		OnPropertyChanged(nameof(GeneralSettingsButtonSelected));
 		OnPropertyChanged(nameof(UserDataSettingsButtonSelected));
 		OnPropertyChanged(nameof(AboutSettingsButtonSelected));
@@ -140,7 +150,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		OnPropertyChanged(nameof(ExportSettingsButtonSelected));
 	}
 
-	private void UpdatNormalNavigationBar() {
+	private void UpdatNormalNavigationBar(Type? from, Type to) {
 	}
 
 	internal void OnLoad() {

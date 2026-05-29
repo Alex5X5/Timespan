@@ -19,19 +19,23 @@ public partial class UserDataSettingsViewModel : ViewModelBase, ISettingsViewChi
 
 	public UserDataSettingsViewModel(DateTimeService dateTimeService, SettingsService settingsService) : base() {
 		this.settingsService = settingsService;
-		settingsService.OnPreSettingsSave += OnPreSettingsSave;
 		UsernameTextboxText = settingsService.Username;
 		StartDateTextboxText = settingsService.StartDateString;
 		JobNameTextboxText = settingsService.JobName;
 	}
 
-	private void OnPreSettingsSave() {
-		settingsService.Username = UsernameTextboxText;
-		settingsService.StartDateString = StartDateTextboxText;
+	partial void OnJobNameTextboxTextChanged(string value) {
 		settingsService.JobName = JobNameTextboxText;
 	}
 
+	partial void OnStartDateTextboxTextChanged(string value) {
+		settingsService.StartDateString = StartDateTextboxText;
+	}
+
+	partial void OnUsernameTextboxTextChanged(string value) {
+		settingsService.Username = UsernameTextboxText;
+	}
+
 	public void OnUnload() {
-		settingsService.OnPreSettingsSave -= OnPreSettingsSave;
 	}
 }

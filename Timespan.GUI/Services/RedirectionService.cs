@@ -52,7 +52,7 @@ public partial class RedirectionAnchor<ChildT> : ObservableObject {
 
 	private ChildT? lastModel;
 
-	public event Action ModelChanged = () => { };
+	public event Action<Type?, Type> ModelChanged = (from, to) => { };
 
 	private readonly ViewModelFactory<ChildT> factory;
 
@@ -67,14 +67,15 @@ public partial class RedirectionAnchor<ChildT> : ObservableObject {
 		lastModel = CurrentModel;
 		ChildT model = factory.BuildViewModel<T>();
 		CurrentModel = model;
-		ModelChanged.Invoke();
+		ModelChanged.Invoke(CurrentModel?.GetType(), typeof(T));
 		afterChange?.Invoke((T?)model);
 	}
 
 	public void GoBack() {
 		if (lastModel != null) {
+			var _CurrentModel = CurrentModel;
 			CurrentModel = lastModel;
-			ModelChanged.Invoke();
+			ModelChanged.Invoke(_CurrentModel?.GetType(), lastModel.GetType());
 		}
 	}
 }

@@ -56,6 +56,10 @@ public class PageInstanciator {
 		serviceCollection.AddTransient<T>();
 	}
 
+	public void RegisterPageScoped<T>() where T : class {
+		serviceCollection.AddScoped<T>();
+	}
+
 	public void RegisterComponentTransient<ComponentT>() where ComponentT : class {
 		serviceCollection.AddTransient<ComponentT>();
 		serviceCollection.AddSingleton<Func<ComponentT>>(
@@ -73,9 +77,20 @@ public class PageInstanciator {
 						?? throw new InvalidOperationException($"View of type {pageType?.FullName} has no registered view model")
 		);
         serviceCollection.AddSingleton<ViewModelFactory<ContentBaseT>>();
-    }
+	}
 
-    public IServiceProvider BuildPages() {
+	public void AddScopedContentBindingType<ContentBaseT>() {
+		serviceCollection.AddSingleton<Func<Type, IServiceScope, ContentBaseT>>(
+			(serviceProvider) =>
+				(pageType, scope) =>
+					(ContentBaseT?)scope.ServiceProvider.GetService(pageType)
+						?? throw new InvalidOperationException($"View of type {pageType?.FullName} has no registered view model")
+		);
+		serviceCollection.AddSingleton<ViewModelFactory<ContentBaseT>>();
+	}
+
+
+	public IServiceProvider BuildPages() {
         return serviceCollection.BuildServiceProvider();
     }
 }
@@ -84,6 +99,15 @@ public class ViewModelFactory<ViewBaseType>(Func<Type, ViewBaseType> factory) {
 	public ViewBaseType BuildViewModel<T>(Action<T?>? afterCreation = null)
 		where T : ViewBaseType {
 		ViewBaseType viewModel = factory(typeof(T));
+		afterCreation?.Invoke((T?)viewModel);
+		return viewModel;
+	}
+}
+
+public class ScopedViewModelFactory<ViewBaseType>(Func<Type, IServiceScope, ViewBaseType> factory) {
+	public ViewBaseType BuildViewModel<T>(IServiceScope scope, Action<T?>? afterCreation = null)
+		where T : ViewBaseType {
+		ViewBaseType viewModel = factory(typeof(T), scope);
 		afterCreation?.Invoke((T?)viewModel);
 		return viewModel;
 	}

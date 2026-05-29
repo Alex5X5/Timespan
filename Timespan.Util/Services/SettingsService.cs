@@ -60,7 +60,8 @@ public partial class SettingsService {
         using StreamWriter streamWriter = new(fileHandle);
         streamWriter.Write(res);
         HasUnsavedChanges = false;
-    }
+        OnPreSettingsSave = () => { };
+	}
 
     public string GetSetting(string key) {
         Settings.TryGetValue(key, out string? setting);

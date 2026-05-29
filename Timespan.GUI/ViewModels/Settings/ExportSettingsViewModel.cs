@@ -15,6 +15,6 @@ public class ExportSettingsViewModel : ViewModelBase, ISettingsViewChild {
 	}
 
 	public void OnUnload() {
-		settingsService.OnPreSettingsSave -= OnPreSettingsSave;
+		//settingsService.OnPreSettingsSave -= OnPreSettingsSave;
 	}
 }

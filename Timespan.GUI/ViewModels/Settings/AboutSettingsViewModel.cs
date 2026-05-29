@@ -1,4 +1,6 @@
-﻿using Timespan.Util.Services;
+﻿using System.Threading;
+
+using Timespan.Util.Services;
 
 namespace Timespan.GUI.ViewModels.Settings;
 
@@ -12,9 +14,10 @@ public class AboutSettingsViewModel : ViewModelBase, ISettingsViewChild {
 	}
 
 	private void OnPreSettingsSave() {
+		
 	}
 
 	public void OnUnload() {
-		settingsService.OnPreSettingsSave -= OnPreSettingsSave;
+		//settingsService.OnPreSettingsSave -= OnPreSettingsSave;
 	}
 }

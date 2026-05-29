@@ -28,6 +28,6 @@ public partial class GeneralSettingsViewModel : ViewModelBase, ISettingsViewChil
 	}
 
 	public void OnUnload() {
-		settingsService.OnPreSettingsSave -= OnPreSettingsSave;
+		//settingsService.OnPreSettingsSave -= OnPreSettingsSave;
 	}
 }

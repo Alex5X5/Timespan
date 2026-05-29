@@ -25,6 +25,6 @@ public partial class GraphicsSettingsViewModel : ViewModelBase, ISettingsViewChi
 	}
 
 	public void OnUnload() {
-		settingsService.OnPreSettingsSave -= OnPreSettingsSave;
+		//settingsService.OnPreSettingsSave -= OnPreSettingsSave;
 	}
 }

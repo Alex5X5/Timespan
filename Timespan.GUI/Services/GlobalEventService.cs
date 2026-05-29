@@ -14,6 +14,10 @@ public class GlobalEventService {
 	public static void Raise<T>(T args) where T : EventArgs {
 		GetEvent<T>().Invoke(args);
 	}
+
+	public static void Raise<T>() where T : EventArgs, new(){
+		GetEvent<T>().Invoke(new T());
+	}
 }
 
 public class EventDispatcherBase {
