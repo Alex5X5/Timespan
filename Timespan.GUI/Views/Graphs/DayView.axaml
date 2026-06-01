@@ -8,8 +8,14 @@
 			 xmlns:cls="using:Timespan.GUI.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Timespan.GUI.Views.Graphs.DayView"
-			 x:DataType="graphsModels:DayViewModel">
-    <Panel>
+			 x:DataType="graphsModels:DayViewModel"
+			 Tapped="OnClick"
+			 DoubleTapped="OnDoubleClick"
+			 PointerMoved="OnMouseMoved"
+			 PointerPressed="OnMousePressed"
+			 PointerReleased="OnMouseReleased">
+	<!--
+	<Panel>
 		<Rectangle Fill="#D9D9D9"
 					RadiusX="20"
 					RadiusY="20"/>
@@ -93,4 +99,5 @@
 			</Canvas>
 		</Viewbox>
     </Panel>
+	-->
 </UserControl>
