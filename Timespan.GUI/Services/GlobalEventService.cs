@@ -47,4 +47,8 @@ public partial class EventDispatcher<T> : EventDispatcherBase where T : EventArg
 	public void Invoke(T args) {
 		callback?.Invoke(args);
 	}
+
+	public void Clear() {
+		callback = (args) => { };
+	}
 }

@@ -18,7 +18,11 @@
   
 	<UserControl.DataTemplates>
         <DataTemplate DataType="graphModels:DayViewModel">
-            <graphViews:DayView />
+            <graphViews:DayView MarkedColumns="{ Binding MarkedColumns }"
+								BlockedColumns="{ Binding BlockedColumns }"
+								XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+								IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+								IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"/>
         </DataTemplate>
         <DataTemplate DataType="graphModels:WeekViewModel">
             <graphViews:WeekView />
