@@ -82,7 +82,7 @@
 					<TextBlock Grid.Row="1"
 							   Grid.Column="0"
 							   Text="{ Binding DateString }"
-							   Classes="P1"
+							   Classes="p1"
 							   TextAlignment="Right" />
 					<Button Grid.Row="1"
 							Grid.Column="1"
@@ -116,7 +116,7 @@
 						<TextBlock Grid.Row="2"
 								   Grid.Column="3"
 								   Text="{ Binding $parent[cls:GraphsView].SelectButtonText }"
-								   Classes="P1" />
+								   Classes="p1" />
 						<Viewbox Grid.Row="2"
 								 Grid.Column="1"
 								 Stretch="Uniform">
@@ -137,7 +137,7 @@
 						<TextBlock Grid.Row="2"
 								   Grid.Column="3"
 								   Text="{ Binding $parent[cls:GraphsView].DeleteButtonText }"
-								   Classes="P1" />
+								   Classes="p1" />
 						<Viewbox Grid.Row="2"
 								 Grid.Column="1"
 								 Stretch="Uniform">
@@ -145,12 +145,16 @@
 						</Viewbox>
 					</Grid>
 				</Button>
-
-				<ComboBox Grid.Column="10"
-						  Classes="Default"
-						  ItemsSource="{ Binding Items }"
-						  SelectedItem="{ Binding SelectedItem }">
-				</ComboBox>
+				<Grid Grid.Column="10"
+					  RowDefinitions="*, 8*, *"
+					  ShowGridLines="False">
+					<ComboBox Grid.Row="1"
+							  Classes="Default p1"
+							  CornerRadius="17, 17, 17, 0"
+							  ItemsSource="{ Binding TimeModes }"
+							  SelectedItem="{ Binding SelectedTimeMode }">
+					</ComboBox>
+				</Grid>
 			</Grid>
 			<ContentControl Grid.Row="3"
 							Grid.Column="1"
@@ -177,7 +181,7 @@
 				  ShowGridLines="False">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="2*" />
-					<RowDefinition Height="5*" />
+					<RowDefinition Height="4*" />
 					<RowDefinition Height="3*" />
 					<RowDefinition Height="4*" />
 					<RowDefinition Height="3*" />
@@ -186,9 +190,9 @@
 					<RowDefinition Height="2*" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="2*" />
-					<ColumnDefinition Width="52*" />
-					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="50*" />
+					<ColumnDefinition Width="3*" />
 				</Grid.ColumnDefinitions>
 				<Grid Grid.Row="1"
 					  Grid.Column="1"

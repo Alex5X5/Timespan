@@ -3,10 +3,16 @@ namespace Timespan.GUI.Views.Graphs;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 
 using CommunityToolkit.Mvvm.Input;
 
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+
+using Timespan.GUI.Types;
 using Timespan.GUI.ViewModels.Graphs;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
@@ -19,7 +25,6 @@ public partial class DayView : UserControl {
 
 	[TranslateMember("Views.Pages.Timer.Labels.Title", "Timer")]
 	public string TitleLabelText { get; set; } = "";
-
 
 	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
 
@@ -44,11 +49,11 @@ public partial class DayView : UserControl {
 	public static readonly StyledProperty<long> IntervalStopSecondsProperty =
 		AvaloniaProperty.Register<DayView, long>(nameof(BlockedColumns), 0);
 
-	public static readonly StyledProperty<bool[]> MarkedColumnsProperty =
-		AvaloniaProperty.Register<DayView, bool[]>(nameof(MarkedColumns), new bool[MAX_COLUMN_COUNT]);
+	public static readonly StyledProperty<ObservableCollection<ObservableBool>> MarkedColumnsProperty =
+		AvaloniaProperty.Register<DayView, ObservableCollection<ObservableBool>>(nameof(MarkedColumns), []);
 
-	public static readonly StyledProperty<bool[]> BlockedColumnsProperty =
-		AvaloniaProperty.Register<DayView, bool[]>(nameof(BlockedColumns), new bool[MAX_COLUMN_COUNT]);
+	public static readonly StyledProperty<ObservableCollection<ObservableBool>> BlockedColumnsProperty =
+		AvaloniaProperty.Register<DayView, ObservableCollection<ObservableBool>>(nameof(BlockedColumns), []);
 
 	public static readonly StyledProperty<int> GraphsPaddingProperty =
 		AvaloniaProperty.Register<DayView, int>(nameof(BlockedColumns), 0);
@@ -62,14 +67,14 @@ public partial class DayView : UserControl {
 	public static readonly StyledProperty<int> YAxisSegmentCountProperty =
 		AvaloniaProperty.Register<DayView, int>(nameof(YAxisSegmentCount), 0);
 
-	public bool[] MarkedColumns {
+	public ObservableCollection<ObservableBool> MarkedColumns {
 		get => GetValue(MarkedColumnsProperty);
 		set => SetValue(MarkedColumnsProperty, value);
 	}
 
-	public bool[] BlockedColumns {
-		get => GetValue(MarkedColumnsProperty);
-		set => SetValue(MarkedColumnsProperty, value);
+	public ObservableCollection<ObservableBool> BlockedColumns {
+		get => GetValue(BlockedColumnsProperty);
+		set => SetValue(BlockedColumnsProperty, value);
 	}
 
 	public long IntervalStartSeconds{
@@ -126,8 +131,15 @@ public partial class DayView : UserControl {
 		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
 		//this.Bind(MarkedColumnsProperty,new Binding(nameof(MarkedColumns)));
 
-		InitializeComponent();
+		//InitializeComponent();
+		AddHandler(TappedEvent, OnClick);
+		AddHandler(DoubleTappedEvent, OnDoubleClick);
+		AddHandler(PointerMovedEvent, OnMouseMoved);
+		AddHandler(PointerPressedEvent, OnMousePressed);
+		AddHandler(PointerReleasedEvent, OnMouseReleased);
+		AddHandler(LoadedEvent, OnLoad);
 	}
+
 
 	private static double ArialHeightToPt(double height, double x = 1) =>
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
@@ -157,8 +169,6 @@ public partial class DayView : UserControl {
 	}
 
 	private void DrawBackground(DrawingContext context) {
-		//IBrush? brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-		//context.FillRectangle(brush, new Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height));
 		var background = new SolidColorBrush(Color.FromArgb(255, 217, 217, 217));
 		Pen pen = new(background, 0);
 		RectangleGeometry rrect = new(Bounds) {
@@ -169,17 +179,17 @@ public partial class DayView : UserControl {
 	}
 
 	private void DrawColumnMarkers(DrawingContext context) {
-		Brush markedBrush = new SolidColorBrush(Color.FromArgb(100, 100, 100, 200));
-		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(100, 80, 80, 80));
+		Brush markedBrush = new SolidColorBrush(Color.FromArgb(120, 120, 120, 240));
+		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
 		double x = PaddingX + 2;
 		double y = PaddingY + 2;
 		double width = XAxisSegmentSize - 4;
 		double height = GraphAreaHeight - 5;
 		for (int i = 0; i < XAxisSegmentCount; i++) {
-			if (MarkedColumns[i])
-				context.FillRectangle(markedBrush, new Rect(x, y, width, height));
-			if (BlockedColumns[i])
+			if (BlockedColumns[i].Value)
 				context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
+			if (MarkedColumns[i].Value)
+				context.FillRectangle(markedBrush, new Rect(x, y, width, height));
 			x += XAxisSegmentSize;
 		}
 	}
@@ -210,6 +220,16 @@ public partial class DayView : UserControl {
 		}
 	}
 
+	private void DrawMouseRectangle(DrawingContext context) {
+		if (RightMouseDown) {
+			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
+			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
+			Pen borderPen = new Pen(borderBrush, 2);
+			context.DrawRectangle(areaBrush, borderPen, MarkerDragRectangle);
+			//Console.WriteLine($"filling marker rect from {MarkerDragRectangle.TopLeft} to {MarkerDragRectangle.BottomRight}");
+		}
+	}
+
 	//private void DrawTaskGraph(DrawingContext context, Timespan.Types.Models.Task task, int i) {
 	//	Rect rect = GetTaskRectanlge(task, 0, 0, i);
 	//	r = Math.Min(r, rect.Width / 2);
@@ -233,16 +253,6 @@ public partial class DayView : UserControl {
 	//	Point p = new(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);
 	//	context.DrawText(formattedText, p);
 	//}
-
-	private void DrawMouseRectangle(DrawingContext context) {
-		if (RightMouseDown) {
-			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
-			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
-			Pen borderPen = new Pen(borderBrush, 2);
-			context.DrawRectangle(areaBrush, borderPen, MarkerDragRectangle);
-			//Console.WriteLine($"filling marker rect from {MarkerDragRectangle.TopLeft} to {MarkerDragRectangle.BottomRight}");
-		}
-	}
 
 	//public async Task SetTimeIntervallBlocked(BlockedTimeIntervallType reason) {
 	//	if (reason == BlockedTimeIntervallType.None) {
@@ -321,6 +331,46 @@ public partial class DayView : UserControl {
 		_contextMenu?.Open(this);
 	}
 
+	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
+		base.OnPropertyChanged(change);
+		if (change.Property == MarkedColumnsProperty) {
+			if (change.OldValue is ObservableCollection<ObservableBool> oldList) {
+				foreach (ObservableBool item in oldList)
+					item.PropertyChanged -= OnBoolValueChanged;
+				oldList.CollectionChanged -= OnBoolListChanged;
+			}
+			if (change.NewValue is ObservableCollection<ObservableBool> newList) {
+				foreach (ObservableBool item in newList)
+					item.PropertyChanged += OnBoolValueChanged;
+				newList.CollectionChanged += OnBoolListChanged;
+			}
+		} else if (change.Property == BlockedColumnsProperty) {
+			if (change.OldValue is ObservableCollection<ObservableBool> oldList) {
+				foreach (ObservableBool item in oldList)
+					item.PropertyChanged -= OnBoolValueChanged;
+				oldList.CollectionChanged -= OnBoolListChanged;
+			}
+			if (change.NewValue is ObservableCollection<ObservableBool> newList) {
+				foreach (ObservableBool item in newList)
+					item.PropertyChanged += OnBoolValueChanged;
+				newList.CollectionChanged += OnBoolListChanged;
+			}
+		}
+	}
+
+	private void OnBoolListChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+		if (e.OldItems != null)
+			foreach (ObservableBool item in e.OldItems)
+				item.PropertyChanged -= OnBoolValueChanged;
+		if (e.NewItems != null)
+			foreach (ObservableBool item in e.NewItems)
+				item.PropertyChanged += OnBoolValueChanged;
+	}
+
+	private void OnBoolValueChanged(object? sender, PropertyChangedEventArgs e) {
+		InvalidateVisual();
+	}
+
 	public void OnClick(object? sender, TappedEventArgs e) {
 		//Console.WriteLine("Click!");
 		Point mousePos = e.GetPosition(this);
@@ -342,6 +392,7 @@ public partial class DayView : UserControl {
 			if (clickedTask != null)
 				model.OnTaskClicked(clickedTask);
 		}
+		(DataContext as DayViewModel)?.OnClicked();
 	}
 
 	public void OnDoubleClick(object? sender, TappedEventArgs args) {
@@ -349,7 +400,7 @@ public partial class DayView : UserControl {
 
 	}
 
-	public void OnMouseMoved(object sender, PointerEventArgs args) {
+	public void OnMouseMoved(object? sender, PointerEventArgs args) {
 		//Console.WriteLine("Mouse moved!");
 		MousePos = args.GetCurrentPoint(this).Position;
 		MarkerDragRectangle = new Rect(
@@ -364,7 +415,7 @@ public partial class DayView : UserControl {
 		InvalidateVisual();
 	}
 
-	public void OnMousePressed(object sender, PointerPressedEventArgs args) {
+	public void OnMousePressed(object? sender, PointerPressedEventArgs args) {
 		Console.WriteLine("Mouse pressed!");
 		PointerPoint mousePoint = args.GetCurrentPoint(sender as Control);
 		MousePos = mousePoint.Position;
@@ -386,7 +437,7 @@ public partial class DayView : UserControl {
 		InvalidateVisual();
 	}
 
-	public void OnMouseReleased(object sender, PointerReleasedEventArgs args) {
+	public void OnMouseReleased(object? sender, PointerReleasedEventArgs args) {
 		Console.WriteLine($"mouse released!");
 		if (!args.GetCurrentPoint(sender as Control).Properties.IsRightButtonPressed) {
 			if (RightMouseDown) {
@@ -397,5 +448,9 @@ public partial class DayView : UserControl {
 		if (!args.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
 			LeftMouseDown = false;
 		InvalidateVisual();
+	}
+
+	public void OnLoad(object? sender, RoutedEventArgs args) {
+		(DataContext as DayViewModel)?.OnLoad();
 	}
 }

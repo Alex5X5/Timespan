@@ -38,4 +38,8 @@
 
 	<Color x:Key="StartButtonColor">#D94807</Color >
 	<Color x:Key="StopButtonColor">#DFD9D9</Color >
+
+	<Color x:Key="GraphModeSelectorBackground">#D9D9D9</Color >
+	<Color x:Key="GraphModeSelectorBackgroundHover">#E5E5E5</Color >
+	<Color x:Key="GraphModeSelectorBackgroundPressed">#C3C3C3</Color >
 </ResourceDictionary>

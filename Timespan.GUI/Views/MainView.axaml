@@ -33,17 +33,17 @@
         </DataTemplate>
     </UserControl.DataTemplates>
 	
-	<Grid ShowGridLines="false"
+	<Grid ShowGridLines="False"
 	      Background="white">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="3.5*"/>
+			<RowDefinition Height="3*"/>
 			<RowDefinition Height="1.55*"/>
-			<RowDefinition Height="21.5*"/>
+			<RowDefinition Height="22*"/>
 			<RowDefinition Height="1*"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="15*"/>
+			<ColumnDefinition Width="20*"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		<Panel Grid.Row="0"

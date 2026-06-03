@@ -11,7 +11,7 @@
 	<Style Selector="TextBlock"> 
 		<Style Selector="^.h1">
 			<Setter Property="FontWeight" Value="ExtraBold" />
-			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=2}" />
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.92}" />
 		</Style>
 		<Style Selector="^.h2">
 			<Setter Property="FontWeight" Value="ExtraBold" />

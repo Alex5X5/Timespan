@@ -18,18 +18,18 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	public RedirectionAnchor<IGraphsViewChild> CurrentPageAnchor;
 	public IGraphsViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
 
-	private string selectedItem = "";
-	public string SelectedItem {
+	private string selectedTimeMode = "";
+	public string SelectedTimeMode {
 		set {
-			selectedItem = value;
+			selectedTimeMode = value;
 			UpdateMode(value);
-			OnPropertyChanged(nameof(SelectedItem));
+			OnPropertyChanged(nameof(SelectedTimeMode));
 			OnPropertyChanged(nameof(DateString));
 		}
-		get => selectedItem;
+		get => selectedTimeMode;
 	}
 
-	public ObservableCollection<string> Items { get; }
+	public ObservableCollection<string> TimeModes { get; }
 	
 	public string DateString => CurrentPage?.GetDateString() ?? "Date";
 
@@ -50,8 +50,8 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
     partial void OnShowTaskPanelChanged(bool value)
 	{
-		SpacerWidth = new(value ? 2 : 0, GridUnitType.Star);
-		TaskPanelWidth = new(value ? 24 : 0, GridUnitType.Star);
+		SpacerWidth = new(value ? 1 : 0, GridUnitType.Star);
+		TaskPanelWidth = new(value ? 19 : 0, GridUnitType.Star);
 	}
 
 	[ObservableProperty]
@@ -68,8 +68,8 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 			OnPropertyChanged(nameof(CurrentPage));
 			OnPropertyChanged(nameof(DateString));
 		};
-		Items = new() { "Day", "Week", "Month" };
-		SelectedItem = Items[0];
+		TimeModes = new() { "Day", "Week", "Month" };
+		SelectedTimeMode = TimeModes[0];
 		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
 			dispatcher += ShowTask;
 	}
@@ -145,11 +145,11 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	private void UpdateMode(string mode) {
-		if(mode == Items[0])
+		if(mode == TimeModes[0])
 			CurrentPageAnchor.ChangeModel<DayViewModel>();
-		if (mode == Items[1])
+		if (mode == TimeModes[1])
 			CurrentPageAnchor.ChangeModel<WeekViewModel>();
-		if (mode == Items[2])
+		if (mode == TimeModes[2])
 			CurrentPageAnchor.ChangeModel<MonthViewModel>();
 	}
 
