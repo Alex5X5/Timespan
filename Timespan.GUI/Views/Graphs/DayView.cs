@@ -169,7 +169,7 @@ public partial class DayView : UserControl {
 	}
 
 	private void DrawBackground(DrawingContext context) {
-		var background = new SolidColorBrush(Color.FromArgb(255, 217, 217, 217));
+		var background = new SolidColorBrush(Color.FromArgb(255, 235, 235, 235));
 		Pen pen = new(background, 0);
 		RectangleGeometry rrect = new(Bounds) {
 			RadiusX = 20,
@@ -198,12 +198,12 @@ public partial class DayView : UserControl {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
-		context.DrawLine(timeLine, new(PaddingX, Bounds.Height - PaddingY), new(Bounds.Width - PaddingX, Bounds.Height - PaddingY));
+		//context.DrawLine(timeLine, new(PaddingX, Bounds.Height - PaddingY), new(Bounds.Width - PaddingX, Bounds.Height - PaddingY));
 		double textSize = Math.Round(PaddingY * 0.7, 1);
 		for (int i = 0; i < 25; i++) {
 			double xPos = XAxisSegmentSize * i + PaddingX;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, PaddingY));
-			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, Bounds.Height - PaddingY * 1.5));
+			//context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, Bounds.Height - PaddingY * 1.5));
 			var formattedText = new FormattedText(
 				Convert.ToString(i) + ":00",
 				System.Globalization.CultureInfo.CurrentCulture,

@@ -47,21 +47,21 @@ Views.Pages.TaskDetails.Labels.Start:Anfang
 Views.Pages.TaskDetails.Labels.Stop:Ende
 Views.Pages.TaskDetails.Labels.Description:Beschreibung
 
-Days.Monday:Mo
-Days.Tuesday:Di
-Days.Wednesday:Mi
-Days.Thursday:Do
-Days.Friday:Fr
-Days.Saturday:Sa
-Days.Sunday:So
+Days.Monday:Montag
+Days.Tuesday:Dienstag
+Days.Wednesday:Mittwoch
+Days.Thursday:Donnerstag
+Days.Friday:Freitag
+Days.Saturday:Samstag
+Days.Sunday:Sonntag
 
-Days.Short.Monday:Monday
-Days.Short.Tuesday:Tuesday
-Days.Short.Wednesday:Wendsday
-Days.Short.Thursday:Thursday
-Days.Short.Friday:Friday
-Days.Short.Saturday:Saturday
-Days.Short.Sunday:Sunday
+Days.Short.Monday:Mo
+Days.Short.Tuesday:Di
+Days.Short.Wednesday:Mi
+Days.Short.Thursday:Do
+Days.Short.Friday:Fr
+Days.Short.Saturday:Sa
+Days.Short.Sunday:So
 
 Months.January:Januar
 Months.February:Februar

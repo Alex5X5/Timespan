@@ -55,13 +55,13 @@ Days.Friday:Friday
 Days.Saturday:Saturday
 Days.Sunday:Sunday
 
-Days.Monday:Mo
-Days.Tuesday:Tu
-Days.Wednesday:We
-Days.Thursday:Th
-Days.Friday:Fr
-Days.Saturday:Sa
-Days.Sunday:Su
+Days.Short.Monday:Mo
+Days.Short.Tuesday:Tu
+Days.Short.Wednesday:We
+Days.Short.Thursday:Th
+Days.Short.Friday:Fr
+Days.Short.Saturday:Sa
+Days.Short.Sunday:Su
 
 Months.January:January
 Months.February:February

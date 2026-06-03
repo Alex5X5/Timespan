@@ -24,6 +24,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 			selectedTimeMode = value;
 			UpdateMode(value);
 			OnPropertyChanged(nameof(SelectedTimeMode));
+			OnPropertyChanged(nameof(CurrentPage));
 			OnPropertyChanged(nameof(DateString));
 		}
 		get => selectedTimeMode;
@@ -72,6 +73,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		SelectedTimeMode = TimeModes[0];
 		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
 			dispatcher += ShowTask;
+		CurrentPageAnchor.ChangeModel<DayViewModel>();
 	}
 
 	[RelayCommand]
@@ -154,6 +156,5 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	internal void OnLoad() {
-		CurrentPageAnchor.ChangeModel<DayViewModel>();
 	}
 }
