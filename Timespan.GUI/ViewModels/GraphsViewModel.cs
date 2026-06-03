@@ -97,17 +97,17 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 			string month = args.Task.StartDateTime.Month switch {
 				1 => TranslatorService.Singleton["Months.January"] ?? "January",
-				2 => TranslatorService.Singleton["Days.Short.February"] ?? "February",
-				3 => TranslatorService.Singleton["Days.Short.March"] ?? "March",
-				4 => TranslatorService.Singleton["Days.Short.April"] ?? "April",
-				5 => TranslatorService.Singleton["Days.Short.May"] ?? "May",
-				6 => TranslatorService.Singleton["Days.Short.June"] ?? "June",
-				7 => TranslatorService.Singleton["Days.Short.July"] ?? "July",
-				8 => TranslatorService.Singleton["Days.Short.August"] ?? "August",
-				9 => TranslatorService.Singleton["Days.Short.September"] ?? "September",
-				10 => TranslatorService.Singleton["Days.Short.October"] ?? "October",
-				11 => TranslatorService.Singleton["Days.Short.November"] ?? "November",
-				12 => TranslatorService.Singleton["Days.Short.December"] ?? "December",
+				2 => TranslatorService.Singleton["Months.February"] ?? "February",
+				3 => TranslatorService.Singleton["Months.March"] ?? "March",
+				4 => TranslatorService.Singleton["Months.April"] ?? "April",
+				5 => TranslatorService.Singleton["Months.May"] ?? "May",
+				6 => TranslatorService.Singleton["Months.June"] ?? "June",
+				7 => TranslatorService.Singleton["Months.July"] ?? "July",
+				8 => TranslatorService.Singleton["Months.August"] ?? "August",
+				9 => TranslatorService.Singleton["Months.September"] ?? "September",
+				10 => TranslatorService.Singleton["Months.October"] ?? "October",
+				11 => TranslatorService.Singleton["Months.November"] ?? "November",
+				12 => TranslatorService.Singleton["Months.December"] ?? "December",
 				_ => ""
 			};
 
