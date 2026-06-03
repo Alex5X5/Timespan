@@ -17,7 +17,7 @@ public partial class DayViewModel : ViewModelBase, IGraphsViewChild {
 	public GUI.Services.CacheService CacheService;
 	private IHourglassDbService dbService;
 
-	public const int MAX_COLUMN_COUNT = 30;
+	public const int MAX_COLUMN_COUNT = 24;
 
 	[ObservableProperty]
 	public partial ObservableCollection<ObservableBool> MarkedColumns { set; get; }
@@ -50,7 +50,7 @@ public partial class DayViewModel : ViewModelBase, IGraphsViewChild {
 			BlockedColumns[i] = new(false);
 		}
 		xAxisSegmentDuration = 3600;
-		xAxisSegmentCount = 24;
+		xAxisSegmentCount = MAX_COLUMN_COUNT;
 		TimeIntervallStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay));
 		TimeIntervallStopSeconds = DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay));
 		//for(int i=0; i<showColumn.Length; i++) {

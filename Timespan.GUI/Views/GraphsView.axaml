@@ -25,7 +25,11 @@
 								IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"/>
         </DataTemplate>
         <DataTemplate DataType="graphModels:WeekViewModel">
-            <graphViews:WeekView />
+            <graphViews:WeekView MarkedColumns="{ Binding MarkedColumns }"
+								 BlockedColumns="{ Binding BlockedColumns }"
+								 XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+								 IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+								 IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"/>
         </DataTemplate>
         <DataTemplate DataType="graphModels:MonthViewModel">
             <graphViews:MonthView />
