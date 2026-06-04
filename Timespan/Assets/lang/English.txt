@@ -47,6 +47,9 @@ Views.Pages.TaskDetails.Labels.Start:Start
 Views.Pages.TaskDetails.Labels.Stop:Finish
 Views.Pages.TaskDetails.Labels.Description:Description
 
+Views.Pages.Graphs.Buttons.Select:Select
+Views.Pages.Graphs.Buttons.Delete:Delete
+
 Days.Monday:Monday
 Days.Tuesday:Tuesday
 Days.Wednesday:Wendsday
@@ -75,6 +78,19 @@ Months.September:September
 Months.October:October
 Months.November:November
 Months.December:December
+
+Months.Short.January:Jan
+Months.Short.February:Feb
+Months.Short.March:Mar
+Months.Short.April:Apr
+Months.Short.May:May
+Months.Short.June:Jun
+Months.Short.July:Jul
+Months.Short.August:Aug
+Months.Short.September:Sep
+Months.Short.October:Oct
+Months.Short.November:Nov
+Months.Short.December:Dec
 
 Absence.Sick:Krank
 Absence.Holiday:Feiertag

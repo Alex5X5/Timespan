@@ -69,7 +69,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 			OnPropertyChanged(nameof(CurrentPage));
 			OnPropertyChanged(nameof(DateString));
 		};
-		TimeModes = new() { "Day", "Week", "Month" };
+		TimeModes = ["Day", "Week", "Month"];
 		SelectedTimeMode = TimeModes[0];
 		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
 			dispatcher += ShowTask;
@@ -84,33 +84,8 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		} else {
 			ShowTaskPanel = true;
 			ShowingTaskDescription = args.Task.description;
-			string day = args.Task.StartDateTime.DayOfWeek switch {
-				DayOfWeek.Monday => TranslatorService.Singleton["Days.Short.Monday"] ?? "Mo",
-				DayOfWeek.Tuesday => TranslatorService.Singleton["Days.Short.Tuesday"] ?? "Tu",
-				DayOfWeek.Wednesday => TranslatorService.Singleton["Days.Short.Wednesday"] ?? "We",
-				DayOfWeek.Thursday => TranslatorService.Singleton["Days.Short.Thursday"] ?? "Th",
-				DayOfWeek.Friday => TranslatorService.Singleton["Days.Short.Friday"] ?? "Fr",
-				DayOfWeek.Saturday => TranslatorService.Singleton["Days.Short.Saturday"] ?? "Sa",
-				DayOfWeek.Sunday => TranslatorService.Singleton["Days.Short.Sunday"] ?? "Su",
-				_ => ""
-			};
-
-			string month = args.Task.StartDateTime.Month switch {
-				1 => TranslatorService.Singleton["Months.January"] ?? "January",
-				2 => TranslatorService.Singleton["Months.February"] ?? "February",
-				3 => TranslatorService.Singleton["Months.March"] ?? "March",
-				4 => TranslatorService.Singleton["Months.April"] ?? "April",
-				5 => TranslatorService.Singleton["Months.May"] ?? "May",
-				6 => TranslatorService.Singleton["Months.June"] ?? "June",
-				7 => TranslatorService.Singleton["Months.July"] ?? "July",
-				8 => TranslatorService.Singleton["Months.August"] ?? "August",
-				9 => TranslatorService.Singleton["Months.September"] ?? "September",
-				10 => TranslatorService.Singleton["Months.October"] ?? "October",
-				11 => TranslatorService.Singleton["Months.November"] ?? "November",
-				12 => TranslatorService.Singleton["Months.December"] ?? "December",
-				_ => ""
-			};
-
+			string day = TranslatorService.Singleton.TranslateDay(args.Task.StartDateTime.DayOfWeek);
+			string month = TranslatorService.Singleton.TranslateMonth(args.Task.StartDateTime.Month);
 			ShowingTaskDateString = $"{day}. {args.Task.StartDateTime.Day}. {month}. {args.Task.StartDateTime.Year}";
 			
 		}

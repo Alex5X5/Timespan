@@ -11,7 +11,8 @@
 			 x:CompileBindings="True"
 			 x:DataType="models:SettingsViewModel"
 			 x:Class="Timespan.GUI.Views.SettingsView"
-			 Loaded="UserControl_Loaded">
+			 Loaded="UserControl_Loaded"
+			 Unloaded="UserControl_UnLoaded">
 
 
 	<UserControl.DataTemplates>

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -20,29 +21,38 @@ public partial class SettingsService {
     public const string THEME_KEY = "theme";
 
     private Dictionary<string, string> Settings;
+    private ReadOnlyDictionary<string, string> UnchangedSettings;
 
-    public bool HasUnsavedChanges { get; private set; } = false;
-
-    private Dictionary<string, string> LoadSettings() {
-        Dictionary<string, string> res = [];
-        using FileStream fileHandle = File.Open(PathService.FilesPath(FILE_NAME), FileMode.OpenOrCreate);
-        using StreamReader streamReader = new(fileHandle);
-        string[] lines = streamReader.ReadToEnd().Split('\n');
-        foreach (string line in lines) {
-            string[] keyvaluePair = line.Split(':');
-            if (keyvaluePair.Length == 2)
-                res[keyvaluePair[0]] = keyvaluePair[1];
-            if (keyvaluePair.Length > 2)
-                res[keyvaluePair[0]] = string.Join(':', keyvaluePair.Skip(1));
-        }
-        return res;
-    }
+	public bool HasUnsavedChanges { get; private set; } = false;
 
     public SettingsService() {
         Settings = LoadSettings();
+        UnchangedSettings = BackupSettings();
+	}
+
+	private Dictionary<string, string> LoadSettings() {
+		Dictionary<string, string> res = [];
+		using FileStream fileHandle = File.Open(PathService.FilesPath(FILE_NAME), FileMode.OpenOrCreate);
+		using StreamReader streamReader = new(fileHandle);
+		string[] lines = streamReader.ReadToEnd().Split('\n');
+		foreach (string line in lines) {
+			string[] keyvaluePair = line.Split(':');
+			if (keyvaluePair.Length == 2)
+				res[keyvaluePair[0]] = keyvaluePair[1];
+			if (keyvaluePair.Length > 2)
+				res[keyvaluePair[0]] = string.Join(':', keyvaluePair.Skip(1));
+		}
+		return res;
+	}
+
+    private ReadOnlyDictionary<string, string> BackupSettings() {
+        var dict = new Dictionary<string, string>();
+        foreach (var key in Settings.Keys)
+            dict[key] = Settings[key];
+        return new(dict);
     }
 
-    public void SaveSettings() {
+	public void SaveSettings() {
         if (!HasUnsavedChanges)
             return;
         OnPreSettingsSave.Invoke();
@@ -61,6 +71,11 @@ public partial class SettingsService {
         streamWriter.Write(res);
         HasUnsavedChanges = false;
         OnPreSettingsSave = () => { };
+	}
+
+    public void CancelEdit() {
+		foreach (var key in UnchangedSettings.Keys)
+			Settings[key] = UnchangedSettings[key];
 	}
 
     public string GetSetting(string key) {

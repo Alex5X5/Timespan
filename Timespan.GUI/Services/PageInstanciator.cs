@@ -86,7 +86,7 @@ public class PageInstanciator {
 					(ContentBaseT?)scope.ServiceProvider.GetService(pageType)
 						?? throw new InvalidOperationException($"View of type {pageType?.FullName} has no registered view model")
 		);
-		serviceCollection.AddSingleton<ViewModelFactory<ContentBaseT>>();
+		serviceCollection.AddSingleton<ScopedViewModelFactory<ContentBaseT>>();
 	}
 
 

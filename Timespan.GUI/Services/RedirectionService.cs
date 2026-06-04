@@ -4,6 +4,8 @@ using System.Linq;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Microsoft.Extensions.DependencyInjection;
+
 public class RedirectionService {
 
 
@@ -22,11 +24,15 @@ public class RedirectionService {
 	}
 
 	internal void Register<OwnerT, ChildT>(RedirectionAnchor<ChildT> newAnchor, string key = "anchor") {
-		Set<OwnerT, RedirectionAnchor<ChildT>>(key, newAnchor);
+		Set<OwnerT, IRedirectionAnchor<ChildT>>(key, newAnchor);
 	}
-	
-	internal RedirectionAnchor<ChildT>? GetAnchor<OwnerT, ChildT>(string key = "anchor") {
-		return Get<OwnerT, RedirectionAnchor<ChildT>>(key);
+
+	internal void Register<OwnerT, ChildT>(ScopedRedirectionAnchor<ChildT> newAnchor, string key = "anchor") {
+		Set<OwnerT, IRedirectionAnchor<ChildT>>(key, newAnchor);
+	}
+
+	internal IRedirectionAnchor<ChildT>? GetAnchor<OwnerT, ChildT>(string key = "anchor") {
+		return Get<OwnerT, IRedirectionAnchor<ChildT>>(key);
 	}
 
 	private void Set<TOwner, TValue>(string key, TValue value) {
@@ -44,11 +50,22 @@ public class RedirectionService {
 	}
 }
 
+public interface IRedirectionAnchor<ChildT> {
+	public ChildT? CurrentModel { set; get; }
 
-public partial class RedirectionAnchor<ChildT> : ObservableObject {
+	public event Action<Type?, Type> ModelChanged;
+
+	public bool IsActive<T>();
+
+	public void ChangeModel<T>(Action<T?>? afterChange = null) where T : ChildT;
+
+	public void GoBack();
+}
+
+public partial class RedirectionAnchor<ChildT> : ObservableObject, IRedirectionAnchor<ChildT> {
 
 	[ObservableProperty]
-	public ChildT? currentModel;
+	private ChildT? currentModel;
 
 	private ChildT? lastModel;
 
@@ -72,6 +89,58 @@ public partial class RedirectionAnchor<ChildT> : ObservableObject {
 	}
 
 	public void GoBack() {
+		if (lastModel != null) {
+			var _CurrentModel = CurrentModel;
+			CurrentModel = lastModel;
+			ModelChanged.Invoke(_CurrentModel?.GetType(), lastModel.GetType());
+		}
+	}
+}
+
+
+public partial class ScopedRedirectionAnchor<ChildT> : ObservableObject, IRedirectionAnchor<ChildT> {
+
+	[ObservableProperty]
+	private ChildT? currentModel;
+
+	private ChildT? lastModel;
+
+	private IServiceScope? scope;
+
+	public event Action<Type?, Type> ModelChanged = (from, to) => { };
+
+	private readonly ScopedViewModelFactory<ChildT> factory;
+	private readonly IServiceScopeFactory scopeFactory;
+
+	public ScopedRedirectionAnchor(ScopedViewModelFactory<ChildT> factory, IServiceScopeFactory scopeFactory) {
+		this.factory = factory;
+		this.scopeFactory = scopeFactory;
+	}
+
+	public bool IsActive<T>() =>
+		typeof(T) == CurrentModel?.GetType();
+
+	public void CreateScope() {
+		scope = scopeFactory.CreateScope();
+	}
+
+	public void CloseScope() {
+		scope?.Dispose();
+	}
+
+	public void ChangeModel<T>(Action<T?>? afterChange = null) where T : ChildT {
+		if (scope == null)
+			throw new InvalidOperationException("can not change model while scope is null");
+		lastModel = CurrentModel;
+		ChildT model = factory.BuildViewModel<T>(scope);
+		CurrentModel = model;
+		ModelChanged.Invoke(CurrentModel?.GetType(), typeof(T));
+		afterChange?.Invoke((T?)model);
+	}
+
+	public void GoBack() {
+		if (scope == null)
+			throw new InvalidOperationException("can not change model while scope is null");
 		if (lastModel != null) {
 			var _CurrentModel = CurrentModel;
 			CurrentModel = lastModel;

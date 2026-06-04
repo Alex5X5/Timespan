@@ -19,7 +19,12 @@ public partial class SettingsView : UserControl {
 	}
 
 	private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("Settings View loaded!");
 		(DataContext as SettingsViewModel)?.OnLoad();
+		Console.WriteLine("Settings View loaded!");
+	}
+
+	private void UserControl_UnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+		(DataContext as SettingsViewModel)?.OnUnLoad();
+		Console.WriteLine("Settings View Unloaded!");
 	}
 }

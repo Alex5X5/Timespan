@@ -14,7 +14,7 @@ public partial class AboutSettingsView : UserControl {
 	}
 
 	private void UserControl_Unloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		(DataContext as AboutSettingsViewModel)?.OnUnload();
+		//(DataContext as AboutSettingsViewModel)?.OnUnload();
 		Console.WriteLine("Timer Page unloaded!");
 	}
 }

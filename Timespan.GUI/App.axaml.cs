@@ -54,7 +54,7 @@ public partial class App : Application {
 		instanciator.RegisterPageTransient<ExportViewModel>();
 		instanciator.RegisterPageSingleton<MainViewModel>();
 
-		instanciator.AddContentBindingType<ISettingsViewChild>();
+		instanciator.AddScopedContentBindingType<ISettingsViewChild>();
 		instanciator.RegisterPageScoped<GeneralSettingsViewModel>();
 		instanciator.RegisterPageScoped<UserDataSettingsViewModel>();
 		instanciator.RegisterPageScoped<AboutSettingsViewModel>();

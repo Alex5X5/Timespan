@@ -8,7 +8,7 @@ using System.Text;
 
 public static class PathService {
 
-	public const int ASSETS_VERSION = 4;
+	public const int ASSETS_VERSION = 5;
 	public const string APP_NAME = "Timespan";
 
 	public static readonly string APP_FILES_DIRECTORY = Path.Combine(GetMainEntryPointDirectory(), APP_NAME);

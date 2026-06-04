@@ -16,15 +16,11 @@ public partial class GraphicsSettingsViewModel : ViewModelBase, ISettingsViewChi
 	public GraphicsSettingsViewModel(SettingsService settingsService) : base() {
 		this.settingsService = settingsService;
 		AvailableThemes = ThemeService.Singleton.AvailableThemes;
-		settingsService.OnPreSettingsSave += OnPreSettingsSave;
 		SelectedTheme = settingsService.Theme;
+		settingsService.OnPreSettingsSave += OnPreSettingsSave;
 	}
 
 	private void OnPreSettingsSave() {
 		settingsService.Theme = SelectedTheme;
-	}
-
-	public void OnUnload() {
-		//settingsService.OnPreSettingsSave -= OnPreSettingsSave;
 	}
 }

@@ -16,8 +16,4 @@ public class AboutSettingsViewModel : ViewModelBase, ISettingsViewChild {
 	private void OnPreSettingsSave() {
 		
 	}
-
-	public void OnUnload() {
-		//settingsService.OnPreSettingsSave -= OnPreSettingsSave;
-	}
 }
