@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel;
 
 using Timespan.GUI.Services;
-using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Settings;
 

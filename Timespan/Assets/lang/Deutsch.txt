@@ -6,7 +6,7 @@ Views.Pages.Settings.About.Labels.Title:Über Uns
 Views.Pages.Settings.Export.Labels.Title:Export
 Views.Pages.Settings.General.Labels.Title:Allgemein
 Views.Pages.Settings.UserData.Labels.Title:Nutzerdaten
-Views.Pages.Settings.Visuals.Labels.Title:Graphik
+Views.Pages.Settings.Graphics.Labels.Title:Graphik
 
 Views.MainView.Buttons.Timer:Zeitmessung
 Views.MainView.Buttons.Graphs:Übersicht
@@ -75,3 +75,10 @@ Months.September:September
 Months.October:Oktober
 Months.November:November
 Months.December:Dezember
+
+Absence.Sick:Sick
+Absence.Holiday:Holiday
+Absence.Vacant:Vacant
+Absence.HomeWork:HomeWork
+Absence.NoExcuse:No Excuse
+Absence.None:Present

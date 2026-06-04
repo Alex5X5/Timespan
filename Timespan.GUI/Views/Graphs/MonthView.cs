@@ -4,7 +4,7 @@ using Avalonia.Media;
 
 using Timespan.Util.Attributes;
 
-public partial class DayView : GraphViewBase {
+public partial class MonthView : GraphViewBase {
 
 	#region fields
 
@@ -21,7 +21,7 @@ public partial class DayView : GraphViewBase {
 
 	#endregion styledProperties
 
-	public DayView() : base() {
+	public MonthView() : base() {
 	}
 
 

@@ -1,4 +1,4 @@
-﻿namespace Timespan.GUI.Types; 
+﻿namespace Timespan.GUI.Types.Events; 
 
 public class CloseSettingsEventArgs(): EventArgs {
 	

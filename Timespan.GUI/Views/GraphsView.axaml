@@ -22,17 +22,36 @@
 								BlockedColumns="{ Binding BlockedColumns }"
 								XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 								IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
-								IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"/>
+								IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+								MousePressedCommand="{ Binding MousePressedCommand }"
+								MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+								ClickedCommand="{ Binding ClickedCommand }"
+								TaskClickedCommand="{ Binding TaskClickedCommand }"
+								LoadCommand="{ Binding LoadCommand }"/>
         </DataTemplate>
         <DataTemplate DataType="graphModels:WeekViewModel">
             <graphViews:WeekView MarkedColumns="{ Binding MarkedColumns }"
 								 BlockedColumns="{ Binding BlockedColumns }"
 								 XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 								 IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
-								 IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"/>
+								 IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+								 MousePressedCommand="{ Binding MousePressedCommand }"
+								 MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+								 ClickedCommand="{ Binding ClickedCommand }"
+								 TaskClickedCommand="{ Binding TaskClickedCommand }"
+								 LoadCommand="{ Binding LoadCommand }"/>
         </DataTemplate>
         <DataTemplate DataType="graphModels:MonthViewModel">
-            <graphViews:MonthView />
+            <graphViews:MonthView MarkedColumns="{ Binding MarkedColumns }"
+								  BlockedColumns="{ Binding BlockedColumns }"
+								  XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+								  IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+								  IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+								  MousePressedCommand="{ Binding MousePressedCommand }"
+								  MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+								  ClickedCommand="{ Binding ClickedCommand }"
+								  TaskClickedCommand="{ Binding TaskClickedCommand }"
+								  LoadCommand="{ Binding LoadCommand }"/>
         </DataTemplate>
     </UserControl.DataTemplates>
 

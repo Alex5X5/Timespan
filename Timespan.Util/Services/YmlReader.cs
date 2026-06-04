@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-internal unsafe class YmlReader {
+internal class YmlReader {
 
 	public string[] Keys => bufferedKeyValuePairs.Keys.ToArray();
 
-	public string? this[string index] => GetValue(index);
+	public string this[string index] => GetValue(index);
 
 	private Dictionary<string, string> bufferedKeyValuePairs = [];
 
@@ -59,8 +59,13 @@ internal unsafe class YmlReader {
 		NativeMemory.Free(text);
 	}
 
-	private string? GetValue(string index) {
-		bufferedKeyValuePairs.TryGetValue(index, out string? bufferedRes);
-		return bufferedRes;
+	private string GetValue(string index) {
+		if (index == null)
+			return "";
+		if (index == "")
+			return "";
+		if(bufferedKeyValuePairs.TryGetValue(index, out string? bufferedRes))
+			return bufferedRes;
+		return index;
 	}
 }

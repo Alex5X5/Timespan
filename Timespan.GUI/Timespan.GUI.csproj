@@ -30,9 +30,6 @@
 	  <Compile Update="Views\ExportView.axaml.cs">
 	    <DependentUpon>ExportView.axaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\Graphs\MonthView.axaml.cs">
-	    <DependentUpon>MonthView.axaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="Views\Settings\AboutSettingsView.axaml.cs">
 	    <DependentUpon>AboutSettingsView.axaml</DependentUpon>
 	  </Compile>
