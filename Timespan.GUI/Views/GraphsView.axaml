@@ -17,9 +17,10 @@
 	</UserControl.Styles>
   
 	<UserControl.DataTemplates>
-        <DataTemplate DataType="graphModels:DayViewModel">
-            <graphViews:DayView MarkedColumns="{ Binding MarkedColumns }"
+        <DataTemplate DataType="graphModels:DayPanelViewModel">
+            <graphViews:DayPanelView MarkedColumns="{ Binding MarkedColumns }"
 								BlockedColumns="{ Binding BlockedColumns }"
+								Tasks="{ Binding Tasks }"
 								XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 								IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
 								IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
@@ -29,9 +30,10 @@
 								TaskClickedCommand="{ Binding TaskClickedCommand }"
 								LoadCommand="{ Binding LoadCommand }"/>
         </DataTemplate>
-        <DataTemplate DataType="graphModels:WeekViewModel">
-            <graphViews:WeekView MarkedColumns="{ Binding MarkedColumns }"
-								 BlockedColumns="{ Binding BlockedColumns }"
+        <DataTemplate DataType="graphModels:WeekPanelViewModel">
+            <graphViews:WeekPanelView MarkedColumns="{ Binding MarkedColumns }"
+								 BlockedColumns="{ Binding BlockedColumns }"	
+								 Tasks="{ Binding Tasks }"
 								 XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 								 IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
 								 IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
@@ -41,9 +43,10 @@
 								 TaskClickedCommand="{ Binding TaskClickedCommand }"
 								 LoadCommand="{ Binding LoadCommand }"/>
         </DataTemplate>
-        <DataTemplate DataType="graphModels:MonthViewModel">
-            <graphViews:MonthView MarkedColumns="{ Binding MarkedColumns }"
+        <DataTemplate DataType="graphModels:MonthPanelViewModel">
+            <graphViews:MonthPanelView MarkedColumns="{ Binding MarkedColumns }"
 								  BlockedColumns="{ Binding BlockedColumns }"
+								  Tasks="{ Binding Tasks }"
 								  XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 								  IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
 								  IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
@@ -233,7 +236,8 @@
 					<Button Grid.Column="3"
 							Classes="OnlyClick"
 							HorizontalAlignment="Center"
-							VerticalAlignment="Center">
+							VerticalAlignment="Center"
+							Command="{ Binding DeleteTaskCommand }">
 						<Viewbox Stretch="Uniform">
 							<Svg Path="avares://Timespan.GUI/Assets/Images/loeschen.svg" />
 						</Viewbox>
@@ -241,7 +245,8 @@
 					<Button Grid.Column="5"
 							Classes="OnlyClick"
 							HorizontalAlignment="Center"
-							VerticalAlignment="Center">
+							VerticalAlignment="Center"
+							Command="{ Binding EditTaskCommand }">
 						<Viewbox Stretch="Uniform">
 							<Svg Path="avares://Timespan.GUI/Assets/Images/stift.svg" />
 						</Viewbox>

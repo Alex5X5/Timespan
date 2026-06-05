@@ -33,13 +33,13 @@ public class ObservableTask: ReactiveObject, IReactiveObject {
 		get => _value.description;
 	}
 
-	public string Running {
+	public bool Running {
 		set {
-			_value.description = value;
+			_value.running = value;
 			this.RaisePropertyChanged(nameof(Running));
 			this.RaisePropertyChanged(nameof(Value));
 		}
-		get => _value.description;
+		get => _value.running;
 	}
 
 	public long Start {

@@ -37,7 +37,10 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	private bool showTaskPanel = false;
 
-    [ObservableProperty]
+	[ObservableProperty]
+	private bool editingTask = false;
+
+	[ObservableProperty]
     private string showingTaskTitle = "a title";
 
     [ObservableProperty]
@@ -73,7 +76,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		SelectedTimeMode = TimeModes[0];
 		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
 			dispatcher += ShowTask;
-		CurrentPageAnchor.ChangeModel<DayViewModel>();
+		CurrentPageAnchor.ChangeModel<DayPanelViewModel>();
 	}
 
 	[RelayCommand]
@@ -95,16 +98,21 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	internal void HideTask() {
 		Console.WriteLine("[GraphsView]:hiding task");
 		ShowTaskPanel = false;
+		EditingTask = false;
 	}
 
 	[RelayCommand]
 	internal void DeleteTask() {
 		HideTask();
+		if (dbService.QueryCurrentTaskAsync().Result is Timespan.Types.Models.Task task) {
+			dbService.DeleteTaskAsync(task);
+		}
 	}
 
 	[RelayCommand]
 	internal void EditTask() {
-		
+		Console.WriteLine("[GraphsView]: editing task");
+		EditingTask = true;
 	}
 
 	[RelayCommand]
@@ -123,11 +131,11 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	private void UpdateMode(string mode) {
 		if(mode == TimeModes[0])
-			CurrentPageAnchor.ChangeModel<DayViewModel>();
+			CurrentPageAnchor.ChangeModel<DayPanelViewModel>();
 		if (mode == TimeModes[1])
-			CurrentPageAnchor.ChangeModel<WeekViewModel>();
+			CurrentPageAnchor.ChangeModel<WeekPanelViewModel>();
 		if (mode == TimeModes[2])
-			CurrentPageAnchor.ChangeModel<MonthViewModel>();
+			CurrentPageAnchor.ChangeModel<MonthPanelViewModel>();
 	}
 
 	internal void OnLoad() {

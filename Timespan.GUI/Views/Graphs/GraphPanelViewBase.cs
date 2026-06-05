@@ -18,7 +18,7 @@ using SharedTypes = Timespan.Types.Models;
 
 namespace Timespan.GUI.Views.Graphs;
 
-public abstract partial class GraphViewBase : UserControl {
+public abstract partial class GraphPanelViewBase : UserControl {
 
 	#region fields
 
@@ -54,66 +54,72 @@ public abstract partial class GraphViewBase : UserControl {
 	#region styled properties
 
 	public static readonly StyledProperty<ObservableCollection<ObservableTask>> TasksProperty =
-		AvaloniaProperty.Register<GraphViewBase, ObservableCollection<ObservableTask>>(nameof(Tasks), []);
+		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableTask>>(nameof(Tasks), []);
 
 	public static readonly StyledProperty<long> IntervalStartSecondsProperty =
-		AvaloniaProperty.Register<GraphViewBase, long>(nameof(MarkedColumns), 0);
+		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(MarkedColumns), 0);
 
 	public static readonly StyledProperty<long> IntervalStopSecondsProperty =
-		AvaloniaProperty.Register<GraphViewBase, long>(nameof(BlockedColumns), 0);
+		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(BlockedColumns), 0);
 
 	public static readonly StyledProperty<ObservableCollection<ObservableBool>> MarkedRowsProperty =
-		AvaloniaProperty.Register<GraphViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedRows), []);
+		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedRows), []);
 
 	public static readonly StyledProperty<ObservableCollection<ObservableBool>> BlockedRowsProperty =
-		AvaloniaProperty.Register<GraphViewBase, ObservableCollection<ObservableBool>>(nameof(BlockedRows), []);
+		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(BlockedRows), []);
 
 	public static readonly StyledProperty<ObservableCollection<ObservableBool>> MarkedColumnsProperty =
-		AvaloniaProperty.Register<GraphViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedColumns), []);
+		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedColumns), []);
 
 	public static readonly StyledProperty<ObservableCollection<ObservableBool>> BlockedColumnsProperty =
-		AvaloniaProperty.Register<GraphViewBase, ObservableCollection<ObservableBool>>(nameof(BlockedColumns), []);
+		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(BlockedColumns), []);
 
-	public static readonly StyledProperty<int> GraphsPaddingProperty =
-		AvaloniaProperty.Register<GraphViewBase, int>(nameof(BlockedColumns), 0);
+	public static readonly StyledProperty<double> ExtraClickSizeProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, double>(nameof(ExtraClickSize), 0);
+
+	public static readonly StyledProperty<double> MinimalWidthProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, double>(nameof(MinimalGraphWidth), 0);
+
+	public static readonly StyledProperty<int> MaxTasksProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(MaxTasks), 0);
 
 	public static readonly StyledProperty<int> XAxisSegmentDurationProperty =
-		AvaloniaProperty.Register<GraphViewBase, int>(nameof(XAxisSegmentDuration), 0);
+		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(XAxisSegmentDuration), 0);
 
 	public static readonly StyledProperty<int> XAxisSegmentCountProperty =
-		AvaloniaProperty.Register<GraphViewBase, int>(nameof(XAxisSegmentCount), 0);
+		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(XAxisSegmentCount), 0);
 
 	public static readonly StyledProperty<int> YAxisSegmentCountProperty =
-		AvaloniaProperty.Register<GraphViewBase, int>(nameof(YAxisSegmentCount), 0);
+		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(YAxisSegmentCount), 0);
 
 	public static readonly StyledProperty<IRelayCommand> LoadCommandProperty =
-		AvaloniaProperty.Register<GraphViewBase, IRelayCommand>(nameof(LoadCommand), new RelayCommand(() => { }));
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(LoadCommand), new RelayCommand(() => { }));
 
 	public static readonly StyledProperty<IRelayCommand> ClickedCommandProperty =
-		AvaloniaProperty.Register<GraphViewBase, IRelayCommand>(nameof(ClickedCommand), new RelayCommand(() => { }));
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(ClickedCommand), new RelayCommand(() => { }));
 
 	public static readonly StyledProperty<IRelayCommand<TaskClickedEventArgs>> TaskClickedCommandProperty =
-		AvaloniaProperty.Register<GraphViewBase, IRelayCommand<TaskClickedEventArgs>>(
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<TaskClickedEventArgs>>(
 			nameof(TaskClickedCommand),
 			new RelayCommand<TaskClickedEventArgs>(args => { }));
-
+		
 	public static readonly StyledProperty<IRelayCommand<MousePressedEventArgs>> MousePressedCommandProperty =
-		AvaloniaProperty.Register<GraphViewBase, IRelayCommand<MousePressedEventArgs>>(
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MousePressedEventArgs>>(
 			nameof(MousePressedCommand),
 			new RelayCommand<MousePressedEventArgs>(args => { }));
 
 	public static readonly StyledProperty<IRelayCommand<MouseReleasedEventArgs>> MouseReleasedCommandProperty =
-		AvaloniaProperty.Register<GraphViewBase, IRelayCommand<MouseReleasedEventArgs>>(
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MouseReleasedEventArgs>>(
 			nameof(MouseReleasedCommand),
 			new RelayCommand<MouseReleasedEventArgs>(args => { }));
 
 	public static readonly StyledProperty<IRelayCommand<MouseDraggingEventArgs>> MouseDraggingCommandProperty =
-		AvaloniaProperty.Register<GraphViewBase, IRelayCommand<MouseDraggingEventArgs>>(
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MouseDraggingEventArgs>>(
 			nameof(MouseDraggingCommand),
 			new RelayCommand<MouseDraggingEventArgs>(args => { }));
 
 	public static readonly StyledProperty<IRelayCommand<MissingContextClickedEventArgs>> MissingContextClickedCommandProperty =
-		AvaloniaProperty.Register<GraphViewBase, IRelayCommand<MissingContextClickedEventArgs>>(
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MissingContextClickedEventArgs>>(
 			nameof(MissingContextClickedCommand),
 			new RelayCommand<MissingContextClickedEventArgs>(args => { }));
 
@@ -142,6 +148,21 @@ public abstract partial class GraphViewBase : UserControl {
 		set => SetValue(BlockedColumnsProperty, value);
 	}
 
+	public double ExtraClickSize {
+		get => GetValue(ExtraClickSizeProperty);
+		set => SetValue(ExtraClickSizeProperty, value);
+	}
+
+	public double MinimalGraphWidth {
+		get => GetValue(MinimalWidthProperty);
+		set => SetValue(MinimalWidthProperty, value);
+	}
+
+	public int MaxTasks {
+		get => GetValue(MaxTasksProperty);
+		set => SetValue(MaxTasksProperty, value);
+	}
+
 	public long IntervalStartSeconds {
 		get => GetValue(XAxisSegmentCountProperty);
 		set => SetValue(XAxisSegmentCountProperty, value);
@@ -151,6 +172,8 @@ public abstract partial class GraphViewBase : UserControl {
 		get => GetValue(YAxisSegmentCountProperty);
 		set => SetValue(YAxisSegmentCountProperty, value);
 	}
+
+	public long IntervalDuration => IntervalStopSeconds - IntervalStartSeconds;
 
 	public int XAxisSegmentDuration {
 		get => GetValue(XAxisSegmentDurationProperty);
@@ -204,17 +227,16 @@ public abstract partial class GraphViewBase : UserControl {
 
 	#endregion
 
-	static GraphViewBase() {
-		AffectsRender<GraphViewBase>(IntervalStartSecondsProperty);
-		AffectsRender<GraphViewBase>(IntervalStopSecondsProperty);
-		AffectsRender<GraphViewBase>(MarkedRowsProperty);
-		AffectsRender<GraphViewBase>(BlockedRowsProperty);
-		AffectsRender<GraphViewBase>(MarkedColumnsProperty);
-		AffectsRender<GraphViewBase>(BlockedColumnsProperty);
-		AffectsRender<GraphViewBase>(GraphsPaddingProperty);
+	static GraphPanelViewBase() {
+		AffectsRender<GraphPanelViewBase>(IntervalStartSecondsProperty);
+		AffectsRender<GraphPanelViewBase>(IntervalStopSecondsProperty);
+		AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
+		AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
+		AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
+		AffectsRender<GraphPanelViewBase>(BlockedColumnsProperty);
 	}
 
-	public GraphViewBase() {
+	public GraphPanelViewBase() {
 		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
 		//this.Bind(MarkedColumnsProperty,new Binding(nameof(MarkedColumns)));
 
@@ -263,6 +285,21 @@ public abstract partial class GraphViewBase : UserControl {
 			}
 		};
 		_contextMenu?.Open(this);
+	}
+
+	public virtual Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int i) {
+		double proportion = GraphAreaWidth / IntervalDuration;
+		double graphPosX = (task.Start - IntervalStartSeconds) * proportion + PaddingX;
+		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
+		double graphLength = duration * proportion;
+		double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
+		Rect res = new(
+			graphPosX - additionalWidth,
+			YAxisSegmentSize * (i % (MaxTasks / XAxisSegmentCount)) * 1.5 - additionalHeight + PaddingY,
+			width,
+			YAxisSegmentSize + additionalHeight * 2
+		);
+		return res;
 	}
 
 	#region rendering
@@ -318,6 +355,17 @@ public abstract partial class GraphViewBase : UserControl {
 					item.PropertyChanged += OnBoolValueChanged;
 				newList.CollectionChanged += OnBoolListChanged;
 			}
+		} else if (change.Property == TasksProperty) {
+			if (change.OldValue is ObservableCollection<ObservableTask> oldList) {
+				foreach (ObservableTask item in oldList)
+					item.PropertyChanged -= OnTaskValueChanged;
+				oldList.CollectionChanged -= OnTaskListChanged;
+			}
+			if (change.NewValue is ObservableCollection<ObservableTask> newList) {
+				foreach (ObservableTask item in newList)
+					item.PropertyChanged += OnTaskValueChanged;
+				newList.CollectionChanged += OnTaskListChanged;
+			}
 		}
 	}
 
@@ -331,6 +379,19 @@ public abstract partial class GraphViewBase : UserControl {
 	}
 
 	private void OnBoolValueChanged(object? sender, PropertyChangedEventArgs e) {
+		InvalidateVisual();
+	}
+
+	private void OnTaskListChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+		if (e.OldItems != null)
+			foreach (ObservableTask item in e.OldItems)
+				item.PropertyChanged -=OnTaskValueChanged;
+		if (e.NewItems != null)
+			foreach (ObservableTask item in e.NewItems)
+				item.PropertyChanged += OnTaskValueChanged;
+	}
+
+	private void OnTaskValueChanged(object? sender, PropertyChangedEventArgs e) {
 		InvalidateVisual();
 	}
 

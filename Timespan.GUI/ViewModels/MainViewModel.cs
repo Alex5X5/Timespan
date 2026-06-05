@@ -57,6 +57,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
 
 		CurrentPageAnchor.ModelChanged += OnPageChanged;
+		CurrentPageAnchor.ModelChanged += UpdateNormalNavigationBar;
 
 		if (GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
 			dispatcher += args => CurrentPageAnchor.ChangeModel<GraphsViewModel>();
@@ -122,6 +123,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 			ShowSettingsNavigationBar = true;
 			ShowBackButton = true;
 			ShowSettingsButton = false;
+			redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.ModelChanged -= UpdateNormalNavigationBar;
 			redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged += UpdateSettingsNavigationBar;
 			GlobalEventService.Raise<OpenSettingsEventArgs>();
 		} else {
@@ -130,14 +132,11 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 			ShowBackButton = false;
 			ShowSettingsButton = true;
 			if (from == typeof(SettingsViewModel) && to != typeof(SettingsViewModel)) {
+				redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.ModelChanged += UpdateNormalNavigationBar;
 				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged -= UpdateSettingsNavigationBar;
 				GlobalEventService.Raise<CloseSettingsEventArgs>();
 			}
 		}
-
-		OnPropertyChanged(nameof(TimerButtonSelected));
-		OnPropertyChanged(nameof(GraphsButtonSelected));
-		OnPropertyChanged(nameof(ExportButtonSelected));
 		OnPropertyChanged(nameof(CurrentPage));
 	}
 
@@ -149,7 +148,10 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		OnPropertyChanged(nameof(ExportSettingsButtonSelected));
 	}
 
-	private void UpdatNormalNavigationBar(Type? from, Type to) {
+	private void UpdateNormalNavigationBar(Type? from, Type to) {
+		OnPropertyChanged(nameof(TimerButtonSelected));
+		OnPropertyChanged(nameof(GraphsButtonSelected));
+		OnPropertyChanged(nameof(ExportButtonSelected));
 	}
 
 	internal void OnLoad() {

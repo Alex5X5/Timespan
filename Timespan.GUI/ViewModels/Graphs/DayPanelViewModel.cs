@@ -5,13 +5,13 @@ using Timespan.Util.Services;
 
 namespace Timespan.GUI.ViewModels.Graphs;
 
-public partial class DayViewModel : GraphViewModelBase {
+public partial class DayPanelViewModel : GraphPanelViewModelBase {
 
-	public DayViewModel() : this(null, null) {
+	public DayPanelViewModel() : this(null, null) {
 		
 	}
 
-    public DayViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(cacheService, dbService, 1, 24, 3600) {
+    public DayPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(cacheService, dbService, 1, 24, 3600) {
 		
 	}
 

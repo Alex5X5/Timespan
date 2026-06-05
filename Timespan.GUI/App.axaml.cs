@@ -44,9 +44,9 @@ public partial class App : Application {
 		instanciator.RegisterWindow<MainWindow>();
 
 		instanciator.AddContentBindingType<IGraphsViewChild>();
-		instanciator.RegisterPageTransient<DayViewModel>();
-		instanciator.RegisterPageTransient<WeekViewModel>();
-		instanciator.RegisterPageTransient<MonthViewModel>();
+		instanciator.RegisterPageTransient<DayPanelViewModel>();
+		instanciator.RegisterPageTransient<WeekPanelViewModel>();
+		instanciator.RegisterPageTransient<MonthPanelViewModel>();
 
 		instanciator.AddContentBindingType<IMainViewChild>();
 		instanciator.RegisterPageTransient<TimerViewModel>();

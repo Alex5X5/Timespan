@@ -18,6 +18,17 @@ public class DateTimeService {
 	public static int DayOfWorkWeek(DateTime day) =>
 		(int)(day.DayOfWeek - 1 + 7) % 7;
 
+	public static int WeeksInMonth(DateTime date) {
+		int weeks = 0;
+		int offset = DayOfWorkWeek(FloorMonth(date));
+		if (offset != 0)
+			weeks++;
+		int totalDays = DateTime.DaysInMonth(date.Year, date.Month);
+		totalDays -= offset;
+		weeks += (int)Math.Ceiling(totalDays / 7.0);
+		return weeks;
+	}
+
     public static long ToSeconds(DateTime date) =>
 		date.Ticks / TimeSpan.TicksPerSecond;
 

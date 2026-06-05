@@ -1,18 +1,19 @@
 ﻿using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
+using Timespan.GUI.Services;
 using Timespan.Util.Services;
 
 namespace Timespan.GUI.ViewModels.Graphs;
 
-public partial class MonthViewModel : GraphViewModelBase {
+public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
-	public MonthViewModel() : this(null, null) {
+	public MonthPanelViewModel() : this(null, null) {
 
 	}
 
-	public MonthViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(cacheService, dbService, 1, 24, 3600) {
-
+	public MonthPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(cacheService, dbService, 1, 24, 3600) {
+		
 	}
 
 	public override string GetDateString() {

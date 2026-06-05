@@ -15,7 +15,7 @@ using Timespan.Util.Services;
 
 namespace Timespan.GUI.ViewModels.Graphs;
 
-public abstract partial class GraphViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
+public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
 
 	public Services.CacheService CacheService;
 	private IHourglassDbService dbService;
@@ -33,6 +33,19 @@ public abstract partial class GraphViewModelBase : ViewModelBase, IGraphsViewChi
 	public partial ObservableCollection<ObservableBool> BlockedColumns { set; get; }
 
 	[ObservableProperty]
+	public partial ObservableCollection<ObservableTask> Tasks { set; get; }
+
+
+	[ObservableProperty]
+	private double extraClickSize;
+	
+	[ObservableProperty]
+	private double minimalWidth;
+
+	[ObservableProperty]
+	private double maxTasks;
+
+	[ObservableProperty]
 	private long xAxisSegmentDuration;
 
 	[ObservableProperty]
@@ -47,7 +60,7 @@ public abstract partial class GraphViewModelBase : ViewModelBase, IGraphsViewChi
 	[ObservableProperty]
 	private long timeIntervallStopSeconds;
 
-    public GraphViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, int rows, int columns, long duration) : base() {
+    public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, int rows=1, int columns=24, long duration=3600) : base() {
 		CacheService = cacheService;
 		this.dbService = dbService;
 		YAxisSegmentCount = rows;

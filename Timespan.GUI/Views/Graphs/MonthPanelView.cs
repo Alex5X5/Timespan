@@ -2,12 +2,9 @@ namespace Timespan.GUI.Views.Graphs;
 
 using Avalonia.Media;
 
-using global::Timespan.GUI.ViewModels.Graphs;
-using global::Timespan.Util.Services;
-
 using Timespan.Util.Attributes;
 
-public partial class WeekView : GraphViewBase {
+public partial class MonthPanelView : GraphPanelViewBase {
 
 	#region fields
 
@@ -24,7 +21,7 @@ public partial class WeekView : GraphViewBase {
 
 	#endregion styledProperties
 
-	public WeekView() : base() {
+	public MonthPanelView() : base() {
 	}
 
 
@@ -63,47 +60,28 @@ public partial class WeekView : GraphViewBase {
 	}
 
 	protected override void DrawTimeline(DrawingContext context) {
-		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-		Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(255, 237, 166, 166));
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
-		string[] days = [
-			TranslatorService.Singleton["Days.Monday"] ?? "Monday",
-			TranslatorService.Singleton["Days.Tuesday"] ?? "Tuesday",
-			TranslatorService.Singleton["Days.Wednesday"] ?? "Wendsday",
-			TranslatorService.Singleton["Days.Thursday"] ?? "Thursday",
-			TranslatorService.Singleton["Days.Friday"] ?? "Friday"
-		];
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			double xPos = XAxisSegmentSize * i + PaddingX;
-			//if (i % 7 == 5 | i % 7 == 6)
-			//context.FillRectangle(weekedDayBackground, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-			if (i + 1 == (int)DateTime.Today.DayOfWeek)
-				if (DateTimeService.FloorWeek((DataContext as WeekViewModel)!.CacheService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
-					context.FillRectangle(todayBackgroundColor, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-		}
 		//context.DrawLine(timeLine, new(PaddingX, Bounds.Height - PaddingY), new(Bounds.Width - PaddingX, Bounds.Height - PaddingY));
 		double textSize = Math.Round(PaddingY * 0.7, 1);
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 25; i++) {
 			double xPos = XAxisSegmentSize * i + PaddingX;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, PaddingY));
-			//context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, Bounds.Height - PaddingY - TimelineMarkHeight));
-			if (i < 5) {
-				var formattedText = new FormattedText(
-					days[i],
-					System.Globalization.CultureInfo.CurrentCulture,
-					FlowDirection.LeftToRight,
-					new Typeface("Arial"),
-					textSize,
-					textBrush
-				);
-				Point textPos = new(xPos + XAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - (PaddingY * 0.85));
-				context.DrawText(
-					formattedText,
-					textPos
-				);
-			}
+			//context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, Bounds.Height - PaddingY * 1.5));
+			var formattedText = new FormattedText(
+				Convert.ToString(i) + ":00",
+				System.Globalization.CultureInfo.CurrentCulture,
+				FlowDirection.LeftToRight,
+				new Typeface("Arial"),
+				textSize,
+				textBrush
+			);
+			Point textPos = new(xPos - formattedText.Width / 2.0, Bounds.Height - (PaddingY * 0.85));
+			context.DrawText(
+				formattedText,
+				textPos
+			);
 		}
 	}
 
