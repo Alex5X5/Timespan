@@ -47,7 +47,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	protected double GraphAreaHeight => Bounds.Height - 2 * PaddingY;
 
 	protected double XAxisSegmentSize => GraphAreaWidth / XAxisSegmentCount;
-	protected double YAxisSegmentSize => GraphAreaHeight / (YAxisSegmentCount * 1.5) * YAxisSegmentCount;
+	protected double YAxisSegmentSize => GraphAreaHeight / YAxisSegmentCount;
 
 	#endregion
 
@@ -230,10 +230,16 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	static GraphPanelViewBase() {
 		AffectsRender<GraphPanelViewBase>(IntervalStartSecondsProperty);
 		AffectsRender<GraphPanelViewBase>(IntervalStopSecondsProperty);
+		AffectsRender<GraphPanelViewBase>(TasksProperty);
 		AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
 		AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
 		AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
 		AffectsRender<GraphPanelViewBase>(BlockedColumnsProperty);
+		AffectsRender<GraphPanelViewBase>(MaxTasksProperty);
+		AffectsRender<GraphPanelViewBase>(MinimalWidthProperty);
+		AffectsRender<GraphPanelViewBase>(XAxisSegmentCountProperty);
+		AffectsRender<GraphPanelViewBase>(YAxisSegmentCountProperty);
+		AffectsRender<GraphPanelViewBase>(XAxisSegmentDurationProperty);
 	}
 
 	public GraphPanelViewBase() {
@@ -324,8 +330,35 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	protected abstract void DrawTimeline(DrawingContext context);
-	protected abstract void DrawColumnMarkers(DrawingContext context);
-	protected abstract void DrawMouseRectangle(DrawingContext context);
+	protected virtual void DrawColumnMarkers(DrawingContext context) {
+		Brush markedBrush = new SolidColorBrush(Color.FromArgb(120, 120, 120, 240));
+		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
+		double y = PaddingY + 2;
+		double width = XAxisSegmentSize - 4;
+		double height = YAxisSegmentSize - 4;
+		for (int row = 0; row < YAxisSegmentCount; row++) {
+			double x = PaddingX + 2;
+			for (int column = 0; column < XAxisSegmentCount; column++) {
+				if (BlockedRows[row].Value)
+					if (BlockedColumns[column].Value)
+						context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
+				if (MarkedRows[row].Value)
+					if (MarkedColumns[column].Value)
+						context.FillRectangle(markedBrush, new Rect(x, y, width, height));
+				x += XAxisSegmentSize;
+			}
+			y += YAxisSegmentSize;
+		}
+	}
+
+	protected virtual void DrawMouseRectangle(DrawingContext context) {
+		if (RightMouseDown) {
+			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
+			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
+			Pen borderPen = new Pen(borderBrush, 2);
+			context.DrawRectangle(areaBrush, borderPen, MarkerDragRectangle);
+		}
+	}
 
 	#endregion
 
@@ -396,6 +429,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	private void OnClickBase(object? sender, TappedEventArgs e) {
+		ClickedCommand.Execute(EventArgs.Empty);
 		Point mousePos = e.GetPosition(this);
 		if (DataContext is IGraphViewModel model) {
 			//int i = 0;
@@ -415,7 +449,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 				TaskClickedCommand.Execute(clickArgs);
 			}
 		}
-
 	}
 
 	private void OnDoubleClickBase(object? sender, TappedEventArgs args) {
@@ -432,9 +465,25 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			Math.Abs(MousePos.X - DragOrigin.X),
 			Math.Abs(MousePos.Y - DragOrigin.Y)
 		);
+		foreach (var flag in MarkedRows)
+			flag.Value = false;
+		foreach (var flag in MarkedColumns)
+			flag.Value = false;
 		if (RightMouseDown) {
-			var dragArgs = new MouseDraggingEventArgs(MarkerDragRectangle, GraphAreaWidth, PaddingX);
+			var dragArgs = new MouseDraggingEventArgs(MarkerDragRectangle, GraphAreaWidth, GraphAreaHeight, PaddingX, PaddingY);
 			MouseDraggingCommand.Execute(dragArgs);
+			double yPos = PaddingY;
+			for (int row = 0; row < YAxisSegmentCount; row++) {
+				double xPos = PaddingX;
+				for (int column = 0; column < XAxisSegmentCount; column++) {
+					var segment = new Rect(xPos, yPos, XAxisSegmentSize, YAxisSegmentSize);
+					var intersects = MarkerDragRectangle.Intersects(segment);
+					MarkedRows[row].Value |= intersects;
+					MarkedColumns[column].Value |= intersects;
+					xPos += XAxisSegmentSize;
+				}
+				yPos += YAxisSegmentSize;
+			}
 		}
 		InvalidateVisual();
 	}

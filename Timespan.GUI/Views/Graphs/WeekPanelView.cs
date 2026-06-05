@@ -69,11 +69,11 @@ public partial class WeekPanelView : GraphPanelViewBase {
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
 		string[] days = [
-			TranslatorService.Singleton["Days.Monday"] ?? "Monday",
-			TranslatorService.Singleton["Days.Tuesday"] ?? "Tuesday",
-			TranslatorService.Singleton["Days.Wednesday"] ?? "Wendsday",
-			TranslatorService.Singleton["Days.Thursday"] ?? "Thursday",
-			TranslatorService.Singleton["Days.Friday"] ?? "Friday"
+			TranslatorService.Singleton["Days.Monday"],
+			TranslatorService.Singleton["Days.Tuesday"],
+			TranslatorService.Singleton["Days.Wednesday"],
+			TranslatorService.Singleton["Days.Thursday"],
+			TranslatorService.Singleton["Days.Friday"]
 		];
 		for (int i = 0; i < XAxisSegmentCount; i++) {
 			double xPos = XAxisSegmentSize * i + PaddingX;
@@ -104,16 +104,6 @@ public partial class WeekPanelView : GraphPanelViewBase {
 					textPos
 				);
 			}
-		}
-	}
-
-	protected override void DrawMouseRectangle(DrawingContext context) {
-		if (RightMouseDown) {
-			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
-			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
-			Pen borderPen = new Pen(borderBrush, 2);
-			context.DrawRectangle(areaBrush, borderPen, MarkerDragRectangle);
-			//Console.WriteLine($"filling marker rect from {MarkerDragRectangle.TopLeft} to {MarkerDragRectangle.BottomRight}");
 		}
 	}
 

@@ -12,7 +12,7 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public MonthPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(cacheService, dbService, 1, 24, 3600) {
+	public MonthPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(cacheService, dbService, DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5, 3600) {
 		
 	}
 
@@ -23,5 +23,10 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
 	public async override Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return [];
+	}
+
+	protected override void SelectedDayChanged() {
+		base.SelectedDayChanged();
+		YAxisSegmentCount = DateTimeService.WeeksInMonth(SelectedDay);
 	}
 }

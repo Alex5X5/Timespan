@@ -1,15 +1,15 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:cls="using:Timespan.GUI.Views"
 			 xmlns:views="using:Timespan.GUI.Views"
 			 xmlns:models="using:Timespan.GUI.ViewModels"
 			 xmlns:graphViews="using:Timespan.GUI.Views.Graphs"
 			 xmlns:graphModels="using:Timespan.GUI.ViewModels.Graphs"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="models:GraphsViewModel"
-             x:Class="Timespan.GUI.Views.GraphsView"
+			 x:Class="Timespan.GUI.Views.GraphsView"
 			 Loaded="UserControl_Loaded">
 	
 	<UserControl.Styles>
@@ -17,46 +17,58 @@
 	</UserControl.Styles>
   
 	<UserControl.DataTemplates>
-        <DataTemplate DataType="graphModels:DayPanelViewModel">
-            <graphViews:DayPanelView MarkedColumns="{ Binding MarkedColumns }"
-								BlockedColumns="{ Binding BlockedColumns }"
-								Tasks="{ Binding Tasks }"
-								XAxisSegmentCount="{ Binding XAxisSegmentCount }"
-								IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
-								IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
-								MousePressedCommand="{ Binding MousePressedCommand }"
-								MouseDraggingCommand="{ Binding MouseDraggingCommand }"
-								ClickedCommand="{ Binding ClickedCommand }"
-								TaskClickedCommand="{ Binding TaskClickedCommand }"
-								LoadCommand="{ Binding LoadCommand }"/>
-        </DataTemplate>
-        <DataTemplate DataType="graphModels:WeekPanelViewModel">
-            <graphViews:WeekPanelView MarkedColumns="{ Binding MarkedColumns }"
-								 BlockedColumns="{ Binding BlockedColumns }"	
-								 Tasks="{ Binding Tasks }"
-								 XAxisSegmentCount="{ Binding XAxisSegmentCount }"
-								 IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
-								 IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
-								 MousePressedCommand="{ Binding MousePressedCommand }"
-								 MouseDraggingCommand="{ Binding MouseDraggingCommand }"
-								 ClickedCommand="{ Binding ClickedCommand }"
-								 TaskClickedCommand="{ Binding TaskClickedCommand }"
-								 LoadCommand="{ Binding LoadCommand }"/>
-        </DataTemplate>
-        <DataTemplate DataType="graphModels:MonthPanelViewModel">
-            <graphViews:MonthPanelView MarkedColumns="{ Binding MarkedColumns }"
-								  BlockedColumns="{ Binding BlockedColumns }"
-								  Tasks="{ Binding Tasks }"
-								  XAxisSegmentCount="{ Binding XAxisSegmentCount }"
-								  IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
-								  IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
-								  MousePressedCommand="{ Binding MousePressedCommand }"
-								  MouseDraggingCommand="{ Binding MouseDraggingCommand }"
-								  ClickedCommand="{ Binding ClickedCommand }"
-								  TaskClickedCommand="{ Binding TaskClickedCommand }"
-								  LoadCommand="{ Binding LoadCommand }"/>
-        </DataTemplate>
-    </UserControl.DataTemplates>
+		<DataTemplate DataType="graphModels:DayPanelViewModel">
+			<graphViews:DayPanelView MarkedRows="{ Binding MarkedRows }"
+									 MarkedColumns="{ Binding MarkedColumns }"
+									 BlockedRows="{ Binding BlockedRows }"
+									 BlockedColumns="{ Binding BlockedColumns }"
+									 Tasks="{ Binding Tasks }"
+									 XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+									 YAxisSegmentCount="{ Binding YAxisSegmentCount }"
+									 IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+									 IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+									 MousePressedCommand="{ Binding MousePressedCommand }"
+									 MouseReleasedCommand="{ Binding MouseReleasedCommand }"
+									 MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									 ClickedCommand="{ Binding ClickedCommand }"
+									 TaskClickedCommand="{ Binding TaskClickedCommand }"
+									 LoadCommand="{ Binding LoadCommand }"/>
+		</DataTemplate>
+		<DataTemplate DataType="graphModels:WeekPanelViewModel">
+			<graphViews:WeekPanelView MarkedRows="{ Binding MarkedRows }"
+									  MarkedColumns="{ Binding MarkedColumns }"
+									  BlockedRows="{ Binding BlockedRows }"
+									  BlockedColumns="{ Binding BlockedColumns }"
+									  Tasks="{ Binding Tasks }"
+									  XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+									  YAxisSegmentCount="{ Binding YAxisSegmentCount }"
+									  IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+									  IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+									  MousePressedCommand="{ Binding MousePressedCommand }"
+									  MouseReleasedCommand="{ Binding MouseReleasedCommand }"
+									  MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									  ClickedCommand="{ Binding ClickedCommand }"
+									  TaskClickedCommand="{ Binding TaskClickedCommand }"
+									  LoadCommand="{ Binding LoadCommand }"/>
+		</DataTemplate>
+		<DataTemplate DataType="graphModels:MonthPanelViewModel">
+			<graphViews:MonthPanelView MarkedRows="{ Binding MarkedRows }"
+									   MarkedColumns="{ Binding MarkedColumns }"
+									   BlockedRows="{ Binding BlockedRows }"
+									   BlockedColumns="{ Binding BlockedColumns }"
+									   Tasks="{ Binding Tasks }"
+									   XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+									   YAxisSegmentCount="{ Binding YAxisSegmentCount }"
+									   IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+									   IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+									   MousePressedCommand="{ Binding MousePressedCommand }"
+									   MouseReleasedCommand="{ Binding MouseReleasedCommand }"
+									   MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									   ClickedCommand="{ Binding ClickedCommand }"
+									   TaskClickedCommand="{ Binding TaskClickedCommand }"
+									   LoadCommand="{ Binding LoadCommand }"/>
+		</DataTemplate>
+	</UserControl.DataTemplates>
 
 	
 	<Grid ShowGridLines="False">

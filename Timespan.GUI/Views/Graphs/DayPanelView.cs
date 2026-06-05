@@ -87,16 +87,6 @@ public partial class DayPanelView : GraphPanelViewBase {
 		}
 	}
 
-	protected override void DrawMouseRectangle(DrawingContext context) {
-		if (RightMouseDown) {
-			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
-			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
-			Pen borderPen = new Pen(borderBrush, 2);
-			context.DrawRectangle(areaBrush, borderPen, MarkerDragRectangle);
-			//Console.WriteLine($"filling marker rect from {MarkerDragRectangle.TopLeft} to {MarkerDragRectangle.BottomRight}");
-		}
-	}
-
 	//private void DrawTaskGraph(DrawingContext context, Timespan.Types.Models.Task task, int i) {
 	//	Rect rect = GetTaskRectanlge(task, 0, 0, i);
 	//	r = Math.Min(r, rect.Width / 2);

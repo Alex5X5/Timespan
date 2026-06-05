@@ -20,6 +20,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	public Services.CacheService CacheService;
 	private IHourglassDbService dbService;
 
+	#region observable properties
+
 	[ObservableProperty]
 	public partial ObservableCollection<ObservableBool> MarkedRows { set; get; }
 
@@ -60,16 +62,25 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	[ObservableProperty]
 	private long timeIntervallStopSeconds;
 
-    public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, int rows=1, int columns=24, long duration=3600) : base() {
+	[ObservableProperty]
+	private DateTime selectedDay;
+
+	partial void OnSelectedDayChanged(DateTime value) {
+		SelectedDayChanged();
+	}
+
+	#endregion
+
+	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, int rows=1, int columns=24, long duration=3600) : base() {
 		CacheService = cacheService;
 		this.dbService = dbService;
-		YAxisSegmentCount = rows;
+		MarkedRows = new();
+		BlockedRows = new();
+		MarkedColumns = new();
+		BlockedColumns = new();
 		XAxisSegmentCount = columns;
+		YAxisSegmentCount = rows;
 		XAxisSegmentDuration = duration;
-		MarkedRows = new(new ObservableBool[rows]);
-		BlockedRows = new(new ObservableBool[rows]);
-		MarkedColumns = new(new ObservableBool[columns]);
-		BlockedColumns = new(new ObservableBool[columns]);
 		for (int i = 0; i < MarkedRows.Count; i++) {
 			MarkedRows[i] = new(false);
 			MarkedRows[i] = new(false);
@@ -92,16 +103,33 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	public abstract string GetDateString();
 
-	public abstract Task<List<Timespan.Types.Models.Task>> GetTasksAsync();
+	public virtual async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
+		long start = TimeIntervallStartSeconds;
+		long stop = start + TimeIntervallStopSeconds;
+		return dbService != null ? await dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds) : [];
+	}
+
+	#region relay commands
 
 	[RelayCommand]
-	public void Load() {
+	protected virtual void OnLoad() {
 		UpdateColumnMarkers();
+		CacheService.OnSelectedDayChanged += UpdateSelectedDay;
 	}
 
 	[RelayCommand]
-	public void OnClicked() {
+	protected virtual void OnUnload() {
+		CacheService.OnSelectedDayChanged -= UpdateSelectedDay;
+	}
 
+	private void UpdateSelectedDay(DateTime? date) {
+		UpdateColumnMarkers();
+		SelectedDay = date ?? SelectedDay;
+	}
+
+	[RelayCommand]
+	protected virtual void OnClicked() {
+		
 	}
 
 	[RelayCommand]
@@ -124,18 +152,54 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	[RelayCommand]
 	protected virtual void OnMouseReleased(MouseReleasedEventArgs args) {
+		
 	}
 
 	[RelayCommand]
 	protected virtual void OnMouseDragging(MouseDraggingEventArgs args) {
-		double leftRectBound = args.DragRectangle.X - args.PaddingX;
-		double rightRectBound = leftRectBound + args.DragRectangle.Width;
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			double leftSegmentBound = args.Width * i / XAxisSegmentCount;
-			double rightSegmentBound = args.Width * (i + 1) / XAxisSegmentCount;
-			MarkedColumns[i].Value = !( rightRectBound < leftSegmentBound | leftRectBound > rightSegmentBound );
+	}
+
+	#endregion
+
+	#region property changed events
+
+	protected virtual void SelectedDayChanged() {
+		
+	}
+
+	partial void OnXAxisSegmentCountChanged(long value) {
+		if (MarkedColumns != null) {
+			while (MarkedColumns.Count > value)
+				MarkedColumns.RemoveAt(MarkedColumns.Count - 1);
+			while (MarkedColumns.Count < value)
+				MarkedColumns.Add(new ObservableBool(false));
+		}
+		if (BlockedColumns != null) {
+			while (BlockedColumns.Count > value)
+				BlockedColumns.RemoveAt(BlockedColumns.Count - 1);
+			while (BlockedColumns.Count < value)
+				BlockedColumns.Add(new ObservableBool(false));
 		}
 	}
+
+	partial void OnYAxisSegmentCountChanged(long value) {
+		if (MarkedRows != null) {
+			while (MarkedRows.Count > value)
+				MarkedRows.RemoveAt(MarkedRows.Count - 1);
+			while (MarkedRows.Count < value)
+				MarkedRows.Add(new ObservableBool(false));
+		}
+		if (BlockedRows != null) {
+			while (BlockedRows.Count > value)
+				BlockedRows.RemoveAt(BlockedRows.Count - 1);
+			while (BlockedRows.Count < value)
+				BlockedRows.Add(new ObservableBool(false));
+		}
+	}
+
+	#endregion
+
+	#region marked rows and columns
 
 	protected virtual void UpdateColumnMarkers() {
 		long start = TimeIntervallStartSeconds;
@@ -190,4 +254,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		}
 		UpdateColumnMarkers();
 	}
+
+	#endregion
 }

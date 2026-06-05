@@ -34,7 +34,9 @@
 		<ProjectReference Include="..\DatabaseUtil\DatabaseUtil.csproj" />
 		<ProjectReference Include="..\Timespan.Database\Timespan.Database.csproj" />
 		<ProjectReference Include="..\Timespan.PDF\Timespan.PDF.csproj" />
+		<!--
 		<ProjectReference Include="..\Timespan.Installer\Timespan.Installer.csproj" />
+		-->
 		<ProjectReference Include="..\Timespan.Gui\Timespan.Gui.csproj" />
 	</ItemGroup>
 
