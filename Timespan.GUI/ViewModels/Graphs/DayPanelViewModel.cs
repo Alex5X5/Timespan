@@ -11,7 +11,11 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		
 	}
 
-    public DayPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(cacheService, dbService, 1, 24, 3600) {
+    public DayPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(
+			cacheService, dbService,
+			DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay)),
+			DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay)),
+			1, 24, 3600) {
 		
 	}
 
@@ -21,7 +25,7 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		return $"{day}. {CacheService.SelectedDay.Day}. {month}. {CacheService.SelectedDay.Year}";
 	}
 
-	public async override Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return [];
+	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(CacheService.SelectedDay)) : [];
 	}
 }

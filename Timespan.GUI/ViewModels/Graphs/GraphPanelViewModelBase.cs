@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using DynamicData;
+
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,6 +11,7 @@ using System.Threading.Tasks;
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Interfaces;
 using Timespan.GUI.Services;
+using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
@@ -18,7 +21,7 @@ namespace Timespan.GUI.ViewModels.Graphs;
 public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
 
 	public Services.CacheService CacheService;
-	private IHourglassDbService dbService;
+	protected IHourglassDbService dbService;
 
 	#region observable properties
 
@@ -71,7 +74,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#endregion
 
-	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, int rows=1, int columns=24, long duration=3600) : base() {
+	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, long start, long finish, int rows=1, int columns=24, long duration=3600) : base() {
 		CacheService = cacheService;
 		this.dbService = dbService;
 		MarkedRows = new();
@@ -97,16 +100,15 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 			BlockedColumns[i] = new(false);
 			BlockedColumns[i] = new(false);
 		}
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay));
+		TimeIntervallStartSeconds = start;
+		TimeIntervallStopSeconds = finish;
+		Tasks = new();
 	}
 
 	public abstract string GetDateString();
 
 	public virtual async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		long start = TimeIntervallStartSeconds;
-		long stop = start + TimeIntervallStopSeconds;
-		return dbService != null ? await dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds) : [];
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(CacheService.SelectedDay)) : [];
 	}
 
 	#region relay commands
@@ -115,6 +117,11 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected virtual void OnLoad() {
 		UpdateColumnMarkers();
 		CacheService.OnSelectedDayChanged += UpdateSelectedDay;
+		List<Timespan.Types.Models.Task> tasks = GetTasksAsync().Result;
+		var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
+		if(tasks_.Count == 0)
+			return;
+		Tasks.AddRange(tasks_);
 	}
 
 	[RelayCommand]

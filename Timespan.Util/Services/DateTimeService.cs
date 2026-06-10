@@ -43,17 +43,17 @@ public class DateTimeService {
 		FloorDay(date.AddDays((-(int)date.DayOfWeek)+1));
 
 	public static DateTime FloorMonth(DateTime date) =>
-			new(date.Year, date.Month, 1);
+		new(date.Year, date.Month, 1);
 
 
 	public static DateTime CeilHour(DateTime date) =>
 		FloorHour(date).AddSeconds(3599);
 
 	public static DateTime CeilDay(DateTime date) =>
-		FloorDay(date).AddSeconds(86399);
+		FloorDay(date).AddSeconds(TimeSpan.SecondsPerDay - 1);
 
 	public static DateTime CeilWeek(DateTime date) =>
-		FloorWeek(date).AddSeconds(604799);
+		FloorWeek(date).AddSeconds(TimeSpan.SecondsPerDay * 5 - 1);
 
 	public static DateTime CeilMonth(DateTime date) =>
 		FloorMonth(date).AddMonths(1).AddSeconds(-1);

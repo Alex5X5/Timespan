@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 using Timespan.GUI.Interfaces;
 using Timespan.GUI.Types;
@@ -57,10 +58,10 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableTask>>(nameof(Tasks), []);
 
 	public static readonly StyledProperty<long> IntervalStartSecondsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(MarkedColumns), 0);
+		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStartSeconds), 0);
 
 	public static readonly StyledProperty<long> IntervalStopSecondsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(BlockedColumns), 0);
+		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStopSeconds), 0);
 
 	public static readonly StyledProperty<ObservableCollection<ObservableBool>> MarkedRowsProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedRows), []);
@@ -164,13 +165,13 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	public long IntervalStartSeconds {
-		get => GetValue(XAxisSegmentCountProperty);
-		set => SetValue(XAxisSegmentCountProperty, value);
+		get => GetValue(IntervalStartSecondsProperty);
+		set => SetValue(IntervalStartSecondsProperty, value);
 	}
 
 	public long IntervalStopSeconds {
-		get => GetValue(YAxisSegmentCountProperty);
-		set => SetValue(YAxisSegmentCountProperty, value);
+		get => GetValue(IntervalStopSecondsProperty);
+		set => SetValue(IntervalStopSecondsProperty, value);
 	}
 
 	public long IntervalDuration => IntervalStopSeconds - IntervalStartSeconds;
@@ -293,15 +294,16 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		_contextMenu?.Open(this);
 	}
 
-	public virtual Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int i) {
+	protected virtual Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int i) {
 		double proportion = GraphAreaWidth / IntervalDuration;
 		double graphPosX = (task.Start - IntervalStartSeconds) * proportion + PaddingX;
 		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
 		double graphLength = duration * proportion;
 		double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
+		
 		Rect res = new(
 			graphPosX - additionalWidth,
-			YAxisSegmentSize * (i % (MaxTasks / XAxisSegmentCount)) * 1.5 - additionalHeight + PaddingY,
+			YAxisSegmentSize * i * 1.5 - additionalHeight + PaddingY,
 			width,
 			YAxisSegmentSize + additionalHeight * 2
 		);
@@ -315,8 +317,14 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			return;
 		DrawBackground(context);
 		DrawTimeline(context);
+		DrawTasks(context);
 		DrawColumnMarkers(context);
 		DrawMouseRectangle(context);
+	}
+
+	protected virtual void DrawTasks(DrawingContext context) {
+		foreach (var task in Tasks ?? [])
+			DrawTaskGraph(context, task, 0);
 	}
 
 	protected virtual void DrawBackground(DrawingContext context) {
@@ -351,6 +359,31 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		}
 	}
 
+	protected void DrawTaskGraph(DrawingContext context, ObservableTask task, int i) {
+		Rect rect = GetTaskRectangle(task, 0, 0, i);
+		Color gradientStartColor = Color.FromArgb(255, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+		Color gradientFinishColor = Color.FromArgb(20, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+
+		Brush brush = task.Running
+			? new LinearGradientBrush() {
+				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
+				EndPoint = new RelativePoint(1.0, 0.5, RelativeUnit.Relative),
+				GradientStops = {
+					new GradientStop(gradientStartColor, 0.0),
+					new GradientStop(gradientFinishColor, 1.0)
+				}
+			}
+			: new SolidColorBrush(task.DisplayColor);
+		double r = Math.Min(10, rect.Height / 4);
+		r = Math.Min(r, rect.Width / 2);
+		RectangleGeometry rrect = new(rect) {
+			RadiusX = r,
+			RadiusY = r
+		};
+		context.DrawGeometry(brush, null, rrect);
+		//DrawTaskDescriptionStub(context, task, rect);
+	}
+
 	protected virtual void DrawMouseRectangle(DrawingContext context) {
 		if (RightMouseDown) {
 			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
@@ -366,6 +399,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
 		base.OnPropertyChanged(change);
+		Console.WriteLine($"""Property "{change.Property.Name}" of "{GetType().Name}" changed to "{change.NewValue?.ToString() ?? "null"}" """);
 		if (change.Property == MarkedColumnsProperty) {
 			if (change.OldValue is ObservableCollection<ObservableBool> oldList) {
 				foreach (ObservableBool item in oldList)

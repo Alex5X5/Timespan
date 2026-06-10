@@ -5,6 +5,7 @@ using Avalonia.Media;
 using global::Timespan.GUI.ViewModels.Graphs;
 using global::Timespan.Util.Services;
 
+using Timespan.GUI.Types;
 using Timespan.Util.Attributes;
 
 public partial class WeekPanelView : GraphPanelViewBase {
@@ -105,6 +106,24 @@ public partial class WeekPanelView : GraphPanelViewBase {
 				);
 			}
 		}
+	}
+
+	protected override Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int i) {
+		double proportion = GraphAreaWidth / IntervalDuration;
+		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
+		long offset = task.Start - IntervalStartSeconds;
+		offset -= offset % XAxisSegmentDuration;
+		double xPos = offset * proportion + PaddingX;
+		xPos -= additionalWidth;
+		double width = XAxisSegmentSize * 0.95;
+		Rect res = new(
+			xPos,
+			YAxisSegmentSize * (i % (MaxTasks / XAxisSegmentCount)) * 1.5 - additionalHeight + PaddingY,
+			width,
+			YAxisSegmentSize + additionalHeight * 2
+		);
+		return res;
+
 	}
 
 	//private void DrawTaskGraph(DrawingContext context, Timespan.Types.Models.Task task, int i) {
