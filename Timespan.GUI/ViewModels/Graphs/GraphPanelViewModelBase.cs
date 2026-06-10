@@ -20,7 +20,7 @@ namespace Timespan.GUI.ViewModels.Graphs;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
 
-	public Services.CacheService CacheService;
+	public Services.CacheService cacheService;
 	protected IHourglassDbService dbService;
 
 	#region observable properties
@@ -39,6 +39,9 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	[ObservableProperty]
 	public partial ObservableCollection<ObservableTask> Tasks { set; get; }
+
+	[ObservableProperty]
+	private bool[,] isTodaySegment;
 
 
 	[ObservableProperty]
@@ -75,7 +78,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	#endregion
 
 	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, long start, long finish, int rows=1, int columns=24, long duration=3600) : base() {
-		CacheService = cacheService;
+		this.cacheService = cacheService;
 		this.dbService = dbService;
 		MarkedRows = new();
 		BlockedRows = new();
@@ -84,6 +87,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		XAxisSegmentCount = columns;
 		YAxisSegmentCount = rows;
 		XAxisSegmentDuration = duration;
+		IsTodaySegment = new bool[YAxisSegmentCount, XAxisSegmentCount];
+		for(int row = 0; row < YAxisSegmentCount; row++) 
+			for(int column = 0; column < XAxisSegmentCount; column++)
+				IsTodaySegment[row, column] = IsToday(row, column);
 		for (int i = 0; i < MarkedRows.Count; i++) {
 			MarkedRows[i] = new(false);
 			MarkedRows[i] = new(false);
@@ -107,8 +114,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	public abstract string GetDateString();
 
+	protected abstract bool IsToday(int ro, int column);
+
 	public virtual async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(CacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];
 	}
 
 	#region relay commands
@@ -116,7 +125,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	[RelayCommand]
 	protected virtual void OnLoad() {
 		UpdateColumnMarkers();
-		CacheService.OnSelectedDayChanged += UpdateSelectedDay;
+		cacheService.OnSelectedDayChanged += UpdateSelectedDay;
 		List<Timespan.Types.Models.Task> tasks = GetTasksAsync().Result;
 		var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
 		if(tasks_.Count == 0)
@@ -126,7 +135,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	[RelayCommand]
 	protected virtual void OnUnload() {
-		CacheService.OnSelectedDayChanged -= UpdateSelectedDay;
+		cacheService.OnSelectedDayChanged -= UpdateSelectedDay;
 	}
 
 	private void UpdateSelectedDay(DateTime? date) {
@@ -141,7 +150,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	[RelayCommand]
 	protected virtual void OnTaskClicked(TaskClickedEventArgs args) {
-		CacheService.SelectedTask = args.Task;
+		cacheService.SelectedTask = args.Task;
 		GlobalEventService.Raise(new ShowTaksEventArgs(args.Task));
 	}
 

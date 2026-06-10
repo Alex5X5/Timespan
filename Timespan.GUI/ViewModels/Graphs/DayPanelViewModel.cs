@@ -20,12 +20,16 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override string GetDateString() {
-		string day = TranslatorService.Singleton.TranslateDayShort(CacheService.SelectedDay.DayOfWeek);
-		string month = TranslatorService.Singleton.TranslateMonthShort(CacheService.SelectedDay.Month);
-		return $"{day}. {CacheService.SelectedDay.Day}. {month}. {CacheService.SelectedDay.Year}";
+		string day = TranslatorService.Singleton.TranslateDayShort(cacheService.SelectedDay.DayOfWeek);
+		string month = TranslatorService.Singleton.TranslateMonthShort(cacheService.SelectedDay.Month);
+		return $"{day}. {cacheService.SelectedDay.Day}. {month}. {cacheService.SelectedDay.Year}";
+	}
+
+	protected override bool IsToday(int row, int column) {
+		return false;
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(CacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];
 	}
 }

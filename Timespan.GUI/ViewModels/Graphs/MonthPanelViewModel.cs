@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Avalonia.Media;
+
+using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
@@ -20,13 +22,20 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
+	protected override bool IsToday(int row, int column) {
+		if(cacheService.SelectedDay.Month != DateTime.Today.Month)
+			return false;
+		int offset = DateTimeService.DayOfWorkWeek(DateTimeService.GetFirstDayOfMonthAtDate(cacheService.SelectedDay)) - 1;
+		return row * column == DateTime.Today.Day + offset;
+	}
+
 	public override string GetDateString() {
-		string month = TranslatorService.Singleton.TranslateMonth(CacheService.SelectedDay.Month);
-		return $"{month} {CacheService.SelectedDay.Year}";
+		string month = TranslatorService.Singleton.TranslateMonth(cacheService.SelectedDay.Month);
+		return $"{month} {cacheService.SelectedDay.Year}";
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorWeek(CacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorWeek(cacheService.SelectedDay)) : [];
 	}
 
 	protected override void SelectedDayChanged() {

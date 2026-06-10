@@ -75,6 +75,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public static readonly StyledProperty<ObservableCollection<ObservableBool>> BlockedColumnsProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(BlockedColumns), []);
 
+	public static readonly StyledProperty<bool[,]> IsTodayProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, bool[,]>(nameof(IsToday), new bool[0,0]);
+
 	public static readonly StyledProperty<double> ExtraClickSizeProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, double>(nameof(ExtraClickSize), 0);
 
@@ -103,7 +106,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<TaskClickedEventArgs>>(
 			nameof(TaskClickedCommand),
 			new RelayCommand<TaskClickedEventArgs>(args => { }));
-		
+
 	public static readonly StyledProperty<IRelayCommand<MousePressedEventArgs>> MousePressedCommandProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MousePressedEventArgs>>(
 			nameof(MousePressedCommand),
@@ -149,6 +152,11 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		set => SetValue(BlockedColumnsProperty, value);
 	}
 
+	public bool[,] IsToday {
+		get => GetValue(IsTodayProperty);
+		set => SetValue(IsTodayProperty, value);
+	}
+
 	public double ExtraClickSize {
 		get => GetValue(ExtraClickSizeProperty);
 		set => SetValue(ExtraClickSizeProperty, value);
@@ -179,6 +187,10 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public int XAxisSegmentDuration {
 		get => GetValue(XAxisSegmentDurationProperty);
 		set => SetValue(XAxisSegmentDurationProperty, value);
+	}
+
+	public int YAxisSegmentDuration {
+		get => XAxisSegmentDuration * XAxisSegmentCount;
 	}
 
 	public int XAxisSegmentCount {
@@ -317,6 +329,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			return;
 		DrawBackground(context);
 		DrawTimeline(context);
+		DrawTodayMarker(context);
 		DrawTasks(context);
 		DrawColumnMarkers(context);
 		DrawMouseRectangle(context);
@@ -338,6 +351,23 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	protected abstract void DrawTimeline(DrawingContext context);
+
+	protected virtual void DrawTodayMarker(DrawingContext context) {
+		for (int row = 0; row < YAxisSegmentCount; row++) {
+			for (int column = 0; column < XAxisSegmentCount; column++) {
+				if (IsToday[row, column]) {
+					Brush brush = new SolidColorBrush(Color.FromArgb(255, 170, 170, 170));
+					var rect = new Rect(
+						PaddingX + column * XAxisSegmentSize + 2,
+						PaddingY + row * YAxisSegmentSize + 2,
+						XAxisSegmentSize - 4,
+						YAxisSegmentSize - 4);
+					context.FillRectangle(brush, rect);
+				}
+			}
+		}
+	}
+
 	protected virtual void DrawColumnMarkers(DrawingContext context) {
 		Brush markedBrush = new SolidColorBrush(Color.FromArgb(120, 120, 120, 240));
 		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
@@ -399,7 +429,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
 		base.OnPropertyChanged(change);
-		Console.WriteLine($"""Property "{change.Property.Name}" of "{GetType().Name}" changed to "{change.NewValue?.ToString() ?? "null"}" """);
 		if (change.Property == MarkedColumnsProperty) {
 			if (change.OldValue is ObservableCollection<ObservableBool> oldList) {
 				foreach (ObservableBool item in oldList)

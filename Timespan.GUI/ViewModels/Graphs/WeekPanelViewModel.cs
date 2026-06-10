@@ -18,11 +18,19 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 			1, 5, 86400) {
 	}
 
+	protected override bool IsToday(int row, int column) {
+		if(row != 0)
+			return false;
+		if(DateTimeService.DayOfWorkWeek(DateTime.Today) == column)
+			return true;
+		return false;
+	}
+
 	public override string GetDateString() {
 		return "Kw 2 ";
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorMonth(CacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorMonth(cacheService.SelectedDay)) : [];
 	}
 }

@@ -32,8 +32,10 @@ public class DateTimeService {
     public static long ToSeconds(DateTime date) =>
 		date.Ticks / TimeSpan.TicksPerSecond;
 
+	public static DateTime FromSeconds(long seconds) =>
+		new(seconds * TimeSpan.TicksPerSecond);
 
-    public static DateTime FloorHour(DateTime date) =>
+	public static DateTime FloorHour(DateTime date) =>
         new(date.Year, date.Month, date.Day, date.Hour, 0, 0);
 
     public static DateTime FloorDay(DateTime date) =>

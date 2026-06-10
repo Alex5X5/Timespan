@@ -28,10 +28,6 @@ public partial class WeekPanelView : GraphPanelViewBase {
 	public WeekPanelView() : base() {
 	}
 
-
-	private static double ArialHeightToPt(double height, double x = 1) =>
-		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
-
 	//public Rect GetTaskRectanlge(Types.Task task, double additionalWidth, double additionalHeight, int i) {
 	//	double proportion = GRAPH_AREA_WIDTH / TIME_INTERVALL_DURATION;
 	//	double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
@@ -47,22 +43,6 @@ public partial class WeekPanelView : GraphPanelViewBase {
 	//	return res;
 	//}
 
-	protected override void DrawColumnMarkers(DrawingContext context) {
-		Brush markedBrush = new SolidColorBrush(Color.FromArgb(120, 120, 120, 240));
-		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
-		double x = PaddingX + 2;
-		double y = PaddingY + 2;
-		double width = XAxisSegmentSize - 4;
-		double height = GraphAreaHeight - 5;
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			if (BlockedColumns[i].Value)
-				context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
-			if (MarkedColumns[i].Value)
-				context.FillRectangle(markedBrush, new Rect(x, y, width, height));
-			x += XAxisSegmentSize;
-		}
-	}
-
 	protected override void DrawTimeline(DrawingContext context) {
 		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
 		Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(255, 237, 166, 166));
@@ -76,14 +56,14 @@ public partial class WeekPanelView : GraphPanelViewBase {
 			TranslatorService.Singleton["Days.Thursday"],
 			TranslatorService.Singleton["Days.Friday"]
 		];
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			double xPos = XAxisSegmentSize * i + PaddingX;
-			//if (i % 7 == 5 | i % 7 == 6)
-			//context.FillRectangle(weekedDayBackground, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-			if (i + 1 == (int)DateTime.Today.DayOfWeek)
-				if (DateTimeService.FloorWeek((DataContext as WeekPanelViewModel)!.CacheService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
-					context.FillRectangle(todayBackgroundColor, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-		}
+		//for (int i = 0; i < XAxisSegmentCount; i++) {
+		//	double xPos = XAxisSegmentSize * i + PaddingX;
+		//	//if (i % 7 == 5 | i % 7 == 6)
+		//	//context.FillRectangle(weekedDayBackground, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
+		//	if (i + 1 == (int)DateTime.Today.DayOfWeek)
+		//		if (DateTimeService.FloorWeek((DataContext as WeekPanelViewModel)!.cacheService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
+		//			context.FillRectangle(todayBackgroundColor, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
+		//}
 		//context.DrawLine(timeLine, new(PaddingX, Bounds.Height - PaddingY), new(Bounds.Width - PaddingX, Bounds.Height - PaddingY));
 		double textSize = Math.Round(PaddingY * 0.7, 1);
 		for (int i = 0; i < 6; i++) {

@@ -46,7 +46,7 @@ public partial class MonthPanelView : GraphPanelViewBase {
 
 	protected override void DrawTimeline(DrawingContext context) {
 		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-		Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(255, 237, 166, 166));
+		Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(150, 213, 149, 149));
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
@@ -65,14 +65,15 @@ public partial class MonthPanelView : GraphPanelViewBase {
 			double yPos = YAxisSegmentSize * i + PaddingY;
 			context.DrawLine(hintLine, new Point(PaddingX, yPos), new Point(Bounds.Width - PaddingX, yPos));
 		}
-		for (int i = 0; i < 8; i++) {
-			double xPos = XAxisSegmentSize * i + PaddingX;
-			//if (i % 7 == 5 | i % 7 == 6)
-			//context.FillRectangle(weekedDayBackground, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-			if (i + 1 == (int)DateTime.Today.DayOfWeek)
-				if (DateTimeService.FloorWeek((DataContext as MonthPanelViewModel)!.CacheService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
-					context.FillRectangle(todayBackgroundColor, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-		}
+
+		//for (int i = 0; i < 8; i++) {
+		//	double xPos = XAxisSegmentSize * i + PaddingX;
+		//	//if (i % 7 == 5 | i % 7 == 6)
+		//	//context.FillRectangle(weekedDayBackground, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
+		//	if (i + 1 == (int)DateTime.Today.DayOfWeek)
+		//		if (DateTimeService.FloorWeek((DataContext as MonthPanelViewModel)!.cacheService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
+		//			context.FillRectangle(todayBackgroundColor, new(xPos + 2, PaddingY, XAxisSegmentSize - 4, Bounds.Height - (2 * PaddingY)));
+		//}
 		//context.DrawLine(timeLine, new(PaddingX, Bounds.Height - PaddingY), new(Bounds.Width - PaddingX, Bounds.Height - PaddingY));
 		double textSize = Math.Round(PaddingY * 0.7, 1);
 		for (int i = 0; i < 6; i++) {
