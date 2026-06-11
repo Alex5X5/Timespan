@@ -16,6 +16,6 @@ public class CacheService {
     public event Action<DateTime?>? OnSelectedDayChanged = date => { };
 
     public CacheService() {
-
+        
     }
 }

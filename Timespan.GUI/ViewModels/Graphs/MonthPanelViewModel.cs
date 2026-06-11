@@ -1,12 +1,13 @@
-﻿using Avalonia.Media;
+﻿namespace Timespan.GUI.ViewModels.Graphs;
+
+using Avalonia.Media;
 
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
+using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
-
-namespace Timespan.GUI.ViewModels.Graphs;
 
 public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
@@ -19,7 +20,7 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 			DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
 			5, DateTimeService.WeeksInMonth(cacheService.SelectedDay), 86400) {
-
+		
 	}
 
 	protected override bool IsToday(int row, int column) {
@@ -34,12 +35,22 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		return $"{month} {cacheService.SelectedDay.Year}";
 	}
 
-	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorWeek(cacheService.SelectedDay)) : [];
+	protected override void PreviousIntervallClick() {
+		cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(-1));
 	}
 
-	protected override void SelectedDayChanged() {
-		base.SelectedDayChanged();
-		YAxisSegmentCount = DateTimeService.WeeksInMonth(SelectedDay);
+	protected override void FollowingIntervallClick() {
+		cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(1));
+	}
+
+	protected override void SelectedDayChanged(IntervallChangedEventArgs args) {
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay));
+		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
+		base.SelectedDayChanged(args);
+	}
+
+	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
+		return dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(DateTimeService.FloorMonth(cacheService.SelectedDay)) : [];
 	}
 }

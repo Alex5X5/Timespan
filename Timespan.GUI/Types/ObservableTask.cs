@@ -1,5 +1,7 @@
 ﻿using Avalonia.Media;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -111,6 +113,16 @@ public class ObservableTask: ReactiveObject, IReactiveObject {
 		get => new(255, DisplayColorRed, DisplayColorGreen, DisplayColorBlue);
 	}
 
+	private int cellIndex = 0;
+
+	public int CellIndex {
+		set {
+			cellIndex = value;
+			this.RaisePropertyChanged(nameof(CellIndex));
+		}
+		get => cellIndex;
+	}
+	
 	public ObservableTask(Timespan.Types.Models.Task? initial) {
 		_value = initial ?? new();
 	}

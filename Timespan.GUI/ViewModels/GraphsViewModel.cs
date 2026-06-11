@@ -32,7 +32,8 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	public ObservableCollection<string> TimeModes { get; }
 	
-	public string DateString => CurrentPage?.GetDateString() ?? "Date";
+	[ObservableProperty]
+	private string dateString = "";
 
 	[ObservableProperty]
 	private bool showTaskPanel = false;
@@ -75,7 +76,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		TimeModes = ["Day", "Week", "Month"];
 		SelectedTimeMode = TimeModes[0];
 		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
-			dispatcher += ShowTask;
+			dispatcher.Subscribe(ShowTask);
 		CurrentPageAnchor.ChangeModel<DayPanelViewModel>();
 	}
 
@@ -129,6 +130,18 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		GlobalEventService.Raise(args);
 	}
 
+	[RelayCommand]
+	protected void PreviousIntervallClick() {
+		CurrentPage?.PreviousIntervallClick();
+		DateString = CurrentPage?.GetDateString() ?? "Date";
+	}
+
+	[RelayCommand]
+	protected void FollowingIntervallClick() {
+		CurrentPage?.FollowingIntervallClick();
+		DateString = CurrentPage?.GetDateString() ?? "Date";
+	}
+
 	private void UpdateMode(string mode) {
 		if(mode == TimeModes[0])
 			CurrentPageAnchor.ChangeModel<DayPanelViewModel>();
@@ -136,8 +149,20 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 			CurrentPageAnchor.ChangeModel<WeekPanelViewModel>();
 		if (mode == TimeModes[2])
 			CurrentPageAnchor.ChangeModel<MonthPanelViewModel>();
+		DateString = CurrentPage?.GetDateString() ?? "Date";
 	}
 
-	internal void OnLoad() {
+	private void UpdateIntervall(IntervallChangedEventArgs args) {
 	}
+
+	[RelayCommand]
+	internal void OnLoad() {
+		GlobalEventService.GetEvent<IntervallChangedEventArgs>().Subscribe(UpdateIntervall);
+	}
+
+	[RelayCommand]
+	internal void OnUnLoad() {
+		GlobalEventService.GetEvent<IntervallChangedEventArgs>().UnSubscribe(UpdateIntervall);
+	}
+
 }

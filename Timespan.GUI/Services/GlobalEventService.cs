@@ -27,21 +27,20 @@ public partial class EventDispatcher<T> : EventDispatcherBase where T : EventArg
 
 	private Action<T>? callback;
 
-	public static EventDispatcher<T> operator +(EventDispatcher<T> dispatcher, Action<T> handler) {
-		dispatcher.callback += handler;
-		return dispatcher;
+	public void Subscribe(Action<T> handler) {
+		callback += handler;
 	}
 
-	public static EventDispatcher<T> operator -(EventDispatcher<T> dispatcher, Action<T> handler) {
-		dispatcher.callback = (dispatcher.callback - handler) ?? (args => {});
-		return dispatcher;
+	public void UnSubscribe(Action<T> handler) {
+		callback -= handler;
 	}
 
 	public EventDispatcher() {
+		callback = args => { };
 	}
 
-	public EventDispatcher(Action<T> callback) {
-		this.callback += callback as Action<EventArgs>;
+	public EventDispatcher(Action<T> handler) : this() {
+		callback += handler as Action<EventArgs>;
 	}
 
 	public void Invoke(T args) {

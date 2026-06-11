@@ -99,6 +99,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public static readonly StyledProperty<IRelayCommand> LoadCommandProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(LoadCommand), new RelayCommand(() => { }));
 
+	public static readonly StyledProperty<IRelayCommand> UnloadCommandProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(UnloadCommand), new RelayCommand(() => { }));
+
 	public static readonly StyledProperty<IRelayCommand> ClickedCommandProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(ClickedCommand), new RelayCommand(() => { }));
 
@@ -208,6 +211,11 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		set => SetValue(LoadCommandProperty, value);
 	}
 
+	public IRelayCommand UnloadCommand {
+		get => GetValue(UnloadCommandProperty);
+		set => SetValue(UnloadCommandProperty, value);
+	}
+
 	public IRelayCommand ClickedCommand {
 		get => GetValue(ClickedCommandProperty);
 		set => SetValue(ClickedCommandProperty, value);
@@ -241,18 +249,11 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	#endregion
 
 	static GraphPanelViewBase() {
-		AffectsRender<GraphPanelViewBase>(IntervalStartSecondsProperty);
-		AffectsRender<GraphPanelViewBase>(IntervalStopSecondsProperty);
-		AffectsRender<GraphPanelViewBase>(TasksProperty);
-		AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
-		AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
-		AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
-		AffectsRender<GraphPanelViewBase>(BlockedColumnsProperty);
-		AffectsRender<GraphPanelViewBase>(MaxTasksProperty);
-		AffectsRender<GraphPanelViewBase>(MinimalWidthProperty);
-		AffectsRender<GraphPanelViewBase>(XAxisSegmentCountProperty);
-		AffectsRender<GraphPanelViewBase>(YAxisSegmentCountProperty);
-		AffectsRender<GraphPanelViewBase>(XAxisSegmentDurationProperty);
+		//AffectsRender<GraphPanelViewBase>(TasksProperty);
+		//AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
+		//AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
+		//AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
+		//AffectsRender<GraphPanelViewBase>(BlockedColumnsProperty);
 	}
 
 	public GraphPanelViewBase() {
@@ -265,6 +266,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		AddHandler(PointerPressedEvent, OnMousePressedBase);
 		AddHandler(PointerReleasedEvent, OnMouseReleasedBase);
 		AddHandler(LoadedEvent, OnLoadBase);
+		AddHandler(UnloadedEvent, OnUnloadBase);
 	}
 
 	protected void ShowReasonContextMenu() {
@@ -391,19 +393,23 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected void DrawTaskGraph(DrawingContext context, ObservableTask task, int i) {
 		Rect rect = GetTaskRectangle(task, 0, 0, i);
-		Color gradientStartColor = Color.FromArgb(255, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
-		Color gradientFinishColor = Color.FromArgb(20, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
 
-		Brush brush = task.Running
-			? new LinearGradientBrush() {
+		Brush brush;
+		if (task.Running) {
+			Color gradientStartColor = Color.FromArgb(255, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+			Color gradientFinishColor = Color.FromArgb(20, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+			brush = new LinearGradientBrush() {
 				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
 				EndPoint = new RelativePoint(1.0, 0.5, RelativeUnit.Relative),
 				GradientStops = {
 					new GradientStop(gradientStartColor, 0.0),
 					new GradientStop(gradientFinishColor, 1.0)
 				}
-			}
-			: new SolidColorBrush(task.DisplayColor);
+			};
+		} else {
+			brush = new SolidColorBrush(task.DisplayColor);
+		}
+			
 		double r = Math.Min(10, rect.Height / 4);
 		r = Math.Min(r, rect.Width / 2);
 		RectangleGeometry rrect = new(rect) {
@@ -592,6 +598,10 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	private void OnLoadBase(object? sender, RoutedEventArgs args) {
 		LoadCommand.Execute(EventArgs.Empty);
+	}
+
+	private void OnUnloadBase(object? sender, RoutedEventArgs args) {
+		UnloadCommand.Execute(EventArgs.Empty);
 	}
 
 	#endregion

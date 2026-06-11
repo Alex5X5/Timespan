@@ -5,7 +5,6 @@ using DynamicData;
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
@@ -41,52 +40,50 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	public partial ObservableCollection<ObservableTask> Tasks { set; get; }
 
 	[ObservableProperty]
-	private bool[,] isTodaySegment;
+	private bool[,] isTodaySegment = new bool[0,0];
 
 
 	[ObservableProperty]
-	private double extraClickSize;
+	private double extraClickSize = 1;
 	
 	[ObservableProperty]
-	private double minimalWidth;
+	private double minimalWidth = 1;
 
 	[ObservableProperty]
-	private double maxTasks;
+	private double maxTasks = 1;
 
 	[ObservableProperty]
-	private long xAxisSegmentDuration;
+	private long xAxisSegmentDuration = 1;
 
 	[ObservableProperty]
-	private long xAxisSegmentCount;
+	private long xAxisSegmentCount = 0;
 
 	[ObservableProperty]
-	private long yAxisSegmentCount;
+	private long yAxisSegmentCount = 0;
 
 	[ObservableProperty]
-	private long timeIntervallStartSeconds;
+	private long timeIntervallStartSeconds = 0;
 
 	[ObservableProperty]
-	private long timeIntervallStopSeconds;
+	private long timeIntervallStopSeconds = 1;
 
 	[ObservableProperty]
 	private DateTime selectedDay;
-
-	partial void OnSelectedDayChanged(DateTime value) {
-		SelectedDayChanged();
-	}
 
 	#endregion
 
 	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, long start, long finish, int rows=1, int columns=24, long duration=3600) : base() {
 		this.cacheService = cacheService;
 		this.dbService = dbService;
+		TimeIntervallStartSeconds = start;
+		TimeIntervallStopSeconds = finish;
+		XAxisSegmentDuration = duration;
 		MarkedRows = new();
 		BlockedRows = new();
 		MarkedColumns = new();
 		BlockedColumns = new();
 		XAxisSegmentCount = columns;
 		YAxisSegmentCount = rows;
-		XAxisSegmentDuration = duration;
 		IsTodaySegment = new bool[YAxisSegmentCount, XAxisSegmentCount];
 		for(int row = 0; row < YAxisSegmentCount; row++) 
 			for(int column = 0; column < XAxisSegmentCount; column++)
@@ -107,8 +104,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 			BlockedColumns[i] = new(false);
 			BlockedColumns[i] = new(false);
 		}
-		TimeIntervallStartSeconds = start;
-		TimeIntervallStopSeconds = finish;
 		Tasks = new();
 	}
 
@@ -120,26 +115,26 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];
 	}
 
-	#region relay commands
+	#region commands
 
 	[RelayCommand]
 	protected virtual void OnLoad() {
 		UpdateColumnMarkers();
-		cacheService.OnSelectedDayChanged += UpdateSelectedDay;
+		GlobalEventService.GetEvent<IntervallChangedEventArgs>().Subscribe(SelectedDayChanged);
 		List<Timespan.Types.Models.Task> tasks = GetTasksAsync().Result;
 		var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
 		if(tasks_.Count == 0)
 			return;
+		Tasks.Clear();
 		Tasks.AddRange(tasks_);
 	}
 
 	[RelayCommand]
 	protected virtual void OnUnload() {
-		cacheService.OnSelectedDayChanged -= UpdateSelectedDay;
+		GlobalEventService.GetEvent<IntervallChangedEventArgs>().UnSubscribe(SelectedDayChanged);
 	}
 
 	private void UpdateSelectedDay(DateTime? date) {
-		UpdateColumnMarkers();
 		SelectedDay = date ?? SelectedDay;
 	}
 
@@ -175,12 +170,24 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected virtual void OnMouseDragging(MouseDraggingEventArgs args) {
 	}
 
+	void IGraphsViewChild.PreviousIntervallClick() {
+		PreviousIntervallClick();
+	}
+
+	void IGraphsViewChild.FollowingIntervallClick() {
+		FollowingIntervallClick();
+	}
+
+	protected abstract void PreviousIntervallClick();
+
+	protected abstract void FollowingIntervallClick();
+
 	#endregion
 
 	#region property changed events
 
-	protected virtual void SelectedDayChanged() {
-		
+	protected virtual void SelectedDayChanged(IntervallChangedEventArgs args) {
+		UpdateColumnMarkers();
 	}
 
 	partial void OnXAxisSegmentCountChanged(long value) {

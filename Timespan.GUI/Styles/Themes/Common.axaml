@@ -17,4 +17,5 @@
 	<Color x:Key="TaskBackgroundDarkGray">#4f4f4f</Color >
 
 	<FontFamily x:Key="CustomBoldonseFont">avares://Timespan.GUI/Assets/Fonts/Boldonse/Boldonse_Rg.ttf#Boldonse</FontFamily>
+	<FontFamily x:Key="AnybodyFont">avares://Timespan.GUI/Assets/Fonts/Anybody/Anybody_Rg.ttf#Anybody</FontFamily>
 </ResourceDictionary>

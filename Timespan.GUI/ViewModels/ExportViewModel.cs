@@ -24,7 +24,6 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	private readonly DateTimeService? dateTimeService;
 	private readonly Services.CacheService cacheService;
 	private readonly IPdfService? pdf;
-	private readonly MainViewModel pageController;
 
 	public ObservableCollection<TextboxItem> TableItems {
 		get; set;

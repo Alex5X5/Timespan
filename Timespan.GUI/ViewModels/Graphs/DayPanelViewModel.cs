@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿namespace Timespan.GUI.ViewModels.Graphs;
+
+using Avalonia.Media;
+
+using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
+using Timespan.GUI.Services;
+using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
-
-namespace Timespan.GUI.ViewModels.Graphs;
 
 public partial class DayPanelViewModel : GraphPanelViewModelBase {
 
@@ -16,7 +20,11 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 			DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay)),
 			1, 24, 3600) {
-		
+
+	}
+
+	protected override bool IsToday(int row, int column) {
+		return false;
 	}
 
 	public override string GetDateString() {
@@ -25,8 +33,18 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		return $"{day}. {cacheService.SelectedDay.Day}. {month}. {cacheService.SelectedDay.Year}";
 	}
 
-	protected override bool IsToday(int row, int column) {
-		return false;
+	protected override void PreviousIntervallClick() {
+		cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(-1));
+	}
+
+	protected override void FollowingIntervallClick() {
+		cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(1));
+	}
+
+	protected override void SelectedDayChanged(IntervallChangedEventArgs args) {
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay));
+		base.SelectedDayChanged(args);
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {

@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿namespace Timespan.GUI.ViewModels.Graphs;
+
+using Avalonia.Media;
+
+using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
+using Timespan.GUI.Services;
+using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
-
-namespace Timespan.GUI.ViewModels.Graphs;
 
 public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 
@@ -19,9 +23,9 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	protected override bool IsToday(int row, int column) {
-		if(row != 0)
+		if (row != 0)
 			return false;
-		if(DateTimeService.DayOfWorkWeek(DateTime.Today) == column)
+		if (DateTimeService.DayOfWorkWeek(DateTime.Today) == column)
 			return true;
 		return false;
 	}
@@ -30,7 +34,21 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 		return "Kw 2 ";
 	}
 
+	protected override void PreviousIntervallClick() {
+		cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(-7));
+	}
+
+	protected override void FollowingIntervallClick() {
+		cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(7));
+	}
+
+	protected override void SelectedDayChanged(IntervallChangedEventArgs args) {
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay));
+		base.SelectedDayChanged(args);
+	}
+
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorMonth(cacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(DateTimeService.FloorWeek(cacheService.SelectedDay)) : [];
 	}
 }

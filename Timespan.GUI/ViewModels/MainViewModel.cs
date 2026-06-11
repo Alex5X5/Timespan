@@ -60,7 +60,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor.ModelChanged += UpdateNormalNavigationBar;
 
 		if (GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
-			dispatcher += args => CurrentPageAnchor.ChangeModel<GraphsViewModel>();
+			dispatcher.Subscribe(args => CurrentPageAnchor.ChangeModel<GraphsViewModel>());
 	}
 
 	[RelayCommand]
@@ -155,6 +155,6 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	}
 
 	internal void OnLoad() {
-		CurrentPageAnchor.ChangeModel<TimerViewModel>();
+		CurrentPageAnchor?.ChangeModel<TimerViewModel>();
 	}
 }

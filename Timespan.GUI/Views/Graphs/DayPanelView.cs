@@ -45,22 +45,6 @@ public partial class DayPanelView : GraphPanelViewBase {
 		return res;
 	}
 
-	protected override void DrawColumnMarkers(DrawingContext context) {
-		Brush markedBrush = new SolidColorBrush(Color.FromArgb(120, 120, 120, 240));
-		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
-		double x = PaddingX + 2;
-		double y = PaddingY + 2;
-		double width = XAxisSegmentSize - 4;
-		double height = GraphAreaHeight - 5;
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			if (BlockedColumns[i].Value)
-				context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
-			if (MarkedColumns[i].Value)
-				context.FillRectangle(markedBrush, new Rect(x, y, width, height));
-			x += XAxisSegmentSize;
-		}
-	}
-
 	protected override void DrawTimeline(DrawingContext context) {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
