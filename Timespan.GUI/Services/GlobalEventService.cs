@@ -27,13 +27,6 @@ public partial class EventDispatcher<T> : EventDispatcherBase where T : EventArg
 
 	private Action<T>? callback;
 
-	public void Subscribe(Action<T> handler) {
-		callback += handler;
-	}
-
-	public void UnSubscribe(Action<T> handler) {
-		callback -= handler;
-	}
 
 	public EventDispatcher() {
 		callback = args => { };
@@ -41,6 +34,15 @@ public partial class EventDispatcher<T> : EventDispatcherBase where T : EventArg
 
 	public EventDispatcher(Action<T> handler) : this() {
 		callback += handler as Action<EventArgs>;
+	}
+
+
+	public void Subscribe(Action<T> handler) {
+		callback += handler;
+	}
+
+	public void UnSubscribe(Action<T> handler) {
+		callback -= handler;
 	}
 
 	public void Invoke(T args) {
