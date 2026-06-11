@@ -30,7 +30,6 @@ public class CacheService : Util.Services.CacheService {
     }
     public event Action<Types.Task?>? OnSelectedTaksChanged;
 
-    public CacheService(IHourglassDbService dbService) : base() {
-        RunningTask = dbService.QueryCurrentTaskAsync().Result;
+    public CacheService() : base() {
     }
 }

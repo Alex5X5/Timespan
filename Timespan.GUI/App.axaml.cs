@@ -35,7 +35,8 @@ public partial class App : Application {
 		if (!Design.IsDesignMode) {
 			HourglassDbService dbService = new();
 			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>(dbService);
-			Services.CacheService cacheService = new(dbService);
+			Services.CacheService cacheService = new();
+			cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
 			instanciator.AddCommonServiceSingleton<Services.CacheService, Services.CacheService>(cacheService);
 			instanciator.AddCommonServiceSingleton<Timespan.Util.Services.CacheService, Services.CacheService>(cacheService);
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
