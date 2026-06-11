@@ -49,6 +49,7 @@ Views.Pages.TaskDetails.Labels.Description:Beschreibung
 
 Views.Pages.Graphs.Buttons.Select:Auswählen
 Views.Pages.Graphs.Buttons.Delete:Löschen
+Views.Pages.Graphs.Labels.Week:KW
 
 Days.Monday:Montag
 Days.Tuesday:Dienstag

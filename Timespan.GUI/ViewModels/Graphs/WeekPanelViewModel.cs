@@ -11,15 +11,18 @@ using Timespan.Util.Services;
 
 public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 
-	public WeekPanelViewModel() : this(null, null) {
+	private SettingsService settingsService;
+
+	public WeekPanelViewModel() : this(null, null, null) {
 
 	}
 
-	public WeekPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(
+	public WeekPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService) : base(
 			cacheService, dbService,
 			DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
 			1, 5, 86400) {
+		this.settingsService = settingsService;
 	}
 
 	protected override bool IsToday(int row, int column) {
@@ -31,7 +34,8 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override string GetDateString() {
-		return "Kw 2 ";
+		int week = new DateTimeService(settingsService, cacheService).GetWeekCountAtDate(cacheService.SelectedDay);
+		return $"{TranslatorService.Singleton["Views.Pages.Graphs.Labels.Week"]} {week}";
 	}
 
 	protected override void PreviousIntervallClick() {
