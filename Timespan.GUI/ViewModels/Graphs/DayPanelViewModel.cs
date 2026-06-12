@@ -5,26 +5,31 @@ using Avalonia.Media;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
-using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class DayPanelViewModel : GraphPanelViewModelBase {
 
-	public DayPanelViewModel() : this(null, null) {
+	public DayPanelViewModel() : this(null, null, null) {
 		
 	}
 
-    public DayPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(
-			cacheService, dbService,
+    public DayPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService) : base(
+			cacheService, dbService, settingsService,
 			DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay)),
-			1, 24, 3600) {
+			1, 24,
+			1, 1, 3600) {
 
 	}
 
 	protected override bool IsToday(int row, int column) {
 		return false;
+	}
+
+	protected override GridCellPosition GetCellForTask(ObservableTask task) {
+		return new(0, 0);
 	}
 
 	public override string GetDateString() {

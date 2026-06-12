@@ -2,6 +2,7 @@ namespace Timespan.GUI.Views.Graphs;
 
 using Avalonia.Media;
 
+using Timespan.GUI.Types;
 using Timespan.GUI.ViewModels.Graphs;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
@@ -16,11 +17,6 @@ public partial class MonthPanelView : GraphPanelViewBase {
 	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
 
 	#endregion fields
-
-	#region styledProperties
-
-
-	#endregion styledProperties
 
 	public MonthPanelView() : base() {
 	}
@@ -43,6 +39,10 @@ public partial class MonthPanelView : GraphPanelViewBase {
 	//	);
 	//	return res;
 	//}
+
+	protected override Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int row, int column) {
+		return base.GetTaskRectangle(task, additionalWidth, additionalHeight, row, column);
+	}
 
 	protected override void DrawTimeline(DrawingContext context) {
 		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));

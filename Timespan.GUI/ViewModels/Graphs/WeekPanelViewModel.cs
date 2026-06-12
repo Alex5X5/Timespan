@@ -5,22 +5,21 @@ using Avalonia.Media;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
-using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class WeekPanelViewModel : GraphPanelViewModelBase {
-
-	private SettingsService settingsService;
 
 	public WeekPanelViewModel() : this(null, null, null) {
 
 	}
 
 	public WeekPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService) : base(
-			cacheService, dbService,
+			cacheService, dbService, settingsService,
 			DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
+			1, 5,
 			1, 5, 86400) {
 		this.settingsService = settingsService;
 	}
@@ -28,9 +27,15 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 	protected override bool IsToday(int row, int column) {
 		if (row != 0)
 			return false;
-		if (DateTimeService.DayOfWorkWeek(DateTime.Today) == column)
-			return true;
-		return false;
+		if (DateTimeService.FloorWeek(cacheService.SelectedDay) != DateTimeService.FloorWeek(DateTime.Today))
+			return false;
+		if (DateTimeService.DayOfWorkWeek(DateTime.Today) != column)
+			return false;
+		return true;
+	}
+
+	protected override GridCellPosition GetCellForTask(ObservableTask task) {
+		return new(0, DateTimeService.DayOfWorkWeek(task.StartDateTime));
 	}
 
 	public override string GetDateString() {

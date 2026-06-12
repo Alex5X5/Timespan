@@ -6,28 +6,38 @@ using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
-	public MonthPanelViewModel() : this(null, null) {
+	public MonthPanelViewModel() : this(null, null, null) {
 
 	}
 
-	public MonthPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService) : base(
-			cacheService, dbService,
+	public MonthPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService) : base(
+			cacheService, dbService, settingsService,
 			DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
-			5, DateTimeService.WeeksInMonth(cacheService.SelectedDay), 86400) {
+			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5,
+			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5, 86400) {
 		
 	}
 
 	protected override bool IsToday(int row, int column) {
 		if(cacheService.SelectedDay.Month != DateTime.Today.Month)
 			return false;
-		int offset = DateTimeService.DayOfWorkWeek(DateTimeService.GetFirstDayOfMonthAtDate(cacheService.SelectedDay)) - 1;
-		return row * column == DateTime.Today.Day + offset;
+		int offset = DateTimeService.DayOfWorkWeek(DateTimeService.GetFirstDayOfMonthAtDate(cacheService.SelectedDay)) + 1;
+		return (row * TaskGridColumnCount + column) == (DateTime.Today.Day + offset);
+	}
+
+	protected override GridCellPosition GetCellForTask(ObservableTask task) {
+		DateTime firstWeek = DateTimeService.FloorWeek(DateTimeService.FloorMonth(task.StartDateTime));
+		DateTime taskWeek = DateTimeService.FloorWeek(task.StartDateTime);
+		long diffSeconds = DateTimeService.ToSeconds(firstWeek) - DateTimeService.ToSeconds(taskWeek);
+		int row = (int)Math.Floor((double)(diffSeconds / 604800));
+		return new(row, DateTimeService.DayOfWorkWeek(task.StartDateTime));
 	}
 
 	public override string GetDateString() {

@@ -15,6 +15,7 @@ public class DateTimeService {
 		this.settingsService = settingsService;
 	}
 
+	//returns 0 on modays, 1 on tuesdays, 2 on wendsdays ...
 	public static int DayOfWorkWeek(DateTime day) =>
 		(int)(day.DayOfWeek - 1 + 7) % 7;
 

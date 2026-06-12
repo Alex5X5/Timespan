@@ -30,6 +30,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	protected Point DragOrigin;
 	protected Point MousePos = new(0.0, 0.0);
 
+	protected int[,] CellTaskCount;
+
 	private ContextMenu? _contextMenu;
 
 	#endregion
@@ -57,12 +59,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public static readonly StyledProperty<ObservableCollection<ObservableTask>> TasksProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableTask>>(nameof(Tasks), []);
 
-	public static readonly StyledProperty<long> IntervalStartSecondsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStartSeconds), 0);
-
-	public static readonly StyledProperty<long> IntervalStopSecondsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStopSeconds), 0);
-
 	public static readonly StyledProperty<ObservableCollection<ObservableBool>> MarkedRowsProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedRows), []);
 
@@ -87,6 +83,13 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public static readonly StyledProperty<int> MaxTasksProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(MaxTasks), 0);
 
+
+	public static readonly StyledProperty<long> IntervalStartSecondsProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStartSeconds), 0);
+
+	public static readonly StyledProperty<long> IntervalStopSecondsProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStopSeconds), 0);
+
 	public static readonly StyledProperty<int> XAxisSegmentDurationProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(XAxisSegmentDuration), 0);
 
@@ -95,6 +98,13 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	public static readonly StyledProperty<int> YAxisSegmentCountProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(YAxisSegmentCount), 0);
+
+	public static readonly StyledProperty<int> TaskGridRowCountProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(TaskGridRowCount), 0);
+
+	public static readonly StyledProperty<int> TaskGridColumnCountProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(TaskGridColumnCount), 0);
+
 
 	public static readonly StyledProperty<IRelayCommand> LoadCommandProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(LoadCommand), new RelayCommand(() => { }));
@@ -129,6 +139,10 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MissingContextClickedEventArgs>>(
 			nameof(MissingContextClickedCommand),
 			new RelayCommand<MissingContextClickedEventArgs>(args => { }));
+
+	#endregion
+
+	#region styled property members
 
 	public ObservableCollection<ObservableTask> Tasks {
 		get => GetValue(TasksProperty);
@@ -206,6 +220,16 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		set => SetValue(YAxisSegmentCountProperty, value);
 	}
 
+	public int TaskGridRowCount {
+		get => GetValue(TaskGridRowCountProperty);
+		set => SetValue(TaskGridRowCountProperty, value);
+	}
+
+	public int TaskGridColumnCount {
+		get => GetValue(TaskGridColumnCountProperty);
+		set => SetValue(TaskGridColumnCountProperty, value);
+	}
+
 	public IRelayCommand LoadCommand {
 		get => GetValue(LoadCommandProperty);
 		set => SetValue(LoadCommandProperty, value);
@@ -267,6 +291,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		AddHandler(PointerReleasedEvent, OnMouseReleasedBase);
 		AddHandler(LoadedEvent, OnLoadBase);
 		AddHandler(UnloadedEvent, OnUnloadBase);
+
+		CellTaskCount = new int[TaskGridRowCount, TaskGridColumnCount];
 	}
 
 	protected void ShowReasonContextMenu() {
@@ -308,7 +334,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		_contextMenu?.Open(this);
 	}
 
-	protected virtual Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int i) {
+	protected virtual Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int row, int column) {
 		double proportion = GraphAreaWidth / IntervalDuration;
 		double graphPosX = (task.Start - IntervalStartSeconds) * proportion + PaddingX;
 		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
@@ -317,7 +343,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		
 		Rect res = new(
 			graphPosX - additionalWidth,
-			YAxisSegmentSize * i * 1.5 - additionalHeight + PaddingY,
+			YAxisSegmentSize * row * 1.5 - additionalHeight + PaddingY,
 			width,
 			YAxisSegmentSize + additionalHeight * 2
 		);
@@ -329,6 +355,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public override void Render(DrawingContext context) {
 		if (!IsVisible)
 			return;
+		for (int row = 0; row < CellTaskCount.GetLength(0); row++)
+			for (int column = 0; column < CellTaskCount.GetLength(0); column++)
+				CellTaskCount[row, column] = 0;
 		DrawBackground(context);
 		DrawTimeline(context);
 		DrawTodayMarker(context);
@@ -339,7 +368,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected virtual void DrawTasks(DrawingContext context) {
 		foreach (var task in Tasks ?? [])
-			DrawTaskGraph(context, task, 0);
+			DrawTaskGraph(context, task);
 	}
 
 	protected virtual void DrawBackground(DrawingContext context) {
@@ -391,8 +420,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		}
 	}
 
-	protected void DrawTaskGraph(DrawingContext context, ObservableTask task, int i) {
-		Rect rect = GetTaskRectangle(task, 0, 0, i);
+	protected void DrawTaskGraph(DrawingContext context, ObservableTask task) {
+		Rect rect = GetTaskRectangle(task, 0, 0, 0, 0);
 
 		Brush brush;
 		if (task.Running) {
@@ -522,7 +551,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	private void OnDoubleClickBase(object? sender, TappedEventArgs args) {
 		Console.WriteLine("Double Click!");
-
 	}
 
 	private void OnMouseMovedBase(object? sender, PointerEventArgs args) {

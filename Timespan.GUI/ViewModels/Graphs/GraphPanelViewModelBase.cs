@@ -19,8 +19,9 @@ namespace Timespan.GUI.ViewModels.Graphs;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
 
-	public Services.CacheService cacheService;
+	protected Services.CacheService cacheService;
 	protected IHourglassDbService dbService;
+	protected SettingsService settingsService;
 
 	#region observable properties
 
@@ -62,6 +63,12 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	private long yAxisSegmentCount = 0;
 
 	[ObservableProperty]
+	private long taskGridRowCount = 0;
+
+	[ObservableProperty]
+	private long taskGridColumnCount = 0;
+
+	[ObservableProperty]
 	private long timeIntervallStartSeconds = 0;
 
 	[ObservableProperty]
@@ -72,9 +79,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#endregion
 
-	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, long start, long finish, int rows=1, int columns=24, long duration=3600) : base() {
+	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService, long start, long finish, int rows=1, int columns=24, int taskRows=1, int taskColumns=1, long duration=3600) : base() {
 		this.cacheService = cacheService;
 		this.dbService = dbService;
+		this.settingsService = settingsService;
 		TimeIntervallStartSeconds = start;
 		TimeIntervallStopSeconds = finish;
 		XAxisSegmentDuration = duration;
@@ -84,10 +92,13 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		BlockedColumns = new();
 		XAxisSegmentCount = columns;
 		YAxisSegmentCount = rows;
+		TaskGridRowCount = taskRows;
+		TaskGridColumnCount = taskColumns;
 		IsTodaySegment = new bool[YAxisSegmentCount, XAxisSegmentCount];
-		for(int row = 0; row < YAxisSegmentCount; row++) 
-			for(int column = 0; column < XAxisSegmentCount; column++)
+		for (int row = 0; row < YAxisSegmentCount; row++)
+			for (int column = 0; column < XAxisSegmentCount; column++) {
 				IsTodaySegment[row, column] = IsToday(row, column);
+			}
 		for (int i = 0; i < MarkedRows.Count; i++) {
 			MarkedRows[i] = new(false);
 			MarkedRows[i] = new(false);
@@ -110,6 +121,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	public abstract string GetDateString();
 
 	protected abstract bool IsToday(int ro, int column);
+
+	protected abstract GridCellPosition GetCellForTask(ObservableTask task);
 
 	public virtual async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];

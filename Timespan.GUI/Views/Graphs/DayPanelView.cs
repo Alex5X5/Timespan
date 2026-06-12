@@ -30,20 +30,20 @@ public partial class DayPanelView : GraphPanelViewBase {
 	private static double ArialHeightToPt(double height, double x = 1) =>
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
-	public Rect GetTaskRectanlge(ObservableTask task, double additionalWidth, double additionalHeight, int i) {
-		double proportion = GraphAreaWidth / IntervalDuration;
-		double graphPosX = (task.Start - IntervalStartSeconds) * proportion + PaddingX;
-		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
-		double graphLength = duration * proportion;
-		double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
-		Rect res = new(
-			graphPosX - additionalWidth,
-			YAxisSegmentSize * (i % (MaxTasks / 2)) * 1.5 - additionalHeight + PaddingY,
-			width,
-			YAxisSegmentSize + additionalHeight * 2
-		);
-		return res;
-	}
+	//protected override Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int row, int column) {
+	//	double proportion = GraphAreaWidth / IntervalDuration;
+	//	double graphPosX = (task.Start - IntervalStartSeconds) * proportion + PaddingX;
+	//	long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
+	//	double graphLength = duration * proportion;
+	//	double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
+	//	Rect res = new(
+	//		graphPosX - additionalWidth,
+	//		YAxisSegmentSize * (i % (MaxTasks / 2)) * 1.5 - additionalHeight + PaddingY,
+	//		width,
+	//		YAxisSegmentSize + additionalHeight * 2
+	//	);
+	//	return res;
+	//}
 
 	protected override void DrawTimeline(DrawingContext context) {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
