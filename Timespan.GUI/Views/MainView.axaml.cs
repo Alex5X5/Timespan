@@ -6,29 +6,29 @@ namespace Timespan.GUI.Views;
 
 internal partial class MainView : UserControl {
 
-	[TranslateMember("Views.Pages.Timer.Labels.Title", "Timer")]
+	[TranslateMember("Views.Pages.Main.Buttons.Timer", "Timer")]
 	public string TimerButtonText { get; set; } = "";
 
-	[TranslateMember("Views.Pages.Graphs.Labels.Title", "Graphs")]
+	[TranslateMember("Views.Pages.Main.Buttons.Graphs", "Graphs")]
 	public string GraphsButtonText { get; set; } = "";
 
-	[TranslateMember("Views.Pages.Export.Labels.Title", "Export")]
+	[TranslateMember("Views.Pages.Main.Buttons.Export", "Export")]
 	public string ExportButtonText { get; set; } = "";
 
 
-	[TranslateMember("Views.Pages.Settings.About.Labels.Title", "About")]
+	[TranslateMember("Views.Pages.Main.Buttons.About", "About")]
 	public string AboutSettingsButtonText { get; set; } = "";
 
-	[TranslateMember("Views.Pages.Settings.Export.Labels.Title", "Export")]
+	[TranslateMember("Views.Pages.Main.Buttons.Export", "Export")]
 	public string ExportSettingsButtonText { get; set; } = "";
 
-	[TranslateMember("Views.Pages.Settings.General.Labels.Title", "Username")]
+	[TranslateMember("Views.Pages.Main.Buttons.General", "General")]
 	public string GeneralSettingsButtonText { get; set; } = "";
 
-	[TranslateMember("Views.Pages.Settings.Graphics.Labels.Title", "Graphics")]
+	[TranslateMember("Views.Pages.Main.Buttons.Graphics", "Graphics")]
 	public string GraphicsSettingsButtonText { get; set; } = "";
 
-	[TranslateMember("Views.Pages.Settings.UserData.Labels.Title", "User Data")]
+	[TranslateMember("Views.Pages.Main.Buttons.UserData", "User Data")]
 	public string UserDataSettingsButtonText { get; set; } = "";
 
 	public MainView() {

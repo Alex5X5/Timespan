@@ -5,18 +5,24 @@ Views.Pages.Timer.Labels.Title:Timer
 Views.Pages.Settings.About.Labels.Title:About Us
 Views.Pages.Settings.Export.Labels.Title:Export Settings
 Views.Pages.Settings.General.Labels.Title:General Settings
-Views.Pages.Settings.UserData.Labels.Title:User Data
 Views.Pages.Settings.Graphics.Labels.Title:Graphics Settings
+Views.Pages.Settings.UserData.Labels.Title:User Data Settings
 
-Views.MainView.Buttons.Timer:Timer
-Views.MainView.Buttons.Graphs:Graphs
-Views.MainView.Buttons.Export:Export
+Views.Pages.Main.Buttons.Timer:Timer
+Views.Pages.Main.Buttons.Graphs:Graphs
+Views.Pages.Main.Buttons.Export:Export
+Views.Pages.Main.Buttons.General:General
+Views.Pages.Main.Buttons.About:About Us
+Views.Pages.Main.Buttons.Graphics:Graphics
+Views.Pages.Main.Buttons.UserData:User Data
+
 
 Views.Pages.Timer.Buttons.Start:Start
 Views.Pages.Timer.Buttons.Stop:Stop
 Views.Pages.Timer.Labels.Start:Start
 Views.Pages.Timer.Labels.Stop:Finish
 Views.Pages.Timer.Labels.Description:Description
+Views.Pages.Graphs.Labels.Week:CW
 
 Views.Pages.Settings.Buttons.Back:Back
 Views.Pages.Settings.Buttons.General:General
@@ -49,7 +55,7 @@ Views.Pages.TaskDetails.Labels.Description:Description
 
 Views.Pages.Graphs.Buttons.Select:Select
 Views.Pages.Graphs.Buttons.Delete:Delete
-Views.Pages.Graphs.Labels.Week:WK
+Views.Pages.Graphs.Labels.Week:CW
 
 Days.Monday:Monday
 Days.Tuesday:Tuesday

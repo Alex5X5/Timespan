@@ -336,16 +336,18 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected virtual Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int row, int column) {
 		double proportion = GraphAreaWidth / IntervalDuration;
-		double graphPosX = (task.Start - IntervalStartSeconds) * proportion + PaddingX;
+		double graphPosX = (task.Start - IntervalStartSeconds) * proportion - additionalWidth + PaddingX;
+		double graphPosY = YAxisSegmentSize * row * 1.5 - additionalHeight + PaddingY;
 		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
 		double graphLength = duration * proportion;
 		double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
-		
+		double height = YAxisSegmentSize + additionalHeight * 2;
+
 		Rect res = new(
-			graphPosX - additionalWidth,
-			YAxisSegmentSize * row * 1.5 - additionalHeight + PaddingY,
+			graphPosX,
+			graphPosY,
 			width,
-			YAxisSegmentSize + additionalHeight * 2
+			height
 		);
 		return res;
 	}
