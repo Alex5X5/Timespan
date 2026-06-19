@@ -133,7 +133,12 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	protected void PreviousIntervallClick() {
-		CurrentPage?.PreviousIntervallClick();
+		if (SelectedTimeMode == TimeModes[0])
+			cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(-1));
+		if (SelectedTimeMode == TimeModes[1])
+			cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(-7));
+		if (SelectedTimeMode == TimeModes[2])
+			cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(-1));
 		DateString = CurrentPage?.GetDateString() ?? "Date";
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		GlobalEventService.Raise<TasksChangedEventArgs>();
@@ -141,7 +146,12 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	protected void FollowingIntervallClick() {
-		CurrentPage?.FollowingIntervallClick();
+		if (SelectedTimeMode == TimeModes[0])
+			cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(1));
+		if (SelectedTimeMode == TimeModes[1])
+			cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(7));
+		if (SelectedTimeMode == TimeModes[2])
+			cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(1));
 		DateString = CurrentPage?.GetDateString() ?? "Date";
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		GlobalEventService.Raise<TasksChangedEventArgs>();

@@ -180,18 +180,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected virtual void OnMouseDragging(MouseDraggingEventArgs args) {
 	}
 
-	void IGraphsViewChild.PreviousIntervallClick() {
-		PreviousIntervallClick();
-	}
-
-	void IGraphsViewChild.FollowingIntervallClick() {
-		FollowingIntervallClick();
-	}
-
-	protected abstract void PreviousIntervallClick();
-
-	protected abstract void FollowingIntervallClick();
-
 	#endregion
 
 	#region property changed events

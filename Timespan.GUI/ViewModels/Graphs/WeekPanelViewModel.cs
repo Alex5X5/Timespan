@@ -51,14 +51,6 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 		return DateTimeService.CeilWeek(date);
 	}
 
-	protected override void PreviousIntervallClick() {
-		cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(-7));
-	}
-
-	protected override void FollowingIntervallClick() {
-		cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(7));
-	}
-
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(DateTimeService.FloorWeek(cacheService.SelectedDay)) : [];
 	}

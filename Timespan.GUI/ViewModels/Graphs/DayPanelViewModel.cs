@@ -46,14 +46,6 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		return DateTimeService.CeilDay(date);
 	}
 
-	protected override void PreviousIntervallClick() {
-		cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(-1));
-	}
-
-	protected override void FollowingIntervallClick() {
-		cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(1));
-	}
-
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];
 	}

@@ -53,14 +53,6 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		return DateTimeService.CeilMonth(date);
 	}
 
-	protected override void PreviousIntervallClick() {
-		cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(-1));
-	}
-
-	protected override void FollowingIntervallClick() {
-		cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(1));
-	}
-
 	protected override void OnIntervallChanged(IntervallChangedEventArgs args) {
 		base.OnIntervallChanged(args);
 		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
