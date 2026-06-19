@@ -38,18 +38,20 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		return $"{day}. {cacheService.SelectedDay.Day}. {month}. {cacheService.SelectedDay.Year}";
 	}
 
+	protected override DateTime FloorIntervall(DateTime date) {
+		return DateTimeService.FloorDay(date);
+	}
+
+	protected override DateTime CeilIntervall(DateTime date) {
+		return DateTimeService.CeilDay(date);
+	}
+
 	protected override void PreviousIntervallClick() {
 		cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(-1));
 	}
 
 	protected override void FollowingIntervallClick() {
 		cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(1));
-	}
-
-	protected override void SelectedDayChanged(IntervallChangedEventArgs args) {
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay));
-		base.SelectedDayChanged(args);
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {

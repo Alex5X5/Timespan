@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 
 using System.Collections.ObjectModel;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -133,22 +134,18 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	[RelayCommand]
 	protected virtual void OnLoad() {
 		UpdateColumnMarkers();
-		GlobalEventService.GetEvent<IntervallChangedEventArgs>().Subscribe(SelectedDayChanged);
-		List<Timespan.Types.Models.Task> tasks = GetTasksAsync().Result;
-		var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
-		if(tasks_.Count == 0)
-			return;
-		Tasks.Clear();
-		Tasks.AddRange(tasks_);
+		GlobalEventService.GetEvent<IntervallChangedEventArgs>().Subscribe(OnIntervallChanged);
+		GlobalEventService.GetEvent<TasksChangedEventArgs>().Subscribe(OnTasksChanged);
+		GlobalEventService.GetEvent<ShowTaksEventArgs>().Subscribe(OnShowTask);
+		GlobalEventService.Raise<IntervallChangedEventArgs>();
+		GlobalEventService.Raise<TasksChangedEventArgs>();
 	}
 
 	[RelayCommand]
 	protected virtual void OnUnload() {
-		GlobalEventService.GetEvent<IntervallChangedEventArgs>().UnSubscribe(SelectedDayChanged);
-	}
-
-	private void UpdateSelectedDay(DateTime? date) {
-		SelectedDay = date ?? SelectedDay;
+		GlobalEventService.GetEvent<IntervallChangedEventArgs>().UnSubscribe(OnIntervallChanged);
+		GlobalEventService.GetEvent<TasksChangedEventArgs>().UnSubscribe(OnTasksChanged);
+		GlobalEventService.GetEvent<ShowTaksEventArgs>().UnSubscribe(OnShowTask);
 	}
 
 	[RelayCommand]
@@ -199,9 +196,28 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#region property changed events
 
-	protected virtual void SelectedDayChanged(IntervallChangedEventArgs args) {
+	protected virtual void OnIntervallChanged(IntervallChangedEventArgs args) {
+		SelectedDay = cacheService.SelectedDay;
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
 		UpdateColumnMarkers();
 	}
+
+	private async void OnTasksChanged(TasksChangedEventArgs args) {
+		List<Timespan.Types.Models.Task> tasks = await GetTasksAsync();
+		var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
+		if (tasks_.Count == 0)
+			return;
+		Tasks.Clear();
+		Tasks.AddRange(tasks_);
+	}
+
+	private void OnShowTask(ShowTaksEventArgs args) {
+		 
+	}
+
+	protected abstract DateTime FloorIntervall(DateTime date);
+	protected abstract DateTime CeilIntervall(DateTime date);
 
 	partial void OnXAxisSegmentCountChanged(long value) {
 		if (MarkedColumns != null) {

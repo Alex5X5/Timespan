@@ -7,12 +7,9 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
-using Timespan.GUI.Interfaces;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
-using Timespan.GUI.ViewModels.Graphs;
 using Timespan.Util.Services;
 
 using SharedTypes = Timespan.Types.Models;
@@ -29,8 +26,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	protected Rect MarkerDragRectangle;
 	protected Point DragOrigin;
 	protected Point MousePos = new(0.0, 0.0);
-
-	protected int[,] CellTaskCount;
 
 	private ContextMenu? _contextMenu;
 
@@ -104,6 +99,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	public static readonly StyledProperty<int> TaskGridColumnCountProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(TaskGridColumnCount), 0);
+
+	public static readonly StyledProperty<int> MaxCellTasksProperty =
+		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(MaxCellTasks), 0);
 
 
 	public static readonly StyledProperty<IRelayCommand> LoadCommandProperty =
@@ -230,6 +228,11 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		set => SetValue(TaskGridColumnCountProperty, value);
 	}
 
+	public int MaxCellTasks {
+		get => GetValue(MaxCellTasksProperty);
+		set => SetValue(MaxCellTasksProperty, value);
+	}
+
 	public IRelayCommand LoadCommand {
 		get => GetValue(LoadCommandProperty);
 		set => SetValue(LoadCommandProperty, value);
@@ -273,7 +276,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	#endregion
 
 	static GraphPanelViewBase() {
-		//AffectsRender<GraphPanelViewBase>(TasksProperty);
+		
+		AffectsRender<GraphPanelViewBase>(BoundsProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
@@ -291,8 +295,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		AddHandler(PointerReleasedEvent, OnMouseReleasedBase);
 		AddHandler(LoadedEvent, OnLoadBase);
 		AddHandler(UnloadedEvent, OnUnloadBase);
-
-		CellTaskCount = new int[TaskGridRowCount, TaskGridColumnCount];
 	}
 
 	protected void ShowReasonContextMenu() {
@@ -334,32 +336,50 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		_contextMenu?.Open(this);
 	}
 
-	protected virtual Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int row, int column) {
+	protected virtual int GetTaskRow(ObservableTask task) {
+		long offset = task.Start - IntervalStartSeconds;
+		if (offset < 0)
+			return 0;
+		return (int)Math.Floor((double)offset / (double)YAxisSegmentDuration);
+	}
+
+	protected virtual int GetTaskColummn(ObservableTask task) {
+		long offset = task.Start - IntervalStartSeconds;
+		if (offset < 0)
+			return 0;
+		return (int)Math.Floor(((double)offset % (double)YAxisSegmentDuration) / (double)XAxisSegmentDuration);
+	}
+
+	protected virtual Rect GetTaskRectangle(ObservableTask task, int[,] cellTaskCount, double additionalWidth, double additionalHeight) {
+		int row = GetTaskRow(task);
+		int column = GetTaskColummn(task);
 		double proportion = GraphAreaWidth / IntervalDuration;
-		double graphPosX = (task.Start - IntervalStartSeconds) * proportion - additionalWidth + PaddingX;
-		double graphPosY = YAxisSegmentSize * row * 1.5 - additionalHeight + PaddingY;
+		double graphPosX = column * XAxisSegmentSize;
+		graphPosX += PaddingX;
+		graphPosX -= additionalWidth;
+		long startOffset = task.Start - IntervalStartSeconds;
+		graphPosX += ((double)startOffset % (double)XAxisSegmentDuration) * proportion;
+		double graphPosY = row * YAxisSegmentSize;
+		graphPosY += PaddingY;
+		graphPosY += cellTaskCount[row, column] * YAxisSegmentSize / MaxCellTasks * 1.5;
+		graphPosY -= additionalHeight;
 		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
 		double graphLength = duration * proportion;
 		double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
-		double height = YAxisSegmentSize + additionalHeight * 2;
-
+		double height = YAxisSegmentSize / MaxCellTasks + additionalHeight * 2;
 		Rect res = new(
 			graphPosX,
 			graphPosY,
 			width,
 			height
 		);
+		cellTaskCount[row, column] ++;
 		return res;
 	}
 
 	#region rendering
 
 	public override void Render(DrawingContext context) {
-		if (!IsVisible)
-			return;
-		for (int row = 0; row < CellTaskCount.GetLength(0); row++)
-			for (int column = 0; column < CellTaskCount.GetLength(0); column++)
-				CellTaskCount[row, column] = 0;
 		DrawBackground(context);
 		DrawTimeline(context);
 		DrawTodayMarker(context);
@@ -368,9 +388,42 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		DrawMouseRectangle(context);
 	}
 
-	protected virtual void DrawTasks(DrawingContext context) {
+	private void DrawTasks(DrawingContext context) {
+		int[,] cells = new int[TaskGridRowCount, TaskGridColumnCount];
+		for (int row = 0; row < TaskGridRowCount; row++)
+			for (int column = 0; column < TaskGridColumnCount; column++)
+				cells[row, column] = 0;
 		foreach (var task in Tasks ?? [])
-			DrawTaskGraph(context, task);
+			DrawTaskGraph(context, task, cells);
+	}
+
+	private void DrawTaskGraph(DrawingContext context, ObservableTask task, int[,] cellTaskCount) {
+		Rect rect = GetTaskRectangle(task, cellTaskCount, 0, 0);
+
+		Brush brush;
+		if (task.Running) {
+			Color gradientStartColor = Color.FromArgb(255, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+			Color gradientFinishColor = Color.FromArgb(20, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+			brush = new LinearGradientBrush() {
+				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
+				EndPoint = new RelativePoint(1.0, 0.5, RelativeUnit.Relative),
+				GradientStops = {
+					new GradientStop(gradientStartColor, 0.0),
+					new GradientStop(gradientFinishColor, 1.0)
+				}
+			};
+		} else {
+			brush = new SolidColorBrush(task.DisplayColor);
+		}
+
+		double r = Math.Min(10, rect.Height / 4);
+		r = Math.Min(r, rect.Width / 2);
+		RectangleGeometry rrect = new(rect) {
+			RadiusX = r,
+			RadiusY = r
+		};
+		context.DrawGeometry(brush, null, rrect);
+		//DrawTaskDescriptionStub(context, task, rect);
 	}
 
 	protected virtual void DrawBackground(DrawingContext context) {
@@ -420,35 +473,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			}
 			y += YAxisSegmentSize;
 		}
-	}
-
-	protected void DrawTaskGraph(DrawingContext context, ObservableTask task) {
-		Rect rect = GetTaskRectangle(task, 0, 0, 0, 0);
-
-		Brush brush;
-		if (task.Running) {
-			Color gradientStartColor = Color.FromArgb(255, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
-			Color gradientFinishColor = Color.FromArgb(20, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
-			brush = new LinearGradientBrush() {
-				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
-				EndPoint = new RelativePoint(1.0, 0.5, RelativeUnit.Relative),
-				GradientStops = {
-					new GradientStop(gradientStartColor, 0.0),
-					new GradientStop(gradientFinishColor, 1.0)
-				}
-			};
-		} else {
-			brush = new SolidColorBrush(task.DisplayColor);
-		}
-			
-		double r = Math.Min(10, rect.Height / 4);
-		r = Math.Min(r, rect.Width / 2);
-		RectangleGeometry rrect = new(rect) {
-			RadiusX = r,
-			RadiusY = r
-		};
-		context.DrawGeometry(brush, null, rrect);
-		//DrawTaskDescriptionStub(context, task, rect);
 	}
 
 	protected virtual void DrawMouseRectangle(DrawingContext context) {
@@ -502,6 +526,16 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		}
 	}
 
+	private static T[,] ResizeArray<T>(T[,] original, int rows, int cols) {
+		var newArray = new T[rows, cols];
+		int minRows = Math.Min(rows, original.GetLength(0));
+		int minCols = Math.Min(cols, original.GetLength(1));
+		for(int i = 0; i<minRows; i++)
+			for(int j = 0; j<minCols; j++)
+			   newArray[i, j] = original[i, j];
+		return newArray;
+	}
+
 	private void OnBoolListChanged(object? sender, NotifyCollectionChangedEventArgs e) {
 		if (e.OldItems != null)
 			foreach (ObservableBool item in e.OldItems)
@@ -529,30 +563,32 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	private void OnClickBase(object? sender, TappedEventArgs e) {
-		ClickedCommand.Execute(EventArgs.Empty);
+		ObservableTask? clickedTask = null;
 		Point mousePos = e.GetPosition(this);
-		if (DataContext is IGraphViewModel model) {
-			//int i = 0;
-			SharedTypes.Task? clickedTask = null;
-			//foreach (var task in await model.GetTasksAsync()) {
-			//	Rect rect = GetTaskRectanlge(task, GRAPH_CLICK_ADDITIONAL_WIDTH, GRAPH_CLICK_ADDITIONAL_HEIGHT, i);
-			//	i++;
-			//	if (rect.Contains(mousePos)) {
-			//		clickedTask = task;
-			//		break;
-			//	} else {
-			//		continue;
-			//	}
-			//}
-			if (clickedTask != null) {
-				var clickArgs = new TaskClickedEventArgs(clickedTask);
-				TaskClickedCommand.Execute(clickArgs);
+		int[,] cells = new int[TaskGridRowCount, TaskGridColumnCount];
+		for (int row = 0; row < TaskGridRowCount; row++)
+			for (int column = 0; column < TaskGridColumnCount; column++)
+				cells[row, column] = 0;
+		int i = 0;
+		foreach (var task in Tasks) {
+			Rect rect = GetTaskRectangle(task, cells, 10, 10);
+			i++;
+			if (rect.Contains(mousePos)) {
+				clickedTask = task;
+				break;
+			} else {
+				continue;
 			}
+		}
+		ClickedCommand.Execute(EventArgs.Empty);
+		if (clickedTask != null) {
+			var clickArgs = new TaskClickedEventArgs(clickedTask.Value);
+			TaskClickedCommand.Execute(clickArgs);
 		}
 	}
 
 	private void OnDoubleClickBase(object? sender, TappedEventArgs args) {
-		Console.WriteLine("Double Click!");
+		//Console.WriteLine("Double Click!");
 	}
 
 	private void OnMouseMovedBase(object? sender, PointerEventArgs args) {
@@ -588,7 +624,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	private void OnMousePressedBase(object? sender, PointerPressedEventArgs args) {
-		Console.WriteLine("Mouse pressed!");
+		//Console.WriteLine("Mouse pressed!");
 		PointerPoint mousePoint = args.GetCurrentPoint(sender as Control);
 		MousePos = mousePoint.Position;
 		DragOrigin = mousePoint.Position;
@@ -611,7 +647,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	private void OnMouseReleasedBase(object? sender, PointerReleasedEventArgs args) {
-		Console.WriteLine($"mouse released!");
+		//Console.WriteLine($"mouse released!");
 		if (!args.GetCurrentPoint(sender as Control).Properties.IsRightButtonPressed) {
 			if (RightMouseDown) {
 				ShowReasonContextMenu();
@@ -628,6 +664,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	private void OnLoadBase(object? sender, RoutedEventArgs args) {
 		LoadCommand.Execute(EventArgs.Empty);
+		InvalidateVisual();
 	}
 
 	private void OnUnloadBase(object? sender, RoutedEventArgs args) {

@@ -40,9 +40,9 @@ public partial class MonthPanelView : GraphPanelViewBase {
 	//	return res;
 	//}
 
-	protected override Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int row, int column) {
-		return base.GetTaskRectangle(task, additionalWidth, additionalHeight, row, column);
-	}
+	//protected override Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight) {
+	//	return base.GetTaskRectangle(task, additionalWidth, additionalHeight);
+	//}
 
 	protected override void DrawTimeline(DrawingContext context) {
 		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));

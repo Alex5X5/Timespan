@@ -23,7 +23,7 @@
 									 BlockedColumns="{ Binding BlockedColumns }"
 									 IsToday="{ Binding IsTodaySegment }"
 									 Tasks="{ Binding Tasks }"
-									 MaxTasks="7"
+									 MaxCellTasks="7"
 									 XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 									 YAxisSegmentCount="{ Binding YAxisSegmentCount }"
 									 TaskGridRowCount="{Binding TaskGridRowCount}"
@@ -36,7 +36,8 @@
 									 MouseDraggingCommand="{ Binding MouseDraggingCommand }"
 									 ClickedCommand="{ Binding ClickedCommand }"
 									 TaskClickedCommand="{ Binding TaskClickedCommand }"
-									 LoadCommand="{ Binding LoadCommand }"/>
+									 LoadCommand="{ Binding LoadCommand }"
+									 UnloadCommand="{ Binding UnloadCommand }"/>
 		</DataTemplate>
 		<DataTemplate DataType="graphModels:WeekPanelViewModel">
 			<graphViews:WeekPanelView MarkedRows="{ Binding MarkedRows }"
@@ -45,7 +46,7 @@
 									  BlockedColumns="{ Binding BlockedColumns }"
 									  IsToday="{ Binding IsTodaySegment }"
 									  Tasks="{ Binding Tasks }"
-									  MaxTasks="20"
+									  MaxCellTasks="7"
 									  XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 									  YAxisSegmentCount="{ Binding YAxisSegmentCount }"
 									  TaskGridRowCount="{Binding TaskGridRowCount}"
@@ -58,7 +59,8 @@
 									  MouseDraggingCommand="{ Binding MouseDraggingCommand }"
 									  ClickedCommand="{ Binding ClickedCommand }"
 									  TaskClickedCommand="{ Binding TaskClickedCommand }"
-									  LoadCommand="{ Binding LoadCommand }"/>
+									  LoadCommand="{ Binding LoadCommand }"
+									  UnloadCommand="{ Binding UnloadCommand }"/>
 		</DataTemplate>
 		<DataTemplate DataType="graphModels:MonthPanelViewModel">
 			<graphViews:MonthPanelView MarkedRows="{ Binding MarkedRows }"
@@ -67,7 +69,7 @@
 									   BlockedColumns="{ Binding BlockedColumns }"
 									   IsToday="{ Binding IsTodaySegment }"
 									   Tasks="{ Binding Tasks }"
-									   MaxTasks="40"
+									   MaxCellTasks="7"
 									   XAxisSegmentCount="{ Binding XAxisSegmentCount }"
 									   YAxisSegmentCount="{ Binding YAxisSegmentCount }"
 									   TaskGridRowCount="{Binding TaskGridRowCount}"
@@ -80,7 +82,8 @@
 									   MouseDraggingCommand="{ Binding MouseDraggingCommand }"
 									   ClickedCommand="{ Binding ClickedCommand }"
 									   TaskClickedCommand="{ Binding TaskClickedCommand }"
-									   LoadCommand="{ Binding LoadCommand }"/>
+									   LoadCommand="{ Binding LoadCommand }"
+									   UnloadCommand="{ Binding UnloadCommand }"/>
 		</DataTemplate>
 	</UserControl.DataTemplates>
 

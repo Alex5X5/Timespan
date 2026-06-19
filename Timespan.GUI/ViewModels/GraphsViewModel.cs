@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
@@ -14,8 +15,9 @@ using Timespan.Util.Services;
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	private IHourglassDbService dbService;
+	private Timespan.GUI.Services.CacheService cacheService;
 
-	public RedirectionAnchor<IGraphsViewChild> CurrentPageAnchor;
+	public IRedirectionAnchor<IGraphsViewChild> CurrentPageAnchor;
 	public IGraphsViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
 
 	private string selectedTimeMode = "";
@@ -65,9 +67,10 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	private GridLength taskPanelWidth = new(0, GridUnitType.Star);
 
-	public GraphsViewModel(RedirectionService redirectionService, ViewModelFactory<IGraphsViewChild> factory, IHourglassDbService dbService) : base() {
+	public GraphsViewModel(RedirectionService redirectionService, ViewModelFactory<IGraphsViewChild> factory, IHourglassDbService dbService, Timespan.GUI.Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
-		CurrentPageAnchor = new(factory);
+		this.cacheService = cacheService;
+		CurrentPageAnchor = new RedirectionAnchor<IGraphsViewChild>(factory);
 		redirectionService.Register<GraphsViewModel, IGraphsViewChild>(CurrentPageAnchor);
 		CurrentPageAnchor.ModelChanged += (from, to) => {
 			OnPropertyChanged(nameof(CurrentPage));
@@ -82,7 +85,6 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	internal void ShowTask(ShowTaksEventArgs args) {
-		Console.WriteLine("[GraphsView]:showing task");
 		if (args.Task is null) {
 			HideTask();
 		} else {
@@ -97,17 +99,17 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	internal void HideTask() {
-		Console.WriteLine("[GraphsView]:hiding task");
 		ShowTaskPanel = false;
 		EditingTask = false;
 	}
 
 	[RelayCommand]
-	internal void DeleteTask() {
+	internal async Task DeleteTask() {
 		HideTask();
-		if (dbService.QueryCurrentTaskAsync().Result is Timespan.Types.Models.Task task) {
-			dbService.DeleteTaskAsync(task);
-		}
+		await dbService.DeleteTaskAsync(cacheService.SelectedTask)
+			.ContinueWith(
+				(state)=>
+					GlobalEventService.Raise<TasksChangedEventArgs>());
 	}
 
 	[RelayCommand]
@@ -117,8 +119,9 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	[RelayCommand]
-	internal void Select() {
-		if (dbService.QueryCurrentTaskAsync().Result is Timespan.Types.Models.Task task) {
+	internal async Task Select() {
+		var task = await dbService.QueryCurrentTaskAsync();
+		if (task is Timespan.Types.Models.Task) {
 			var args = new ShowTaksEventArgs(task);
 			GlobalEventService.Raise(args);
 		}
@@ -126,20 +129,22 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	internal void Delete() {
-		var args = new ShowTaksEventArgs();
-		GlobalEventService.Raise(args);
 	}
 
 	[RelayCommand]
 	protected void PreviousIntervallClick() {
 		CurrentPage?.PreviousIntervallClick();
 		DateString = CurrentPage?.GetDateString() ?? "Date";
+		GlobalEventService.Raise<IntervallChangedEventArgs>();
+		GlobalEventService.Raise<TasksChangedEventArgs>();
 	}
 
 	[RelayCommand]
 	protected void FollowingIntervallClick() {
 		CurrentPage?.FollowingIntervallClick();
 		DateString = CurrentPage?.GetDateString() ?? "Date";
+		GlobalEventService.Raise<IntervallChangedEventArgs>();
+		GlobalEventService.Raise<TasksChangedEventArgs>();
 	}
 
 	private void UpdateMode(string mode) {
@@ -153,6 +158,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	private void UpdateIntervall(IntervallChangedEventArgs args) {
+		DateString = CurrentPage?.GetDateString() ?? "Date";
 	}
 
 	[RelayCommand]

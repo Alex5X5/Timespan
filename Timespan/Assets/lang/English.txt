@@ -16,7 +16,6 @@ Views.Pages.Main.Buttons.About:About Us
 Views.Pages.Main.Buttons.Graphics:Graphics
 Views.Pages.Main.Buttons.UserData:User Data
 
-
 Views.Pages.Timer.Buttons.Start:Start
 Views.Pages.Timer.Buttons.Stop:Stop
 Views.Pages.Timer.Labels.Start:Start
@@ -105,3 +104,7 @@ Absence.Vacant:Urlaub
 Absence.HomeWork:Heimarbeitstag
 Absence.NoExcuse:Unentschuldigt
 Absence.None:Anwesend
+
+TimeMode.Day:Day
+TimeMode.Week:Week
+TimeMode.Month:Month

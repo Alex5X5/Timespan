@@ -43,18 +43,20 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 		return $"{TranslatorService.Singleton["Views.Pages.Graphs.Labels.Week"]} {week}";
 	}
 
+	protected override DateTime FloorIntervall(DateTime date) {
+		return DateTimeService.FloorWeek(date);
+	}
+
+	protected override DateTime CeilIntervall(DateTime date) {
+		return DateTimeService.CeilWeek(date);
+	}
+
 	protected override void PreviousIntervallClick() {
 		cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(-7));
 	}
 
 	protected override void FollowingIntervallClick() {
 		cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(7));
-	}
-
-	protected override void SelectedDayChanged(IntervallChangedEventArgs args) {
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay));
-		base.SelectedDayChanged(args);
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {

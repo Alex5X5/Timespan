@@ -11,6 +11,10 @@ Views.Pages.Settings.Graphics.Labels.Title:Graphik
 Views.Pages.Main.Buttons.Timer:Zeitmessung
 Views.Pages.Main.Buttons.Graphs:Übersicht
 Views.Pages.Main.Buttons.Export:Exportieren
+Views.Pages.Main.Buttons.General:Allgemein
+Views.Pages.Main.Buttons.About:Über uns
+Views.Pages.Main.Buttons.Graphics:Graphik
+Views.Pages.Main.Buttons.UserData:Nutzerdaten
 
 Views.Pages.Timer.Buttons.Start:Start
 Views.Pages.Timer.Buttons.Stop:Stop
@@ -100,3 +104,7 @@ Absence.Vacant:Vacant
 Absence.HomeWork:HomeWork
 Absence.NoExcuse:No Excuse
 Absence.None:Present
+
+TimeMode.Day:Tag
+TimeMode.Week:Woche
+TimeMode.Month:Monat

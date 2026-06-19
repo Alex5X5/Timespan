@@ -23,6 +23,10 @@ public class RedirectionService {
 		_store = [];
 	}
 
+	internal void Register<OwnerT, ChildT>(IRedirectionAnchor<ChildT> newAnchor, string key = "anchor") {
+		Set<OwnerT, IRedirectionAnchor<ChildT>>(key, newAnchor);
+	}
+
 	internal void Register<OwnerT, ChildT>(RedirectionAnchor<ChildT> newAnchor, string key = "anchor") {
 		Set<OwnerT, IRedirectionAnchor<ChildT>>(key, newAnchor);
 	}
