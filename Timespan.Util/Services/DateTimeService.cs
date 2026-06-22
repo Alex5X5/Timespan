@@ -146,9 +146,16 @@ public class DateTimeService {
     public static string ToTimeString(DateTime time) =>
 		$"{time.Hour}:{time.Minute}:{time.Second}";
 
+	public static string ToHourMinuteString(DateTime date) =>
+		ToHourMinuteStringBase(date.Minute, date.Hour);
+
 	public static string ToHourMinuteString(long totalSeconds) {
 		long hours = (totalSeconds % TimeSpan.SecondsPerDay) / TimeSpan.SecondsPerHour;
 		long minutes = ((totalSeconds % TimeSpan.SecondsPerDay) % TimeSpan.SecondsPerHour) / TimeSpan.SecondsPerMinute;
+		return ToHourMinuteStringBase(minutes, hours);
+	}
+
+	private static string ToHourMinuteStringBase(long minutes, long hours) {
 		return (hours < 10 ? "0" + Convert.ToString(hours) : Convert.ToString(hours)) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
 	}
 

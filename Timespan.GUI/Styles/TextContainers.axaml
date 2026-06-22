@@ -28,7 +28,10 @@
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 	</Style>
 	<Style Selector="TextBlock.DynamicTextHeight">
+		<!--
 		<Setter Property="Padding" Value="{ Binding $self.Bounds, Converter={x:Static vc:PaddingConverters.PaddingFromBoundsAndParameterConverter} }"/>
+		-->
+		<Setter Property="Padding" Value="0"/>
 		<Setter Property="MinHeight" Value="0"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />

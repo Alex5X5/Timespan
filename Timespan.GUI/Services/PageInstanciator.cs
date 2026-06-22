@@ -66,7 +66,7 @@ public class PageInstanciator {
 			(serviceProvider) => 
 				() => serviceProvider.GetService<ComponentT>() ?? Activator.CreateInstance<ComponentT>()
 		);
-        serviceCollection.AddSingleton<ComponentViewModelFactory<ComponentT>>();
+        serviceCollection.AddSingleton<ComponentModelFactory<ComponentT>>();
     }
 
 	public void AddContentBindingType<ContentBaseT>() {
@@ -113,7 +113,7 @@ public class ScopedViewModelFactory<ViewBaseType>(Func<Type, IServiceScope, View
 	}
 }
 
-public class ComponentViewModelFactory<ComponentT>(Func<ComponentT> factory) {
+public class ComponentModelFactory<ComponentT>(Func<ComponentT> factory) {
 
     public ComponentT GetComponentViewModel(
 		Action<ComponentT?>? afterCreation = null,

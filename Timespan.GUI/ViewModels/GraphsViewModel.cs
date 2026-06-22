@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
+using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Graphs;
 using Timespan.Util.Services;
@@ -25,9 +26,6 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		set {
 			selectedTimeMode = value;
 			UpdateMode(value);
-			OnPropertyChanged(nameof(SelectedTimeMode));
-			OnPropertyChanged(nameof(CurrentPage));
-			OnPropertyChanged(nameof(DateString));
 		}
 		get => selectedTimeMode;
 	}
@@ -41,7 +39,10 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	private bool showTaskPanel = false;
 
 	[ObservableProperty]
-	private bool editingTask = false;
+	private bool showReadonlyTaskPanel = false;
+
+	[ObservableProperty]
+	private bool showEditTaskPanel = false;
 
 	[ObservableProperty]
     private string showingTaskTitle = "a title";
@@ -55,8 +56,18 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
     [ObservableProperty]
     private string showingTaskTimeString = "07:34 - 11:53";
 
+	[ObservableProperty]
+	private ObservableTask showingTask;
+
     partial void OnShowTaskPanelChanged(bool value)
 	{
+		if (value) {
+			ShowReadonlyTaskPanel = true;
+			ShowEditTaskPanel = false;
+		} else {
+			ShowReadonlyTaskPanel = false;
+			ShowEditTaskPanel = false;
+		}
 		SpacerWidth = new(value ? 1 : 0, GridUnitType.Star);
 		TaskPanelWidth = new(value ? 19 : 0, GridUnitType.Star);
 	}
@@ -80,6 +91,8 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		SelectedTimeMode = TimeModes[0];
 		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
 			dispatcher.Subscribe(ShowTask);
+		cacheService.SelectedDay = DateTimeService.FloorDay(DateTime.Now);
+		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		CurrentPageAnchor.ChangeModel<DayPanelViewModel>();
 	}
 
@@ -88,6 +101,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		if (args.Task is null) {
 			HideTask();
 		} else {
+			ShowingTask = new ObservableTask(args.Task);
 			ShowTaskPanel = true;
 			ShowingTaskDescription = args.Task.description;
 			string day = TranslatorService.Singleton.TranslateDay(args.Task.StartDateTime.DayOfWeek);
@@ -100,22 +114,29 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[RelayCommand]
 	internal void HideTask() {
 		ShowTaskPanel = false;
-		EditingTask = false;
 	}
 
 	[RelayCommand]
 	internal async Task DeleteTask() {
 		HideTask();
-		await dbService.DeleteTaskAsync(cacheService.SelectedTask)
-			.ContinueWith(
-				(state)=>
-					GlobalEventService.Raise<TasksChangedEventArgs>());
+		await dbService.DeleteTaskAsync(cacheService.SelectedTask);
+		await Task.Run(GlobalEventService.Raise<TasksChangedEventArgs>);
 	}
 
 	[RelayCommand]
-	internal void EditTask() {
+	internal void ApplyEdit() {
 		Console.WriteLine("[GraphsView]: editing task");
-		EditingTask = true;
+		ShowEditTaskPanel = true;
+		ShowReadonlyTaskPanel = false;
+
+	}
+
+	[RelayCommand]
+	internal void CanelEdit() {
+		Console.WriteLine("[GraphsView]: editing task");
+		ShowEditTaskPanel = true;
+		ShowReadonlyTaskPanel = false;
+
 	}
 
 	[RelayCommand]
@@ -165,6 +186,9 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		if (mode == TimeModes[2])
 			CurrentPageAnchor.ChangeModel<MonthPanelViewModel>();
 		DateString = CurrentPage?.GetDateString() ?? "Date";
+		OnPropertyChanged(nameof(SelectedTimeMode));
+		OnPropertyChanged(nameof(CurrentPage));
+		OnPropertyChanged(nameof(DateString));
 	}
 
 	private void UpdateIntervall(IntervallChangedEventArgs args) {
@@ -173,12 +197,13 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	internal void OnLoad() {
-		GlobalEventService.GetEvent<IntervallChangedEventArgs>().Subscribe(UpdateIntervall);
+		GlobalEventService.Subscribe<IntervallChangedEventArgs>(UpdateIntervall);
 	}
 
 	[RelayCommand]
 	internal void OnUnLoad() {
-		GlobalEventService.GetEvent<IntervallChangedEventArgs>().UnSubscribe(UpdateIntervall);
+		HideTask();
+		GlobalEventService.UnSubscribe<IntervallChangedEventArgs>(UpdateIntervall);
 	}
 
 }

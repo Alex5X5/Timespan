@@ -11,6 +11,14 @@ public class GlobalEventService {
 		return (EventDispatcher<T>)_store[key];
 	}
 
+	public static void Subscribe<T>(Action<T> handler) where T : EventArgs {
+		GetEvent<T>().Subscribe(handler);
+	}
+
+	public static void UnSubscribe<T>(Action<T> handler) where T : EventArgs {
+		GetEvent<T>().UnSubscribe(handler);
+	}
+
 	public static void Raise<T>(T args) where T : EventArgs {
 		GetEvent<T>().Invoke(args);
 	}

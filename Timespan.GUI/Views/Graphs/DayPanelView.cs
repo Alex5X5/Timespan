@@ -46,7 +46,6 @@ public partial class DayPanelView : GraphPanelViewBase {
 	//}
 
 
-
 	protected override int GetTaskRow(ObservableTask task) {
 		return 0;
 	}
@@ -54,7 +53,7 @@ public partial class DayPanelView : GraphPanelViewBase {
 	protected override int GetTaskColummn(ObservableTask task) {
 		return 0;
 	}
-
+	
 	protected override void DrawTimeline(DrawingContext context) {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));

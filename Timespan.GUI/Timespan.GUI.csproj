@@ -28,8 +28,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Controls\TaskDetailsControl.axaml.cs">
+	    <DependentUpon>TaskDetailsControl.axaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\ExportView.axaml.cs">
 	    <DependentUpon>ExportView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TaskDetailsView.axaml.cs">
+	    <DependentUpon>TaskDetailsView.axaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\Settings\AboutSettingsView.axaml.cs">
 	    <DependentUpon>AboutSettingsView.axaml</DependentUpon>

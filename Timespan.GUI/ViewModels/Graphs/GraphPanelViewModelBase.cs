@@ -134,18 +134,18 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	[RelayCommand]
 	protected virtual void OnLoad() {
 		UpdateColumnMarkers();
-		GlobalEventService.GetEvent<IntervallChangedEventArgs>().Subscribe(OnIntervallChanged);
-		GlobalEventService.GetEvent<TasksChangedEventArgs>().Subscribe(OnTasksChanged);
-		GlobalEventService.GetEvent<ShowTaksEventArgs>().Subscribe(OnShowTask);
+		GlobalEventService.Subscribe<IntervallChangedEventArgs>(OnIntervallChanged);
+		GlobalEventService.Subscribe<TasksChangedEventArgs>(OnTasksChanged);
+		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		GlobalEventService.Raise<TasksChangedEventArgs>();
 	}
 
 	[RelayCommand]
 	protected virtual void OnUnload() {
-		GlobalEventService.GetEvent<IntervallChangedEventArgs>().UnSubscribe(OnIntervallChanged);
-		GlobalEventService.GetEvent<TasksChangedEventArgs>().UnSubscribe(OnTasksChanged);
-		GlobalEventService.GetEvent<ShowTaksEventArgs>().UnSubscribe(OnShowTask);
+		GlobalEventService.UnSubscribe<IntervallChangedEventArgs>(OnIntervallChanged);
+		GlobalEventService.UnSubscribe<TasksChangedEventArgs>(OnTasksChanged);
+		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(OnShowTask);
 	}
 
 	[RelayCommand]
@@ -193,11 +193,13 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	private async void OnTasksChanged(TasksChangedEventArgs args) {
 		List<Timespan.Types.Models.Task> tasks = await GetTasksAsync();
-		var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
-		if (tasks_.Count == 0)
-			return;
-		Tasks.Clear();
-		Tasks.AddRange(tasks_);
+		await Task.Run(() => {
+			var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
+			if (tasks_.Count == 0)
+				Tasks = [];
+			else
+				Tasks = new(tasks_);
+		});
 	}
 
 	private void OnShowTask(ShowTaksEventArgs args) {

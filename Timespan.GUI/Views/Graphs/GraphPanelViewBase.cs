@@ -227,6 +227,10 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		get => GetValue(TaskGridColumnCountProperty);
 		set => SetValue(TaskGridColumnCountProperty, value);
 	}
+	
+	public long TaskGridColumnDuration {
+		get => IntervalDuration / (long)TaskGridColumnCount;
+	}
 
 	public int MaxCellTasks {
 		get => GetValue(MaxCellTasksProperty);
@@ -278,6 +282,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	static GraphPanelViewBase() {
 		
 		AffectsRender<GraphPanelViewBase>(BoundsProperty);
+		AffectsRender<GraphPanelViewBase>(TasksProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
@@ -358,7 +363,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		graphPosX += PaddingX;
 		graphPosX -= additionalWidth;
 		long startOffset = task.Start - IntervalStartSeconds;
-		graphPosX += ((double)startOffset % (double)XAxisSegmentDuration) * proportion;
+		graphPosX += ((double)startOffset % (double)TaskGridColumnDuration) * proportion;
 		double graphPosY = row * YAxisSegmentSize;
 		graphPosY += PaddingY;
 		graphPosY += cellTaskCount[row, column] * YAxisSegmentSize / MaxCellTasks * 1.5;
@@ -438,7 +443,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected abstract void DrawTimeline(DrawingContext context);
 
-	protected virtual void DrawTodayMarker(DrawingContext context) {
+	private void DrawTodayMarker(DrawingContext context) {
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
 				if (IsToday[row, column]) {
@@ -454,7 +459,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		}
 	}
 
-	protected virtual void DrawColumnMarkers(DrawingContext context) {
+	private void DrawColumnMarkers(DrawingContext context) {
 		Brush markedBrush = new SolidColorBrush(Color.FromArgb(120, 120, 120, 240));
 		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
 		double y = PaddingY + 2;
@@ -475,7 +480,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		}
 	}
 
-	protected virtual void DrawMouseRectangle(DrawingContext context) {
+	private void DrawMouseRectangle(DrawingContext context) {
 		if (RightMouseDown) {
 			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
 			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
@@ -523,6 +528,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 					item.PropertyChanged += OnTaskValueChanged;
 				newList.CollectionChanged += OnTaskListChanged;
 			}
+			InvalidateVisual();
 		}
 	}
 
