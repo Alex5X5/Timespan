@@ -70,10 +70,14 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		}
 		SpacerWidth = new(value ? 1 : 0, GridUnitType.Star);
 		TaskPanelWidth = new(value ? 19 : 0, GridUnitType.Star);
+		HeaderSpacerWidth = new(value ? 15 : 5, GridUnitType.Star);
 	}
 
 	[ObservableProperty]
 	private GridLength spacerWidth = new(0, GridUnitType.Star);
+
+	[ObservableProperty]
+	private GridLength headerSpacerWidth = new(0, GridUnitType.Star);
 
 	[ObservableProperty]
 	private GridLength taskPanelWidth = new(0, GridUnitType.Star);
@@ -101,13 +105,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		if (args.Task is null) {
 			HideTask();
 		} else {
-			ShowingTask = new ObservableTask(args.Task);
 			ShowTaskPanel = true;
-			ShowingTaskDescription = args.Task.description;
-			string day = TranslatorService.Singleton.TranslateDay(args.Task.StartDateTime.DayOfWeek);
-			string month = TranslatorService.Singleton.TranslateMonth(args.Task.StartDateTime.Month);
-			ShowingTaskDateString = $"{day}. {args.Task.StartDateTime.Day}. {month}. {args.Task.StartDateTime.Year}";
-			
 		}
 	}
 
@@ -191,10 +189,6 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		OnPropertyChanged(nameof(DateString));
 	}
 
-	private void UpdateIntervall(IntervallChangedEventArgs args) {
-		DateString = CurrentPage?.GetDateString() ?? "Date";
-	}
-
 	[RelayCommand]
 	internal void OnLoad() {
 		GlobalEventService.Subscribe<IntervallChangedEventArgs>(UpdateIntervall);
@@ -204,6 +198,10 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	internal void OnUnLoad() {
 		HideTask();
 		GlobalEventService.UnSubscribe<IntervallChangedEventArgs>(UpdateIntervall);
+	}
+
+	private void UpdateIntervall(IntervallChangedEventArgs args) {
+		DateString = CurrentPage?.GetDateString() ?? "Date";
 	}
 
 }

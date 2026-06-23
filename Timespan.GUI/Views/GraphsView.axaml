@@ -119,7 +119,8 @@
 					<ColumnDefinition Width="1*" />
 					<ColumnDefinition Width="5*" />
 					<ColumnDefinition Width="1*" />
-					<ColumnDefinition Width="15*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="14*" />
 					<ColumnDefinition Width="1*" />
 					<ColumnDefinition Width="10*" />
 					<ColumnDefinition Width="1*" />
@@ -133,7 +134,7 @@
 						   Classes="h2" />
 				
 				<!--Date-->
-				<Grid Grid.Column="4"
+				<Grid Grid.Column="5"
 					  ColumnDefinitions="15*, *, 4*, 4*"
 					  ShowGridLines="False">
 					<Grid Grid.Row="0"
@@ -172,7 +173,7 @@
 				</Grid>
 
 				<!--select button-->
-				<Button	Grid.Column="6"
+				<Button	Grid.Column="7"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Padding="0,0,0,0"
@@ -194,7 +195,7 @@
 				</Button>
 
 				<!--delete button-->
-				<Button	Grid.Column="8"
+				<Button	Grid.Column="9"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Padding="0,0,0,0"
@@ -216,7 +217,7 @@
 				</Button>
 
 				<!--mode combobox-->
-				<Grid Grid.Column="10"
+				<Grid Grid.Column="11"
 					  RowDefinitions="*, 8*, *"
 					  ShowGridLines="False">
 					<ComboBox Grid.Row="1"

@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
-using Timespan.Util.Attributes;
 using Timespan.Util.Services;
 
 internal partial class TaskDetailsControl : UserControl {
@@ -22,8 +21,8 @@ internal partial class TaskDetailsControl : UserControl {
 	public static readonly StyledProperty<IRelayCommand> CloseCommandProperty =
 		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand>(nameof(CloseCommand), new RelayCommand(() => { }));
 
-	public static readonly StyledProperty<IRelayCommand> SaveCommandProperty =
-		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand>(nameof(SaveCommand), new RelayCommand(() => { }));
+	public static readonly StyledProperty<IRelayCommand<Timespan.Types.Models.Task>> SaveCommandProperty =
+		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand<Timespan.Types.Models.Task>>(nameof(SaveCommand), new RelayCommand<Timespan.Types.Models.Task>(task => { }));
 
 	public static readonly StyledProperty<IRelayCommand> DeleteCommandProperty =
 		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand>(nameof(DeleteCommand), new RelayCommand(() => { }));
@@ -60,6 +59,30 @@ internal partial class TaskDetailsControl : UserControl {
 			"",
 			Avalonia.Data.BindingMode.TwoWay);
 
+	public static readonly DirectProperty<TaskDetailsControl, string> StartTextboxTextProperty =
+		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
+			nameof(StartTextboxText),
+			control => control.StartTextboxText,
+			(control, value) => control.StartTextboxText = value,
+			"",
+			Avalonia.Data.BindingMode.TwoWay);
+
+	public static readonly DirectProperty<TaskDetailsControl, string> FinishTextboxTextProperty =
+		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
+			nameof(FinishTextboxText),
+			control => control.FinishTextboxText,
+			(control, value) => control.FinishTextboxText = value,
+			"",
+			Avalonia.Data.BindingMode.TwoWay);
+
+	public static readonly DirectProperty<TaskDetailsControl, string> DescriptionTextboxTextProperty =
+		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
+			nameof(DescriptionTextboxText),
+			control => control.DescriptionTextboxText,
+			(control, value) => control.DescriptionTextboxText = value,
+			"",
+			Avalonia.Data.BindingMode.TwoWay);
+
 	public static readonly DirectProperty<TaskDetailsControl, bool> ShowReadonlyTaskPanelProperty =
 		AvaloniaProperty.RegisterDirect<TaskDetailsControl, bool>(
 			nameof(ShowReadonlyTaskPanel),
@@ -73,7 +96,7 @@ internal partial class TaskDetailsControl : UserControl {
 			nameof(ShowEditTaskPanel),
 			control => control.ShowEditTaskPanel,
 			(control, value) => control.ShowEditTaskPanel = value,
-			true,
+			false,
 			Avalonia.Data.BindingMode.TwoWay);
 
 	public Types.ObservableTask SelectedTask {
@@ -91,12 +114,10 @@ internal partial class TaskDetailsControl : UserControl {
 		set => SetValue(DeleteCommandProperty, value);
 	}
 
-	public IRelayCommand SaveCommand {
+	public IRelayCommand<Timespan.Types.Models.Task> SaveCommand {
 		get => GetValue(SaveCommandProperty);
 		set => SetValue(SaveCommandProperty, value);
 	}
-
-	#endregion
 
 	public string Title {
 		get => title;
@@ -122,6 +143,24 @@ internal partial class TaskDetailsControl : UserControl {
 	}
 	private string timeString = "A Time String";
 
+	public string StartTextboxText {
+		get => timeString;
+		set => SetAndRaise(StartTextboxTextProperty, ref timeString, value);
+	}
+	private string startTextboxText = "A Start Text";
+
+	public string FinishTextboxText {
+		get => timeString;
+		set => SetAndRaise(FinishTextboxTextProperty, ref timeString, value);
+	}
+	private string finishTextboxText = "A Finish Text";
+
+	public string DescriptionTextboxText {
+		get => timeString;
+		set => SetAndRaise(DescriptionTextboxTextProperty, ref timeString, value);
+	}
+	private string descriptionTextboxText = "A Description Text";
+
 	public bool ShowReadonlyTaskPanel {
 		get => showReadonlyTaskPanel;
 		set => SetAndRaise(ShowReadonlyTaskPanelProperty, ref showReadonlyTaskPanel, value);
@@ -133,6 +172,8 @@ internal partial class TaskDetailsControl : UserControl {
 		set => SetAndRaise(ShowEditTaskPanelProperty, ref showEditTaskPanel, value);
 	}
 	private bool showEditTaskPanel = false;
+
+	#endregion
 
 	public TaskDetailsControl() {
 		InitializeComponent();
@@ -147,8 +188,12 @@ internal partial class TaskDetailsControl : UserControl {
 	}
 
 	public void SaveButtonClick(object sender, RoutedEventArgs e) {
-		ShowReadonlyTaskPanel = false;
-		ShowEditTaskPanel = true;
+		ShowReadonlyTaskPanel = true;
+		ShowEditTaskPanel = false;
+		InvalidateVisual();
+		var start = DateTimeService.InterpretDayAndTimeString(StartTextboxText);
+		var finish = DateTimeService.InterpretDayAndTimeString(FinishTextboxText);
+		Timespan.Types.Models.Task task = new();
 		if (SaveCommand.CanExecute(EventArgs.Empty))
 			SaveCommand.Execute(EventArgs.Empty);
 		if (CloseCommand.CanExecute(EventArgs.Empty))
@@ -199,8 +244,8 @@ internal partial class TaskDetailsControl : UserControl {
 			char current = description[i];
 			if (current == ' ') {
 				if (res.Count + 1 + word.Count <= MAX_TASK_DESCRIPTION_CHARS) {
-					res.Add(current);
 					res.AddRange(word);
+					res.Add(current);
 					word = [];
 				}
 				continue;
