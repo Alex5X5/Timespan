@@ -5,13 +5,13 @@ using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
 
 using Timespan.GUI.Services;
+using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 internal partial class TaskDetailsControl : UserControl {
 
 	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
-
 
 	#region styled properties
 
@@ -75,14 +75,6 @@ internal partial class TaskDetailsControl : UserControl {
 			"",
 			Avalonia.Data.BindingMode.TwoWay);
 
-	public static readonly DirectProperty<TaskDetailsControl, string> DescriptionTextboxTextProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
-			nameof(DescriptionTextboxText),
-			control => control.DescriptionTextboxText,
-			(control, value) => control.DescriptionTextboxText = value,
-			"",
-			Avalonia.Data.BindingMode.TwoWay);
-
 	public static readonly DirectProperty<TaskDetailsControl, bool> ShowReadonlyTaskPanelProperty =
 		AvaloniaProperty.RegisterDirect<TaskDetailsControl, bool>(
 			nameof(ShowReadonlyTaskPanel),
@@ -103,7 +95,7 @@ internal partial class TaskDetailsControl : UserControl {
 		get => GetValue(SelectedTaskProperty);
 		set => SetValue(SelectedTaskProperty, value);
 	}
-	
+
 	public IRelayCommand CloseCommand {
 		get => GetValue(CloseCommandProperty);
 		set => SetValue(CloseCommandProperty, value);
@@ -144,22 +136,16 @@ internal partial class TaskDetailsControl : UserControl {
 	private string timeString = "A Time String";
 
 	public string StartTextboxText {
-		get => timeString;
-		set => SetAndRaise(StartTextboxTextProperty, ref timeString, value);
+		get => startTextboxText;
+		set => SetAndRaise(StartTextboxTextProperty, ref startTextboxText, value);
 	}
 	private string startTextboxText = "A Start Text";
 
 	public string FinishTextboxText {
-		get => timeString;
-		set => SetAndRaise(FinishTextboxTextProperty, ref timeString, value);
+		get => finishTextboxText;
+		set => SetAndRaise(FinishTextboxTextProperty, ref finishTextboxText, value);
 	}
 	private string finishTextboxText = "A Finish Text";
-
-	public string DescriptionTextboxText {
-		get => timeString;
-		set => SetAndRaise(DescriptionTextboxTextProperty, ref timeString, value);
-	}
-	private string descriptionTextboxText = "A Description Text";
 
 	public bool ShowReadonlyTaskPanel {
 		get => showReadonlyTaskPanel;
@@ -191,20 +177,32 @@ internal partial class TaskDetailsControl : UserControl {
 		ShowReadonlyTaskPanel = true;
 		ShowEditTaskPanel = false;
 		InvalidateVisual();
-		var start = DateTimeService.InterpretDayAndTimeString(StartTextboxText);
-		var finish = DateTimeService.InterpretDayAndTimeString(FinishTextboxText);
-		Timespan.Types.Models.Task task = new();
-		if (SaveCommand.CanExecute(EventArgs.Empty))
-			SaveCommand.Execute(EventArgs.Empty);
-		if (CloseCommand.CanExecute(EventArgs.Empty))
-			CloseCommand.Execute(EventArgs.Empty);
+		var start = DateTimeService.InterpretDayAndTimeString(StartTextboxText) ?? SelectedTask.StartDateTime;
+		var finish = DateTimeService.InterpretDayAndTimeString(FinishTextboxText) ?? SelectedTask.FinishDateTime;
+		Timespan.Types.Models.Task task = new() {
+			Id = SelectedTask.Id,
+			description = Description,
+			start = DateTimeService.ToSeconds(start),
+			finish = DateTimeService.ToSeconds(finish),
+			running = SelectedTask.Running,
+			blocksTime = Timespan.Types.Models.BlockedTimeIntervallType.None,
+			displayColorRed = SelectedTask.DisplayColorRed,
+			displayColorGreen = SelectedTask.DisplayColorGreen,
+			displayColorBlue = SelectedTask.DisplayColorBlue
+		};
+		if (SaveCommand.CanExecute(task))
+			SaveCommand.Execute(task);
 	}
 
 	public void CloseButtonClick(object sender, RoutedEventArgs e) {
-		ShowReadonlyTaskPanel = true;
-		ShowEditTaskPanel = false;
-		if (CloseCommand.CanExecute(EventArgs.Empty))
-			CloseCommand.Execute(EventArgs.Empty);
+		if (ShowReadonlyTaskPanel == true) {
+			if (CloseCommand.CanExecute(EventArgs.Empty))
+				CloseCommand.Execute(EventArgs.Empty);
+		} else {
+			ShowReadonlyTaskPanel = true;
+			ShowEditTaskPanel = false;
+			InsertSelectedTaskData();
+		}
 	}
 
 	public void DeleteButtonClick(object sender, RoutedEventArgs e) {
@@ -223,15 +221,27 @@ internal partial class TaskDetailsControl : UserControl {
 		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(ShowTask);
 	}
 
+	[RelayCommand]
+	private void OnColorSelected(Avalonia.Media.Color color) {
+		SelectedTask.DisplayColor = color;
+	}
+
 	private void ShowTask(ShowTaksEventArgs args) {
 		ShowReadonlyTaskPanel = true;
 		ShowEditTaskPanel = false;
 		if (args.Task is Timespan.Types.Models.Task task) {
-			Description = args.Task?.description ?? "";
-			Title = GetTitleString(args.Task?.description ?? "");
-			DateString = GetDateString(task.StartDateTime);
-			TimeString = GetTimeString(task.StartDateTime, task.FinishDateTime);
+			SelectedTask = TaskMapper.ToGuiType(task);
+			InsertSelectedTaskData();
 		}
+	}
+
+	private void InsertSelectedTaskData() {
+		Description = SelectedTask.Description;
+		Title = GetTitleString(SelectedTask.Description);
+		DateString = GetDateString(SelectedTask.StartDateTime);
+		TimeString = GetTimeString(SelectedTask.StartDateTime, SelectedTask.FinishDateTime);
+		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.StartDateTime);
+		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.FinishDateTime);
 	}
 
 	private static string GetTitleString(string description) {

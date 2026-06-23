@@ -19,10 +19,10 @@ internal partial class GraphsView : UserControl {
 
 
 	public static readonly StyledProperty<IRelayCommand> LoadCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(LoadCommand), new RelayCommand(() => { }));
+		AvaloniaProperty.Register<GraphsView, IRelayCommand>(nameof(LoadCommand), new RelayCommand(() => { }));
 
 	public static readonly StyledProperty<IRelayCommand> UnloadCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(UnloadCommand), new RelayCommand(() => { }));
+		AvaloniaProperty.Register<GraphsView, IRelayCommand>(nameof(UnloadCommand), new RelayCommand(() => { }));
 	
 
 	public IRelayCommand LoadCommand {

@@ -122,11 +122,13 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	[RelayCommand]
-	internal void ApplyEdit() {
+	internal async Task SaveTaskChanges(Timespan.Types.Models.Task task) {
 		Console.WriteLine("[GraphsView]: editing task");
-		ShowEditTaskPanel = true;
-		ShowReadonlyTaskPanel = false;
-
+		await dbService.UpdateTaskAsync(task);
+		await Task.Run(() => {
+			
+			GlobalEventService.Raise<TasksChangedEventArgs>();
+		});
 	}
 
 	[RelayCommand]

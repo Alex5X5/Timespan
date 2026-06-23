@@ -3,10 +3,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:cls="using:Timespan.GUI.Controls"
-			 xmlns:views="using:Timespan.GUI.Views"
-			 xmlns:models="using:Timespan.GUI.ViewModels"
-			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
-			 xmlns:settingsModels="using:Timespan.GUI.ViewModels.Settings"
+			 xmlns:controls="using:Timespan.GUI.Controls"
 			 xmlns:vc="using:Timespan.GUI.Converters"
 			 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
 			 x:CompileBindings="True"
@@ -147,8 +144,7 @@
 					<RowDefinition Height="12*" />
 					<RowDefinition Height="2*" />
 					<RowDefinition Height="2*" />
-					<RowDefinition Height="2*" />
-					<RowDefinition Height="12*" />
+					<RowDefinition Height="14*" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="13*" />
@@ -156,88 +152,31 @@
 					<ColumnDefinition Width="13*" />
 				</Grid.ColumnDefinitions>
 				<TextBox Classes="Default DynamicTextHeight" 
-							Grid.Row="1"
-							Grid.Column="0"
-							VerticalContentAlignment="Center"
-							CornerRadius="5,5,5,5"
-							Text="{ Binding $parent[cls:TaskDetailsControl].StartTextboxText }"/>
-				<TextBox Classes="Default DynamicTextHeight" 
-							Grid.Row="1"
-							Grid.Column="2"
-							VerticalContentAlignment="Center"
-							CornerRadius="5,5,5,5"
-							Text="{ Binding $parent[cls:TaskDetailsControl].FinishTextboxText }"/>
+						 Grid.Row="1"
+						 Grid.Column="0"
+						 VerticalContentAlignment="Center"
+						 CornerRadius="5,5,5,5"
+						 Text="{Binding $parent[cls:TaskDetailsControl].StartTextboxText}"/>
+				<TextBox Classes="Default DynamicTextHeight"
+						 Grid.Row="1"
+						 Grid.Column="2"
+						 VerticalContentAlignment="Center"
+						 CornerRadius="5,5,5,5"
+						 Text="{Binding $parent[cls:TaskDetailsControl].FinishTextboxText}"/>
 				<TextBox Grid.Row="3"
-							Grid.Column="0"
-							Grid.ColumnSpan="3"
-							Classes="Default"
-							VerticalContentAlignment="Top"
-							TextWrapping="Wrap"
-							CornerRadius="5,5,5,5"
-							Text="{ Binding $parent[cls:TaskDetailsControl].DescriptionTextboxText }"/>
-				<Grid Grid.Row="5"
-						Grid.Column="0"
-						Grid.ColumnSpan="3"
-						ShowGridLines="True" >
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="10*" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="10*" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="10*" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="10*" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="10*" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="10*" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="10*" />
-						<ColumnDefinition Width="30*" />
-					</Grid.ColumnDefinitions>
-					<Viewbox Grid.Column="0" Stretch="Uniform">
-						<Button Classes="Default DynamicBackground Circle"
-								Width="100"
-								Height="100"
-								Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
-					</Viewbox>
-					<Viewbox Grid.Column="2" Stretch="Uniform">
-						<Button Classes="Default DynamicBackground Circle"
-								Width="100"
-								Height="100"
-								Background="{ StaticResource ResourceKey=TaskBackgroundOrange }" />
-					</Viewbox>
-					<Viewbox Grid.Column="4" Stretch="Uniform">
-						<Button Classes="Default DynamicBackground Circle"
-								Width="100"
-								Height="100"
-								Background="{ StaticResource ResourceKey=TaskBackgroundYellow }" />
-					</Viewbox>
-					<Viewbox Grid.Column="6" Stretch="Uniform">
-						<Button Classes="Default DynamicBackground Circle"
-								Width="100"
-								Height="100"
-								Background="{ StaticResource ResourceKey=TaskBackgroundDarkGreen }" />
-					</Viewbox>
-					<Viewbox Grid.Column="8" Stretch="Uniform">
-						<Button Classes="Default DynamicBackground Circle"
-								Width="100"
-								Height="100"
-								Background="{ StaticResource ResourceKey=TaskBackgroundDarkBlue }" />
-					</Viewbox>
-					<Viewbox Grid.Column="10" Stretch="Uniform">
-						<Button Classes="Default DynamicBackground Circle"
-								Width="100"
-								Height="100"
-								Background="{ StaticResource ResourceKey=TaskBackgroundDarkPurple }" />
-					</Viewbox>
-					<Viewbox Grid.Column="12" Stretch="Uniform">
-						<Button Classes="Default DynamicBackground Circle"
-								Width="100"
-								Height="100"
-								Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
-					</Viewbox>
-				</Grid>
+						 Grid.Column="0"
+						 Grid.ColumnSpan="3"
+						 Classes="Default"
+						 VerticalContentAlignment="Top"
+						 TextWrapping="Wrap"
+						 CornerRadius="5,5,5,5"
+						 Text="{Binding $parent[cls:TaskDetailsControl].Description}"/>
+				<controls:ColorSelectorControl Grid.Row="5"
+											   Grid.Column="0"
+											   Grid.ColumnSpan="3"
+											   HorizontalAlignment="Stretch"
+											   VerticalAlignment="Stretch"
+											   ColorChangedCommand="{Binding $parent[cls:TaskDetailsControl].ColorSelectedCommand}"/>
 			</Grid>
 		</Grid>
 	</Panel>

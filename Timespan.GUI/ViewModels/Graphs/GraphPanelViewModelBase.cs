@@ -192,13 +192,14 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	}
 
 	private async void OnTasksChanged(TasksChangedEventArgs args) {
-		List<Timespan.Types.Models.Task> tasks = await GetTasksAsync();
+		List<ObservableTask> tasks = (await GetTasksAsync())
+			.Select(TaskMapper.ToGuiType)
+			.ToList();
 		await Task.Run(() => {
-			var tasks_ = tasks.Select(TaskMapper.ToDomain).ToList();
-			if (tasks_.Count == 0)
+			if (tasks.Count == 0)
 				Tasks = [];
 			else
-				Tasks = new(tasks_);
+				Tasks = new(tasks);
 		});
 	}
 

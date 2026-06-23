@@ -245,7 +245,7 @@
 										 HorizontalAlignment="Stretch"
 										 VerticalAlignment="Stretch"
 										 CloseCommand="{Binding HideTaskCommand}"
-										 SaveCommand="{Binding ApplyEditCommand}"
+										 SaveCommand="{Binding SaveTaskChangesCommand}"
 										 DeleteCommand="{Binding DeleteTaskCommand}"/>
 		</Grid>
 	</Grid>

@@ -4,11 +4,11 @@ using Timespan.GUI.Types;
 
 public class TaskMapper {
 
-	public static ObservableTask ToDomain(Timespan.Types.Models.Task task) {
+	public static ObservableTask ToGuiType(Timespan.Types.Models.Task task) {
 		return new(task);
 	}
 
-	public static Timespan.Types.Models.Task ToShared(ObservableTask task) {
+	public static Timespan.Types.Models.Task ToSharedType(ObservableTask task) {
 		return task.Value;
 	}
 }
