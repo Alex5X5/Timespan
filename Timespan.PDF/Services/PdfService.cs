@@ -403,11 +403,11 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	public static string[] CompileTask(Types.Task task) {
 		string source = "";
 		List<string> res = [];
-		if (task.project != null)
-			source += $"{task.project.Name}: ";
-		if (task.ticket != null)
-			source += $"{task.ticket.name}: ";
-		source += task.description;
+		var description = task.description;
+		description = description.Replace("""\""", """\\""");
+		description = description.Replace("""(""", """\(""");
+		description = description.Replace(""")""", """\)""");
+		source += description;
 		while (source.Length > 0) {
 			int CharacterRemoveCount;
 			if (source.Length >= MAX_LINE_LENGTH) {
@@ -426,10 +426,6 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
     public static string[] CompileTaskPreview(Types.Task task) {
         string source = "";
         List<string> res = [];
-        if (task.project != null)
-            source += $"{task.project.Name}: ";
-        if (task.ticket != null)
-            source += $"{task.ticket.name}: ";
         source += task.description;
         while (source.Length > 0) {
             int CharacterRemoveCount;
