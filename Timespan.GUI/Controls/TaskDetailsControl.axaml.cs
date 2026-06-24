@@ -4,12 +4,13 @@ using Avalonia.Interactivity;
 
 using CommunityToolkit.Mvvm.Input;
 
+using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Services;
 using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
-internal partial class TaskDetailsControl : UserControl {
+public partial class TaskDetailsControl : UserControl {
 
 	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
 
@@ -26,71 +27,7 @@ internal partial class TaskDetailsControl : UserControl {
 
 	public static readonly StyledProperty<IRelayCommand> DeleteCommandProperty =
 		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand>(nameof(DeleteCommand), new RelayCommand(() => { }));
-
-	public static readonly DirectProperty<TaskDetailsControl, string> TitleProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
-			nameof(Title),
-			control => control.Title,
-			(control, value) => control.Title = value,
-			"",
-			Avalonia.Data.BindingMode.TwoWay);
 	
-	public static readonly DirectProperty<TaskDetailsControl, string> DescriptionProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
-			nameof(Description),
-			control => control.Description,
-			(control, value) => control.Description = value,
-			"",
-			Avalonia.Data.BindingMode.TwoWay);
-
-	public static readonly DirectProperty<TaskDetailsControl, string> DateStringProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
-			nameof(DateString),
-			control => control.DateString,
-			(control, value) => control.DateString = value,
-			"",
-			Avalonia.Data.BindingMode.TwoWay);
-
-	public static readonly DirectProperty<TaskDetailsControl, string> TimeStringProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
-			nameof(TimeString),
-			control => control.TimeString,
-			(control, value) => control.TimeString = value,
-			"",
-			Avalonia.Data.BindingMode.TwoWay);
-
-	public static readonly DirectProperty<TaskDetailsControl, string> StartTextboxTextProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
-			nameof(StartTextboxText),
-			control => control.StartTextboxText,
-			(control, value) => control.StartTextboxText = value,
-			"",
-			Avalonia.Data.BindingMode.TwoWay);
-
-	public static readonly DirectProperty<TaskDetailsControl, string> FinishTextboxTextProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, string>(
-			nameof(FinishTextboxText),
-			control => control.FinishTextboxText,
-			(control, value) => control.FinishTextboxText = value,
-			"",
-			Avalonia.Data.BindingMode.TwoWay);
-
-	public static readonly DirectProperty<TaskDetailsControl, bool> ShowReadonlyTaskPanelProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, bool>(
-			nameof(ShowReadonlyTaskPanel),
-			control => control.ShowReadonlyTaskPanel,
-			(control, value) => control.ShowReadonlyTaskPanel = value,
-			true,
-			Avalonia.Data.BindingMode.TwoWay);
-
-	public static readonly DirectProperty<TaskDetailsControl, bool> ShowEditTaskPanelProperty =
-		AvaloniaProperty.RegisterDirect<TaskDetailsControl, bool>(
-			nameof(ShowEditTaskPanel),
-			control => control.ShowEditTaskPanel,
-			(control, value) => control.ShowEditTaskPanel = value,
-			false,
-			Avalonia.Data.BindingMode.TwoWay);
-
 	public Types.ObservableTask SelectedTask {
 		get => GetValue(SelectedTaskProperty);
 		set => SetValue(SelectedTaskProperty, value);
@@ -111,52 +48,28 @@ internal partial class TaskDetailsControl : UserControl {
 		set => SetValue(SaveCommandProperty, value);
 	}
 
-	public string Title {
-		get => title;
-		set => SetAndRaise(TitleProperty, ref title, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private string title = "A Title";
 
-	public string Description {
-		get => description;
-		set => SetAndRaise(DescriptionProperty, ref description, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private string description = "A Description";
 
-	public string DateString {
-		get => dateString;
-		set => SetAndRaise(DateStringProperty, ref dateString, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private string dateString = "A Date String";
 
-	public string TimeString {
-		get => timeString;
-		set => SetAndRaise(TimeStringProperty, ref timeString, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private string timeString = "A Time String";
 
-	public string StartTextboxText {
-		get => startTextboxText;
-		set => SetAndRaise(StartTextboxTextProperty, ref startTextboxText, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private string startTextboxText = "A Start Text";
 
-	public string FinishTextboxText {
-		get => finishTextboxText;
-		set => SetAndRaise(FinishTextboxTextProperty, ref finishTextboxText, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private string finishTextboxText = "A Finish Text";
 
-	public bool ShowReadonlyTaskPanel {
-		get => showReadonlyTaskPanel;
-		set => SetAndRaise(ShowReadonlyTaskPanelProperty, ref showReadonlyTaskPanel, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private bool showReadonlyTaskPanel = true;
 
-	public bool ShowEditTaskPanel {
-		get => showEditTaskPanel;
-		set => SetAndRaise(ShowEditTaskPanelProperty, ref showEditTaskPanel, value);
-	}
+	[BasicDirectProperty<TaskDetailsControl>]
 	private bool showEditTaskPanel = false;
 
 	#endregion
@@ -213,12 +126,14 @@ internal partial class TaskDetailsControl : UserControl {
 	}
 
 	private void OnLoad(object? sender, RoutedEventArgs args) {
-		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
+		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
+		GlobalEventService.Subscribe<SelectedtaskChangedEventArgs>(OnTaskChanged);
 		InvalidateVisual();
 	}
 
 	private void OnUnload(object? sender, RoutedEventArgs args) {
-		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(ShowTask);
+		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(OnShowTask);
+		GlobalEventService.UnSubscribe<SelectedtaskChangedEventArgs>(OnTaskChanged);
 	}
 
 	[RelayCommand]
@@ -226,7 +141,11 @@ internal partial class TaskDetailsControl : UserControl {
 		SelectedTask.DisplayColor = color;
 	}
 
-	private void ShowTask(ShowTaksEventArgs args) {
+	private void OnTaskChanged(SelectedtaskChangedEventArgs args) {
+		OnShowTask(args);
+	}
+
+	private void OnShowTask(ShowTaksEventArgs args) {
 		ShowReadonlyTaskPanel = true;
 		ShowEditTaskPanel = false;
 		if (args.Task is Timespan.Types.Models.Task task) {

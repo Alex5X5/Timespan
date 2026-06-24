@@ -19,9 +19,20 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
 	</ItemGroup>
 
+	<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Generated\**\*" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Timespan.Database\Timespan.Database.csproj" />
 		<ProjectReference Include="..\Timespan.PDF\Timespan.PDF.csproj" />
+		<ProjectReference Include="..\Timespan.GUI.Generators\Timespan.GUI.Generators.csproj"
+						  OutputItemType="Analyzer"/>
 	</ItemGroup>
 
 	<ItemGroup>

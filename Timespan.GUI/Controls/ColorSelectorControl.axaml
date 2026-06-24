@@ -9,7 +9,7 @@
 			 x:CompileBindings="True"
 			 x:Class="Timespan.GUI.Controls.ColorSelectorControl">
 	<UserControl.Styles>
-		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/TaskDetailsControl.styles.axaml" />
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/ColorSelectorControl.styles.axaml" />
 	</UserControl.Styles>
 
 	<Panel>
@@ -38,13 +38,15 @@
 				<Button Name="Color1Button"
 						Width="100"
 						Height="100"
-						Classes="Default DynamicBackground Circle"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding $parent[cls:ColorSelectorControl].Color1ButtonSelected}"
 						Click="ColorButtonClick"
 						Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
 			</Viewbox>
 			<Viewbox Grid.Column="2" Stretch="Uniform">
 				<Button Name="Color2Button"
-						Classes="Default DynamicBackground Circle"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding $parent[cls:ColorSelectorControl].Color2ButtonSelected}"
 						Width="100"
 						Height="100"
 						Click="ColorButtonClick"
@@ -52,7 +54,8 @@
 			</Viewbox>
 			<Viewbox Grid.Column="4" Stretch="Uniform">
 				<Button Name="Color3Button"
-						Classes="Default DynamicBackground Circle"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding $parent[cls:ColorSelectorControl].Color3ButtonSelected}"
 						Width="100"
 						Height="100"
 						Click="ColorButtonClick"
@@ -60,7 +63,8 @@
 			</Viewbox>
 			<Viewbox Grid.Column="6" Stretch="Uniform">
 				<Button Name="Color4Button"
-						Classes="Default DynamicBackground Circle"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding $parent[cls:ColorSelectorControl].Color4ButtonSelected}"
 						Width="100"
 						Height="100"
 						Click="ColorButtonClick"
@@ -68,7 +72,8 @@
 			</Viewbox>
 			<Viewbox Grid.Column="8" Stretch="Uniform">
 				<Button Name="Color5Button"
-						Classes="Default DynamicBackground Circle"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding $parent[cls:ColorSelectorControl].Color5ButtonSelected}"
 						Width="100"
 						Height="100"
 						Click="ColorButtonClick"
@@ -76,7 +81,8 @@
 			</Viewbox>
 			<Viewbox Grid.Column="10" Stretch="Uniform">
 				<Button Name="Color6Button"
-						Classes="Default DynamicBackground Circle"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding $parent[cls:ColorSelectorControl].Color6ButtonSelected}"
 						Width="100"
 						Height="100"
 						Click="ColorButtonClick"
@@ -84,7 +90,7 @@
 			</Viewbox>
 			<Viewbox Grid.Column="12" Stretch="Uniform">
 				<Button Name="PickerButton"
-						Classes="Default DynamicBackground Circle"
+						Classes="DynamicBackground Circle"
 						Width="100"
 						Height="100"
 						Click="PickerButtonClick"
