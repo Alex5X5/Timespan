@@ -2,25 +2,26 @@ namespace Timespan.GUI.Controls;
 
 using Avalonia.Interactivity;
 using Avalonia.Media;
-
-using CommunityToolkit.Mvvm.Input;
+using Avalonia.Media.Immutable;
 
 using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Services;
 using Timespan.GUI.Services.Mapping;
+using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 
 public partial class ColorSelectorControl : UserControl {
 
 	#region styled properties
 
-	public static readonly StyledProperty<IRelayCommand<Avalonia.Media.Color>> ColorChangedCommandProperty =
-		AvaloniaProperty.Register<ColorSelectorControl, IRelayCommand<Avalonia.Media.Color>>(nameof(ColorChangedCommand), new RelayCommand<Avalonia.Media.Color>(color => { }));
+	[BasicStyledProperty<ColorSelectorControl>]
+	private IRelayCommand<Color> colorChangedCommand;
 
-	public IRelayCommand<Avalonia.Media.Color> ColorChangedCommand {
-		get => GetValue(ColorChangedCommandProperty);
-		set => SetValue(ColorChangedCommandProperty, value);
-	}
+	[BasicStyledProperty<ColorSelectorControl>]
+	private ObservableTask selectedTask;
+
+	[BasicStyledProperty<ColorSelectorControl>]
+	private Color selectedColor = Color.FromArgb(255, 70, 70, 70);
 
 	[BasicDirectProperty<ColorSelectorControl>]
 	private bool color1ButtonSelected = false;
@@ -59,8 +60,7 @@ public partial class ColorSelectorControl : UserControl {
 	}
 
 	public void ColorButtonClick(object sender, RoutedEventArgs e) {
-		Color fallback = new Color(255, 79, 79, 79);
-		Color color = ((sender as Button)?.Background as SolidColorBrush)?.Color ?? fallback;
+		Color color = GetButtonBackground(sender as Button);
 		SetButtonSelected(sender);
 		if (ColorChangedCommand.CanExecute(color))
 			ColorChangedCommand.Execute(color);
@@ -76,31 +76,41 @@ public partial class ColorSelectorControl : UserControl {
 	}
 
 	public void PickerButtonClick(object sender, RoutedEventArgs e) {
-
+		
 	}
 
 	private void OnLoad(object? sender, RoutedEventArgs args) {
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
-		GlobalEventService.Subscribe<SelectedtaskChangedEventArgs>(ShowTask);
-		InvalidateVisual();
+		OnTaskChanged();
 	}
 
 	private void OnUnload(object? sender, RoutedEventArgs args) {
 		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(ShowTask);
-		GlobalEventService.UnSubscribe<SelectedtaskChangedEventArgs>(ShowTask);
 	}
 
 	private void ShowTask(ShowTaksEventArgs args) {
-		if (args.Task == null)
-			return;
-		foreach(var button in buttons)
-			if (TaskHasColorAsButton(button, args.Task))
-				SetButtonSelected(button);
+		OnTaskChanged();
 	}
 
-	private static bool TaskHasColorAsButton(Button button, Timespan.Types.Models.Task? task) {
-		if(task == null)
-			return false;
-		return (button.Background as SolidColorBrush)?.Color == task.DisplayColor;
+	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
+		base.OnPropertyChanged(change);
+		if (change.Property == SelectedTaskProperty) {
+			if (SelectedTask != null)
+				OnTaskChanged();
+		}
+	}
+
+	private void OnTaskChanged() {
+		if (SelectedTask != null) {
+			SelectedColor = SelectedTask.DisplayColor;
+			foreach (var button in buttons) {
+				if (GetButtonBackground(button) == SelectedColor)
+					SetButtonSelected(button);
+			}
+		}
+	}
+
+	private static Color GetButtonBackground(Button? button) {
+		return (button?.Background as ImmutableSolidColorBrush)?.Color ?? new(255, 79, 79, 79);
 	}
 }

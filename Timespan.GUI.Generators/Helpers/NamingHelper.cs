@@ -1,8 +1,4 @@
-﻿namespace Timespan.GUI.Generators.Attributes;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Timespan.GUI.Generators.Helpers;
 
 internal static class NamingHelpers {
 	/// <summary>
@@ -31,5 +27,5 @@ internal static class NamingHelpers {
 	}
 
 	/// <summary>Returns the property name + "Property" suffix used for the static field.</summary>
-	public static string ToStaticFieldName(string propertyName) => propertyName + "Property";
+	public static string ToPropertyName(string propertyName) => propertyName + "Property";
 }

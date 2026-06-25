@@ -8,6 +8,8 @@ using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Timespan.Database.Services.Interfaces;
+using Timespan.GUI.Services.Mapping;
+using Timespan.GUI.Types;
 using Timespan.Util.Services;
 
 
@@ -30,6 +32,9 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	[ObservableProperty]
 	private string finishTextboxText = "";
 
+	[ObservableProperty]
+	private ObservableTask selectedTask;
+
 	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
 	public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
 
@@ -49,6 +54,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime);
 		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
 		DescriptionTextboxText = cacheService.RunningTask.description;
+		SelectedTask = TaskMapper.ToGuiType(running);
 	}
 
 	private async Task UpdateCacheTask() {
@@ -105,6 +111,12 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		StartTextboxText = "";
 		FinishTextboxText = "";
 		UpdateButtons();
+	}
+
+	[RelayCommand]
+	private async Task OnColorSelected(Avalonia.Media.Color color) {
+		SelectedTask.DisplayColor = color;
+		await dbService.UpdateTaskAsync(SelectedTask.Value);
 	}
 
 	private void UpdateButtons() {

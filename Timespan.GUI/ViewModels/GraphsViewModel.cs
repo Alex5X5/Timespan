@@ -12,6 +12,9 @@ using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Graphs;
 using Timespan.Util.Services;
+using System.Linq;
+using Avalonia.Threading;
+using Timespan.GUI.Services.Mapping;
 
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
@@ -39,35 +42,10 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	private bool showTaskPanel = false;
 
 	[ObservableProperty]
-	private bool showReadonlyTaskPanel = false;
-
-	[ObservableProperty]
-	private bool showEditTaskPanel = false;
-
-	[ObservableProperty]
-    private string showingTaskTitle = "a title";
-
-    [ObservableProperty]
-    private string showingTaskDescription = "lorem ipsum dolor sit amet condecteter";
-
-    [ObservableProperty]
-    private string showingTaskDateString = "Mi. 18. Feb. 2026";
-
-    [ObservableProperty]
-    private string showingTaskTimeString = "07:34 - 11:53";
-
-	[ObservableProperty]
 	private ObservableTask showingTask;
 
     partial void OnShowTaskPanelChanged(bool value)
 	{
-		if (value) {
-			ShowReadonlyTaskPanel = true;
-			ShowEditTaskPanel = false;
-		} else {
-			ShowReadonlyTaskPanel = false;
-			ShowEditTaskPanel = false;
-		}
 		SpacerWidth = new(value ? 1 : 0, GridUnitType.Star);
 		TaskPanelWidth = new(value ? 19 : 0, GridUnitType.Star);
 		HeaderSpacerWidth = new(value ? 15 : 5, GridUnitType.Star);
@@ -93,8 +71,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		};
 		TimeModes = ["Day", "Week", "Month"];
 		SelectedTimeMode = TimeModes[0];
-		if(GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
-			dispatcher.Subscribe(ShowTask);
+		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
 		cacheService.SelectedDay = DateTimeService.FloorDay(DateTime.Now);
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		CurrentPageAnchor.ChangeModel<DayPanelViewModel>();
@@ -105,6 +82,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		if (args.Task is null) {
 			HideTask();
 		} else {
+			ShowingTask = TaskMapper.ToGuiType(args.Task);
 			ShowTaskPanel = true;
 		}
 	}
@@ -125,18 +103,16 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	internal async Task SaveTaskChanges(Timespan.Types.Models.Task task) {
 		Console.WriteLine("[GraphsView]: editing task");
 		await dbService.UpdateTaskAsync(task);
-		await Task.Run(() => {
-			
-			GlobalEventService.Raise<TasksChangedEventArgs>();
+		var refetchedTask = (await dbService.QueryTasksAsync()).First(x => x.Id == task.Id);
+		await Task.Run(
+		() => {
+			Dispatcher.UIThread.Invoke(
+				() => {
+					cacheService.SelectedTask = refetchedTask;
+					GlobalEventService.Raise<ShowTaksEventArgs>(new ShowTaksEventArgs(refetchedTask));
+					GlobalEventService.Raise<TasksChangedEventArgs>();
+				});
 		});
-	}
-
-	[RelayCommand]
-	internal void CanelEdit() {
-		Console.WriteLine("[GraphsView]: editing task");
-		ShowEditTaskPanel = true;
-		ShowReadonlyTaskPanel = false;
-
 	}
 
 	[RelayCommand]
@@ -205,5 +181,4 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	private void UpdateIntervall(IntervallChangedEventArgs args) {
 		DateString = CurrentPage?.GetDateString() ?? "Date";
 	}
-
 }

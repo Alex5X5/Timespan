@@ -176,7 +176,9 @@
 											   Grid.ColumnSpan="3"
 											   HorizontalAlignment="Stretch"
 											   VerticalAlignment="Stretch"
-											   ColorChangedCommand="{Binding $parent[cls:TaskDetailsControl].ColorSelectedCommand}"/>
+											   ColorChangedCommand="{Binding $parent[cls:TaskDetailsControl].ColorSelectedCommand}"
+											   SelectedTask="{Binding $parent[cls:TaskDetailsControl].SelectedTask}"
+											   />
 			</Grid>
 		</Grid>
 	</Panel>

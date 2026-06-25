@@ -5,10 +5,13 @@
 			 xmlns:cls="using:Timespan.GUI.Views"
 			 xmlns:views="using:Timespan.GUI.Views"
 			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:controls="using:Timespan.GUI.Controls"
+			 xmlns:ext="using:Timespan.GUI.MarkupExtensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="models:TimerViewModel"
              x:Class="Timespan.GUI.Views.TimerView"
-			 Loaded="UserControl_Loaded">
+			 Loaded="UserControl_Loaded"
+			 Unloaded="UserControl_Unloaded">
 	<Grid ShowGridLines="False">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
@@ -67,69 +70,13 @@
 					 CornerRadius="5,5,5,5"
 					 PlaceholderText="{ Binding $parent[cls:TimerView].DescriptionLabelText }"
 					 Text="{ Binding DescriptionTextboxText }"/>
-			<Grid Grid.Row="7"
-				  Grid.Column="0"
-				  Grid.ColumnSpan="3"
-				  ShowGridLines="false" >
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="10*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="10*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="10*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="10*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="10*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="10*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="10*" />
-					<ColumnDefinition Width="30*" />
-				</Grid.ColumnDefinitions>
-				<Viewbox Grid.Column="0" Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
-				</Viewbox>
-				<Viewbox Grid.Column="2" Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }" />
-				</Viewbox>
-				<Viewbox Grid.Column="4" Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundYellow }" />
-				</Viewbox>
-				<Viewbox Grid.Column="6" Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundDarkGreen }" />
-				</Viewbox>
-				<Viewbox Grid.Column="8" Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundDarkBlue }" />
-				</Viewbox>
-				<Viewbox Grid.Column="10" Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundDarkPurple }" />
-				</Viewbox>
-				<Viewbox Grid.Column="12" Stretch="Uniform">
-					<Button Classes="Default DynamicBackground Circle"
-							Width="100"
-							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
-				</Viewbox>
-			</Grid>
+			<controls:ColorSelectorControl Grid.Row="7"
+										   Grid.Column="0"
+										   Grid.ColumnSpan="3"
+										   HorizontalAlignment="Stretch"
+										   VerticalAlignment="Stretch"
+										   ColorChangedCommand="{Binding ColorSelectedCommand}"
+											   SelectedTask="{Binding SelectedTask}"/>
 			<Grid Grid.Row="9" 
 				  Grid.Column="0"
 				  Grid.ColumnSpan="3"

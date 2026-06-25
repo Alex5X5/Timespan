@@ -1,4 +1,4 @@
-﻿namespace Timespan.GUI.Generators.Attributes.DirectPropertyAttribute;
+﻿namespace Timespan.GUI.Generators.Attributes.StyledPropertyAttribute;
 
 using System.Collections.Immutable;
 
@@ -10,15 +10,15 @@ using Microsoft.CodeAnalysis.Text;
 /// <summary>
 /// Incremental Roslyn source generator.
 ///
-/// For every field annotated with <c>[BasicDirectProperty&lt;TOwner&gt;]</c> it
+/// For every field annotated with <c>[BasicStyledProperty&lt;TOwner&gt;]</c> it
 /// produces a partial class that contains:
-///   a static <c>DirectProperty&lt;TOwner, TValue&gt;</c> field
+///   a static <c>StyledProperty&lt;TOwner, TValue&gt;</c> field
 ///   a public CLR property that uses <c>SetAndRaise</c>
 /// </summary>
 [Generator]
-public sealed class BasicDirectPropertyGenerator : IIncrementalGenerator {
+public sealed class BasicStyledPropertyGenerator : IIncrementalGenerator {
 	// ── Attribute short name (without generic arity) used for quick pre-filter
-	private const string AttributeShortName = "BasicDirectProperty";
+	private const string AttributeShortName = "BasicStyledProperty";
 
 	public void Initialize(IncrementalGeneratorInitializationContext context) {
 		IncrementalValuesProvider<PropertyModel?> models =
@@ -53,7 +53,7 @@ public sealed class BasicDirectPropertyGenerator : IIncrementalGenerator {
 
 			var attr = symbol.GetAttributes().FirstOrDefault(
 				a => a.AttributeClass?.ConstructedFrom.ToDisplayString()
-						 .StartsWith("Timespan.GUI.Generators.Attributes.BasicDirectPropertyAttribute") == true);
+						 .StartsWith("Timespan.GUI.Generators.Attributes.BasicStyledPropertyAttribute") == true);
 
 			if (attr is null)
 				continue;
@@ -135,7 +135,7 @@ public sealed class BasicDirectPropertyGenerator : IIncrementalGenerator {
 			sb.Append(m.Namespace).Append('.');
 		foreach (var outer in m.ContainingTypeNames)
 			sb.Append(outer).Append('.');
-		sb.Append(m.ClassName).Append(".DirectProperties.g.cs");
+		sb.Append(m.ClassName).Append(".StyledProperties.g.cs");
 		return sb.ToString();
 	}
 }

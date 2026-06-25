@@ -113,13 +113,12 @@
 
 			<!--task bar-->
 			<Grid Grid.Row="1"
-				  ShowGridLines="False">
+				  ShowGridLines="True">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="12*" />
 					<ColumnDefinition Width="1*" />
 					<ColumnDefinition Width="5*" />
-					<ColumnDefinition Width="1*" />
-					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="2*" />
 					<ColumnDefinition Width="14*" />
 					<ColumnDefinition Width="1*" />
 					<ColumnDefinition Width="10*" />
@@ -134,7 +133,7 @@
 						   Classes="h2" />
 				
 				<!--Date-->
-				<Grid Grid.Column="5"
+				<Grid Grid.Column="4"
 					  ColumnDefinitions="15*, *, 4*, 4*"
 					  ShowGridLines="False">
 					<Grid Grid.Row="0"
@@ -173,7 +172,7 @@
 				</Grid>
 
 				<!--select button-->
-				<Button	Grid.Column="7"
+				<Button	Grid.Column="6"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Padding="0,0,0,0"
@@ -195,7 +194,7 @@
 				</Button>
 
 				<!--delete button-->
-				<Button	Grid.Column="9"
+				<Button	Grid.Column="8"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Padding="0,0,0,0"
@@ -217,7 +216,7 @@
 				</Button>
 
 				<!--mode combobox-->
-				<Grid Grid.Column="11"
+				<Grid Grid.Column="10"
 					  RowDefinitions="*, 8*, *"
 					  ShowGridLines="False">
 					<ComboBox Grid.Row="1"
@@ -244,6 +243,7 @@
 			<controls:TaskDetailsControl Grid.Row="1"
 										 HorizontalAlignment="Stretch"
 										 VerticalAlignment="Stretch"
+										 SelectedTask="{Binding ShowingTask}"
 										 CloseCommand="{Binding HideTaskCommand}"
 										 SaveCommand="{Binding SaveTaskChangesCommand}"
 										 DeleteCommand="{Binding DeleteTaskCommand}"/>

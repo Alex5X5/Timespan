@@ -1,4 +1,4 @@
-﻿namespace Timespan.GUI.Generators.Attributes.DirectPropertyAttribute;
+﻿namespace Timespan.GUI.Generators.Attributes.StyledPropertyAttribute;
 
 /// <summary>
 /// Contains the source text of the attribute that is injected into every compilation

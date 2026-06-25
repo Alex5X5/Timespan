@@ -1,12 +1,12 @@
 namespace Timespan.GUI.Controls;
 
 using Avalonia.Interactivity;
+using Avalonia.Media;
 
 using CommunityToolkit.Mvvm.Input;
 
 using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Services;
-using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
@@ -67,6 +67,9 @@ public partial class TaskDetailsControl : UserControl {
 	private string finishTextboxText = "A Finish Text";
 
 	[BasicDirectProperty<TaskDetailsControl>]
+	private Color selectedColor = Color.FromArgb(255, 70, 70, 70);
+
+	[BasicDirectProperty<TaskDetailsControl>]
 	private bool showReadonlyTaskPanel = true;
 
 	[BasicDirectProperty<TaskDetailsControl>]
@@ -99,9 +102,7 @@ public partial class TaskDetailsControl : UserControl {
 			finish = DateTimeService.ToSeconds(finish),
 			running = SelectedTask.Running,
 			blocksTime = Timespan.Types.Models.BlockedTimeIntervallType.None,
-			displayColorRed = SelectedTask.DisplayColorRed,
-			displayColorGreen = SelectedTask.DisplayColorGreen,
-			displayColorBlue = SelectedTask.DisplayColorBlue
+			DisplayColor = SelectedColor
 		};
 		if (SaveCommand.CanExecute(task))
 			SaveCommand.Execute(task);
@@ -127,34 +128,28 @@ public partial class TaskDetailsControl : UserControl {
 
 	private void OnLoad(object? sender, RoutedEventArgs args) {
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
-		GlobalEventService.Subscribe<SelectedtaskChangedEventArgs>(OnTaskChanged);
+		InsertSelectedTaskData();
 		InvalidateVisual();
 	}
 
 	private void OnUnload(object? sender, RoutedEventArgs args) {
 		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(OnShowTask);
-		GlobalEventService.UnSubscribe<SelectedtaskChangedEventArgs>(OnTaskChanged);
 	}
 
 	[RelayCommand]
-	private void OnColorSelected(Avalonia.Media.Color color) {
-		SelectedTask.DisplayColor = color;
-	}
-
-	private void OnTaskChanged(SelectedtaskChangedEventArgs args) {
-		OnShowTask(args);
+	private void OnColorSelected(Color color) {
+		SelectedColor = color;
 	}
 
 	private void OnShowTask(ShowTaksEventArgs args) {
 		ShowReadonlyTaskPanel = true;
 		ShowEditTaskPanel = false;
-		if (args.Task is Timespan.Types.Models.Task task) {
-			SelectedTask = TaskMapper.ToGuiType(task);
-			InsertSelectedTaskData();
-		}
+		InsertSelectedTaskData();
 	}
 
 	private void InsertSelectedTaskData() {
+		if (SelectedTask == null)
+			return;
 		Description = SelectedTask.Description;
 		Title = GetTitleString(SelectedTask.Description);
 		DateString = GetDateString(SelectedTask.StartDateTime);
@@ -183,6 +178,13 @@ public partial class TaskDetailsControl : UserControl {
 		}
 		//res.AddRange(dots);
 		return new(res.ToArray());
+	}
+
+	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
+		if (change.Property == SelectedTaskProperty) {
+			Console.WriteLine("[TaskDetailsControl]:Task changed");
+		}
+		base.OnPropertyChanged(change);
 	}
 
 	private static string GetDateString(DateTime date) {

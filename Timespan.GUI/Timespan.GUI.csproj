@@ -31,8 +31,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Timespan.Database\Timespan.Database.csproj" />
 		<ProjectReference Include="..\Timespan.PDF\Timespan.PDF.csproj" />
-		<ProjectReference Include="..\Timespan.GUI.Generators\Timespan.GUI.Generators.csproj"
-						  OutputItemType="Analyzer"/>
+		<ProjectReference Include="..\Timespan.GUI.Generators\Timespan.GUI.Generators.csproj" OutputItemType="Analyzer" />
 	</ItemGroup>
 
 	<ItemGroup>

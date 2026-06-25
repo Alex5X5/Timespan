@@ -35,5 +35,10 @@ internal partial class TimerView : UserControl {
     {
         Console.WriteLine("Main View loaded!");
         (DataContext as TimerViewModel)?.OnLoad();
-    }
+	}
+
+	private void UserControl_Unloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+		Console.WriteLine("Main View loaded!");
+		(DataContext as TimerViewModel)?.OnUnload();
+	}
 }

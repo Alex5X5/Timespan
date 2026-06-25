@@ -1,4 +1,6 @@
-﻿namespace Timespan.GUI.Generators.Attributes.DirectPropertyAttribute;
+﻿namespace Timespan.GUI.Generators.Attributes.StyledPropertyAttribute;
+
+using System;
 
 /// <summary>
 /// Immutable data bag that describes one field annotated with

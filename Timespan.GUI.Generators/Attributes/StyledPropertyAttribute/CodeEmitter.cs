@@ -1,4 +1,5 @@
-﻿namespace Timespan.GUI.Generators.Attributes.DirectPropertyAttribute;
+﻿namespace Timespan.GUI.Generators.Attributes.StyledPropertyAttribute;
+
 
 /// <summary>
 /// Turns a group of <see cref="PropertyModel"/> records that share the same class
@@ -64,8 +65,8 @@ internal static class CodeEmitter {
 	// ─────────────────────────────────────────────────────────────────────────
 
 	private static void EmitProperty(StringBuilder sb, PropertyModel p, int indent) {
-		string propName = NamingHelpers.ToPascalCase(p.FieldName);
-		string staticName = NamingHelpers.ToPropertyName(propName);
+		string memberName = NamingHelpers.ToPascalCase(p.FieldName);
+		string propertyName = NamingHelpers.ToPropertyName(memberName);
 		string type = p.FieldType;
 		string owner = p.ClassName;
 
@@ -75,22 +76,21 @@ internal static class CodeEmitter {
 		string I = Indent(indent);
 
 		// ── Static DirectProperty field ───────────────────────────────────────
-		sb.AppendLine($"{I}public static readonly DirectProperty<{owner}, {type}> {staticName} =");
-		sb.AppendLine($"{I}    AvaloniaProperty.RegisterDirect<{owner}, {type}>(");
-		sb.AppendLine($"{I}        nameof({propName}),");
-		sb.AppendLine($"{I}        control => control.{propName},");
-		sb.AppendLine($"{I}        (control, value) => control.{propName} = value,");
+		sb.AppendLine($"{I}public static readonly StyledProperty<{type}> {propertyName} =");
+		sb.AppendLine($"{I}    AvaloniaProperty.Register<{owner}, {type}>(");
+		sb.AppendLine($"{I}        nameof({memberName}),");
 		sb.AppendLine($"{I}        {defaultArg},");
+		sb.AppendLine($"{I}        false,");
 		sb.AppendLine($"{I}        BindingMode.TwoWay);");
 		sb.AppendLine();
 
 		// ── Public CLR property ───────────────────────────────────────────────
-		sb.AppendLine($"{I}public {type} {propName}");
+		sb.AppendLine($"{I}public {type} {memberName}");
 		sb.AppendLine($"{I}{{");
-		sb.AppendLine($"{I}    get => {p.FieldName};");
-		sb.AppendLine($"{I}    set => SetAndRaise({staticName}, ref {p.FieldName}, value);");
+		sb.AppendLine($"{I}    get => GetValue({propertyName});");
+		sb.AppendLine($"{I}    set => SetValue({propertyName}, value);");
 		sb.AppendLine($"{I}}}");
 	}
 
-	private static string Indent(int level) => new string(' ', level * 4);
+	private static string Indent(int level) => new(' ', level * 4);
 }

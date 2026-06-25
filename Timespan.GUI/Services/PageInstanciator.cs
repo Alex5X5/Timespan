@@ -4,9 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 public class PageInstanciator {
 
@@ -60,13 +57,13 @@ public class PageInstanciator {
 		serviceCollection.AddScoped<T>();
 	}
 
-	public void RegisterComponentTransient<ComponentT>() where ComponentT : class {
-		serviceCollection.AddTransient<ComponentT>();
-		serviceCollection.AddSingleton<Func<ComponentT>>(
+	public void RegisterControl<ControlT>() where ControlT : class {
+		serviceCollection.AddTransient<ControlT>();
+		serviceCollection.AddSingleton<Func<ControlT>>(
 			(serviceProvider) => 
-				() => serviceProvider.GetService<ComponentT>() ?? Activator.CreateInstance<ComponentT>()
+				() => serviceProvider.GetService<ControlT>() ?? Activator.CreateInstance<ControlT>()
 		);
-        serviceCollection.AddSingleton<ComponentModelFactory<ComponentT>>();
+        serviceCollection.AddSingleton<ComponentModelFactory<ControlT>>();
     }
 
 	public void AddContentBindingType<ContentBaseT>() {
@@ -88,7 +85,6 @@ public class PageInstanciator {
 		);
 		serviceCollection.AddSingleton<ScopedViewModelFactory<ContentBaseT>>();
 	}
-
 
 	public IServiceProvider BuildPages() {
         return serviceCollection.BuildServiceProvider();
@@ -113,26 +109,6 @@ public class ScopedViewModelFactory<ViewBaseType>(Func<Type, IServiceScope, View
 	}
 }
 
-public class ComponentModelFactory<ComponentT>(Func<ComponentT> factory) {
-
-    public ComponentT GetComponentViewModel(
-		Action<ComponentT?>? afterCreation = null,
-		Dictionary<string, object?>? data = null
-	) {
-        ComponentT viewModel = factory();
-		if(data != null) {
-			PropertyInfo[] properties = typeof(ComponentT).GetProperties();
-			FieldInfo[] fields = typeof(ComponentT).GetFields();
-            foreach (string key in data.Keys) {
-				PropertyInfo? property = properties.FirstOrDefault(x => x.Name == key);
-				if(property != null) {
-					property?.SetValue(viewModel, data[key]);
-					continue;
-				}
-				fields.FirstOrDefault(x => x.Name == key)?.SetValue(viewModel, data[key]);
-			}
-		}
-        afterCreation?.Invoke(viewModel);
-        return viewModel;
-    }
+public class ModelProvider {
+	
 }
