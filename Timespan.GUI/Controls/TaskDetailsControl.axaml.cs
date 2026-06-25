@@ -16,37 +16,17 @@ public partial class TaskDetailsControl : UserControl {
 
 	#region styled properties
 
-	public static readonly StyledProperty<Types.ObservableTask> SelectedTaskProperty =
-		AvaloniaProperty.Register<TaskDetailsControl, Types.ObservableTask>(nameof(SelectedTask), new Types.ObservableTask(null));
+	[BasicStyledProperty<TaskDetailsControl>]
+	private Types.ObservableTask selectedTask;
 
-	public static readonly StyledProperty<IRelayCommand> CloseCommandProperty =
-		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand>(nameof(CloseCommand), new RelayCommand(() => { }));
+	[BasicStyledProperty<TaskDetailsControl>]
+	private IRelayCommand closeCommand;
 
-	public static readonly StyledProperty<IRelayCommand<Timespan.Types.Models.Task>> SaveCommandProperty =
-		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand<Timespan.Types.Models.Task>>(nameof(SaveCommand), new RelayCommand<Timespan.Types.Models.Task>(task => { }));
+	[BasicStyledProperty<TaskDetailsControl>]
+	private IRelayCommand<Timespan.Types.Models.Task> saveCommand;
 
-	public static readonly StyledProperty<IRelayCommand> DeleteCommandProperty =
-		AvaloniaProperty.Register<TaskDetailsControl, IRelayCommand>(nameof(DeleteCommand), new RelayCommand(() => { }));
-	
-	public Types.ObservableTask SelectedTask {
-		get => GetValue(SelectedTaskProperty);
-		set => SetValue(SelectedTaskProperty, value);
-	}
-
-	public IRelayCommand CloseCommand {
-		get => GetValue(CloseCommandProperty);
-		set => SetValue(CloseCommandProperty, value);
-	}
-
-	public IRelayCommand DeleteCommand {
-		get => GetValue(DeleteCommandProperty);
-		set => SetValue(DeleteCommandProperty, value);
-	}
-
-	public IRelayCommand<Timespan.Types.Models.Task> SaveCommand {
-		get => GetValue(SaveCommandProperty);
-		set => SetValue(SaveCommandProperty, value);
-	}
+	[BasicStyledProperty<TaskDetailsControl>]
+	private IRelayCommand deleteCommand;
 
 	[BasicDirectProperty<TaskDetailsControl>]
 	private string title = "A Title";
@@ -180,9 +160,6 @@ public partial class TaskDetailsControl : UserControl {
 	}
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
-		if (change.Property == SelectedTaskProperty) {
-			Console.WriteLine("[TaskDetailsControl]:Task changed");
-		}
 		base.OnPropertyChanged(change);
 	}
 

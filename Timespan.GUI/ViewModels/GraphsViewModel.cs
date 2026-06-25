@@ -69,7 +69,11 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 			OnPropertyChanged(nameof(CurrentPage));
 			OnPropertyChanged(nameof(DateString));
 		};
-		TimeModes = ["Day", "Week", "Month"];
+		TimeModes = [
+			TranslatorService.Singleton["TimeMode.Day"],
+			TranslatorService.Singleton["TimeMode.Week"],
+			TranslatorService.Singleton["TimeMode.Month"],
+		];
 		SelectedTimeMode = TimeModes[0];
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
 		cacheService.SelectedDay = DateTimeService.FloorDay(DateTime.Now);
@@ -101,7 +105,6 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	internal async Task SaveTaskChanges(Timespan.Types.Models.Task task) {
-		Console.WriteLine("[GraphsView]: editing task");
 		await dbService.UpdateTaskAsync(task);
 		var refetchedTask = (await dbService.QueryTasksAsync()).First(x => x.Id == task.Id);
 		await Task.Run(
