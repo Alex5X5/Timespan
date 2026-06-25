@@ -156,10 +156,10 @@ public partial class TaskDetailsControl : UserControl {
 		TimeString = GetTimeString(SelectedTask.StartDateTime, SelectedTask.FinishDateTime);
 		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.StartDateTime);
 		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.FinishDateTime);
+		SelectedColor = SelectedTask.DisplayColor;
 	}
 
 	private static string GetTitleString(string description) {
-		char[] dots = ['.', '.', '.'];
 		if (description.Length <= MAX_TASK_DESCRIPTION_CHARS)
 			return description;
 		List<char> res = [];
@@ -176,7 +176,6 @@ public partial class TaskDetailsControl : UserControl {
 			}
 			word.Add(current);
 		}
-		//res.AddRange(dots);
 		return new(res.ToArray());
 	}
 
