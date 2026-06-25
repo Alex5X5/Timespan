@@ -113,7 +113,7 @@
 
 			<!--task bar-->
 			<Grid Grid.Row="1"
-				  ShowGridLines="True">
+				  ShowGridLines="False">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="12*" />
 					<ColumnDefinition Width="1*" />

@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
+using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
@@ -69,74 +70,62 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public static readonly StyledProperty<bool[,]> IsTodayProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, bool[,]>(nameof(IsToday), new bool[0,0]);
 
-	public static readonly StyledProperty<double> ExtraClickSizeProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, double>(nameof(ExtraClickSize), 0);
-
-	public static readonly StyledProperty<double> MinimalWidthProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, double>(nameof(MinimalGraphWidth), 0);
-
-	public static readonly StyledProperty<int> MaxTasksProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(MaxTasks), 0);
 
 
-	public static readonly StyledProperty<long> IntervalStartSecondsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStartSeconds), 0);
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private double extraClickSize;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private double minimalGraphWidth;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private long intervalStartSeconds = 0;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private long intervalStopSeconds = 0;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private int maxTasks = 0;
 
-	public static readonly StyledProperty<long> IntervalStopSecondsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, long>(nameof(IntervalStopSeconds), 0);
-
-	public static readonly StyledProperty<int> XAxisSegmentDurationProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(XAxisSegmentDuration), 0);
-
-	public static readonly StyledProperty<int> XAxisSegmentCountProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(XAxisSegmentCount), 0);
-
-	public static readonly StyledProperty<int> YAxisSegmentCountProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(YAxisSegmentCount), 0);
-
-	public static readonly StyledProperty<int> TaskGridRowCountProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(TaskGridRowCount), 0);
-
-	public static readonly StyledProperty<int> TaskGridColumnCountProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(TaskGridColumnCount), 0);
-
-	public static readonly StyledProperty<int> MaxCellTasksProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, int>(nameof(MaxCellTasks), 0);
+	public long IntervalDuration => IntervalStopSeconds - IntervalStartSeconds;
 
 
-	public static readonly StyledProperty<IRelayCommand> LoadCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(LoadCommand), new RelayCommand(() => { }));
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private int xAxisSegmentCount = 1;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private int yAxisSegmentCount = 1;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private int xAxisSegmentDuration = 1;
 
-	public static readonly StyledProperty<IRelayCommand> UnloadCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(UnloadCommand), new RelayCommand(() => { }));
+	public int YAxisSegmentDuration {
+		get => XAxisSegmentDuration * XAxisSegmentCount;
+	}
 
-	public static readonly StyledProperty<IRelayCommand> ClickedCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand>(nameof(ClickedCommand), new RelayCommand(() => { }));
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private int taskGridRowCount;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private int taskGridColumnCount;
 
-	public static readonly StyledProperty<IRelayCommand<TaskClickedEventArgs>> TaskClickedCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<TaskClickedEventArgs>>(
-			nameof(TaskClickedCommand),
-			new RelayCommand<TaskClickedEventArgs>(args => { }));
+	public long TaskGridColumnDuration {
+		get => IntervalDuration / (long)TaskGridColumnCount;
+	}
 
-	public static readonly StyledProperty<IRelayCommand<MousePressedEventArgs>> MousePressedCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MousePressedEventArgs>>(
-			nameof(MousePressedCommand),
-			new RelayCommand<MousePressedEventArgs>(args => { }));
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private int maxCellTasks;
 
-	public static readonly StyledProperty<IRelayCommand<MouseReleasedEventArgs>> MouseReleasedCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MouseReleasedEventArgs>>(
-			nameof(MouseReleasedCommand),
-			new RelayCommand<MouseReleasedEventArgs>(args => { }));
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand loadCommand;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand unloadCommand;
 
-	public static readonly StyledProperty<IRelayCommand<MouseDraggingEventArgs>> MouseDraggingCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MouseDraggingEventArgs>>(
-			nameof(MouseDraggingCommand),
-			new RelayCommand<MouseDraggingEventArgs>(args => { }));
-
-	public static readonly StyledProperty<IRelayCommand<MissingContextClickedEventArgs>> MissingContextClickedCommandProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, IRelayCommand<MissingContextClickedEventArgs>>(
-			nameof(MissingContextClickedCommand),
-			new RelayCommand<MissingContextClickedEventArgs>(args => { }));
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand clickedCommand;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand<TaskClickedEventArgs> taskClickedCommand;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand<MousePressedEventArgs> mousePressedCommand;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand<MouseReleasedEventArgs> mouseReleasedCommand;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand<MouseReleasedEventArgs> mouseDraggingCommand;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand<MouseReleasedEventArgs> missingContextClickedCommand;
 
 	#endregion
 
@@ -170,111 +159,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	public bool[,] IsToday {
 		get => GetValue(IsTodayProperty);
 		set => SetValue(IsTodayProperty, value);
-	}
-
-	public double ExtraClickSize {
-		get => GetValue(ExtraClickSizeProperty);
-		set => SetValue(ExtraClickSizeProperty, value);
-	}
-
-	public double MinimalGraphWidth {
-		get => GetValue(MinimalWidthProperty);
-		set => SetValue(MinimalWidthProperty, value);
-	}
-
-	public int MaxTasks {
-		get => GetValue(MaxTasksProperty);
-		set => SetValue(MaxTasksProperty, value);
-	}
-
-	public long IntervalStartSeconds {
-		get => GetValue(IntervalStartSecondsProperty);
-		set => SetValue(IntervalStartSecondsProperty, value);
-	}
-
-	public long IntervalStopSeconds {
-		get => GetValue(IntervalStopSecondsProperty);
-		set => SetValue(IntervalStopSecondsProperty, value);
-	}
-
-	public long IntervalDuration => IntervalStopSeconds - IntervalStartSeconds;
-
-	public int XAxisSegmentDuration {
-		get => GetValue(XAxisSegmentDurationProperty);
-		set => SetValue(XAxisSegmentDurationProperty, value);
-	}
-
-	public int YAxisSegmentDuration {
-		get => XAxisSegmentDuration * XAxisSegmentCount;
-	}
-
-	public int XAxisSegmentCount {
-		get => GetValue(XAxisSegmentCountProperty);
-		set => SetValue(XAxisSegmentCountProperty, value);
-	}
-
-	public int YAxisSegmentCount {
-		get => GetValue(YAxisSegmentCountProperty);
-		set => SetValue(YAxisSegmentCountProperty, value);
-	}
-
-	public int TaskGridRowCount {
-		get => GetValue(TaskGridRowCountProperty);
-		set => SetValue(TaskGridRowCountProperty, value);
-	}
-
-	public int TaskGridColumnCount {
-		get => GetValue(TaskGridColumnCountProperty);
-		set => SetValue(TaskGridColumnCountProperty, value);
-	}
-	
-	public long TaskGridColumnDuration {
-		get => IntervalDuration / (long)TaskGridColumnCount;
-	}
-
-	public int MaxCellTasks {
-		get => GetValue(MaxCellTasksProperty);
-		set => SetValue(MaxCellTasksProperty, value);
-	}
-
-	public IRelayCommand LoadCommand {
-		get => GetValue(LoadCommandProperty);
-		set => SetValue(LoadCommandProperty, value);
-	}
-
-	public IRelayCommand UnloadCommand {
-		get => GetValue(UnloadCommandProperty);
-		set => SetValue(UnloadCommandProperty, value);
-	}
-
-	public IRelayCommand ClickedCommand {
-		get => GetValue(ClickedCommandProperty);
-		set => SetValue(ClickedCommandProperty, value);
-	}
-
-	public IRelayCommand<TaskClickedEventArgs> TaskClickedCommand {
-		get => GetValue(TaskClickedCommandProperty);
-		set => SetValue(TaskClickedCommandProperty, value);
-	}
-
-	public IRelayCommand<MousePressedEventArgs> MousePressedCommand {
-		get => GetValue(MousePressedCommandProperty);
-		set => SetValue(MousePressedCommandProperty, value);
-	}
-
-	public IRelayCommand<MouseReleasedEventArgs> MouseReleasedCommand {
-		get => GetValue(MouseReleasedCommandProperty);
-		set => SetValue(MouseReleasedCommandProperty, value);
-	}
-
-	public IRelayCommand<MouseDraggingEventArgs> MouseDraggingCommand {
-		get => GetValue(MouseDraggingCommandProperty);
-		set => SetValue(MouseDraggingCommandProperty, value);
-	}
-
-	public IRelayCommand<MissingContextClickedEventArgs> MissingContextClickedCommand {
-		get => GetValue(MissingContextClickedCommandProperty);
-		set => SetValue(MissingContextClickedCommandProperty, value);
 	}
 
 	#endregion
