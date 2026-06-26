@@ -10,9 +10,13 @@ using System.ComponentModel;
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Settings;
+using Timespan.Util.Services;
 
 public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
-	
+
+	private readonly RedirectionService redirectionService;
+	private readonly SettingsService settingsService;
+
 	internal RedirectionAnchor<IMainViewChild> CurrentPageAnchor;
 	internal IMainViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
 	
@@ -49,10 +53,9 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	internal bool ExportSettingsButtonSelected =>
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<ExportSettingsViewModel>() ?? false;
 	
-	private readonly RedirectionService redirectionService;
-
-	public MainViewModel(RedirectionService redirectionService, ViewModelFactory<IMainViewChild> factory) {
+	public MainViewModel(RedirectionService redirectionService, ViewModelFactory<IMainViewChild> factory, SettingsService settingsService) {
 		this.redirectionService = redirectionService;
+		this.settingsService = settingsService;
 		CurrentPageAnchor = new(factory);
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
 
@@ -134,6 +137,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 			if (from == typeof(SettingsViewModel) && to != typeof(SettingsViewModel)) {
 				redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.ModelChanged += UpdateNormalNavigationBar;
 				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged -= UpdateSettingsNavigationBar;
+				settingsService.CancelEdit();
 				GlobalEventService.Raise<CloseSettingsEventArgs>();
 			}
 		}

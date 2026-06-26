@@ -1,7 +1,10 @@
 ﻿namespace Timespan.Util.Services;
 
-using Timespan.Util.Services;
+using Microsoft.VisualBasic;
+
 using System;
+
+using Timespan.Util.Services;
 
 public class DateTimeService {
 
@@ -30,7 +33,14 @@ public class DateTimeService {
 		return weeks;
 	}
 
-    public static long ToSeconds(DateTime date) =>
+	public static int WeekOfMonth(DateTime date, DayOfWeek firstDayOfWeek = DayOfWeek.Monday) {
+		DateTime firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+		int offset = ((int)firstDayOfMonth.DayOfWeek - (int)firstDayOfWeek + 7) % 7;
+		return (int)Math.Ceiling((date.Day + offset) / 7.0);
+	}
+
+
+	public static long ToSeconds(DateTime date) =>
 		date.Ticks / TimeSpan.TicksPerSecond;
 
 	public static DateTime FromSeconds(long seconds) =>

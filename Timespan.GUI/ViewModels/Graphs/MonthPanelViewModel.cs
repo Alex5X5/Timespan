@@ -54,8 +54,11 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	protected override void OnIntervallChanged(IntervallChangedEventArgs args) {
-		base.OnIntervallChanged(args);
+		SelectedDay = cacheService.SelectedDay;
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
 		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
+		UpdateColumnMarkers();
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {

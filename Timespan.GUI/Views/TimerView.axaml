@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vc="using:Timespan.GUI.Converters"
 			 xmlns:cls="using:Timespan.GUI.Views"
 			 xmlns:views="using:Timespan.GUI.Views"
 			 xmlns:models="using:Timespan.GUI.ViewModels"
@@ -68,6 +69,7 @@
 					 VerticalContentAlignment="Top"
 					 TextWrapping="Wrap"
 					 CornerRadius="5,5,5,5"
+					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.21 }" 
 					 PlaceholderText="{ Binding $parent[cls:TimerView].DescriptionLabelText }"
 					 Text="{ Binding DescriptionTextboxText }"/>
 			<controls:ColorSelectorControl Grid.Row="7"

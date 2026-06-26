@@ -18,15 +18,15 @@
 
 	<Grid ShowGridLines="False">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="1*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="1*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="1*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="10*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="33*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="6*" />
@@ -38,7 +38,7 @@
 				   Grid.Column="1"
 				   Classes="h2" />
 
-		<TextBox Classes="Default Input" 
+		<TextBox Classes="Default DynamicTextHeight Input" 
 				 Grid.Row="3"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
@@ -46,7 +46,7 @@
 				 TextWrapping="NoWrap"
 				 Text="{ Binding UsernameTextboxText }"
 				 PlaceholderText="{ Binding $parent[cls:UserDataSettingsView].UsernamePlaceholderText }"/>
-		<TextBox Classes="Default Input" 
+		<TextBox Classes="Default DynamicTextHeight Input" 
 				 Grid.Row="5"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"
@@ -54,7 +54,7 @@
 				 TextWrapping="NoWrap"
 				 Text="{ Binding StartDateTextboxText }"
 				 PlaceholderText="{ Binding $parent[cls:UserDataSettingsView].StartDatePlaceholderText }"/>
-		<TextBox Classes="Default Input" 
+		<TextBox Classes="Default DynamicTextHeight Input" 
 				 Grid.Row="7"
 				 Grid.Column="1"
 				 VerticalContentAlignment="Center"

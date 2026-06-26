@@ -80,8 +80,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	private long intervalStartSeconds = 0;
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private long intervalStopSeconds = 0;
-	[BasicStyledProperty<GraphPanelViewBase>]
-	private int maxTasks = 0;
 
 	public long IntervalDuration => IntervalStopSeconds - IntervalStartSeconds;
 
@@ -98,6 +96,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	[BasicStyledProperty<GraphPanelViewBase>]
+	private int maxCellTasks;
+	[BasicStyledProperty<GraphPanelViewBase>]
 	private int taskGridRowCount;
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private int taskGridColumnCount;
@@ -107,7 +107,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	[BasicStyledProperty<GraphPanelViewBase>]
-	private int maxCellTasks;
+	private bool fillColumn;
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private IRelayCommand loadCommand;
@@ -123,9 +123,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private IRelayCommand<MouseReleasedEventArgs> mouseReleasedCommand;
 	[BasicStyledProperty<GraphPanelViewBase>]
-	private IRelayCommand<MouseReleasedEventArgs> mouseDraggingCommand;
+	private IRelayCommand<MouseDraggingEventArgs> mouseDraggingCommand;
 	[BasicStyledProperty<GraphPanelViewBase>]
-	private IRelayCommand<MouseReleasedEventArgs> missingContextClickedCommand;
+	private IRelayCommand<MissingContextClickedEventArgs> missingContextClickedCommand;
 
 	#endregion
 
@@ -167,6 +167,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		
 		AffectsRender<GraphPanelViewBase>(BoundsProperty);
 		AffectsRender<GraphPanelViewBase>(TasksProperty);
+		AffectsRender<GraphPanelViewBase>(TaskGridRowCountProperty);
+		AffectsRender<GraphPanelViewBase>(TaskGridColumnCountProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
@@ -242,20 +244,28 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	protected virtual Rect GetTaskRectangle(ObservableTask task, int[,] cellTaskCount, double additionalWidth, double additionalHeight) {
 		int row = GetTaskRow(task);
 		int column = GetTaskColummn(task);
-		double proportion = GraphAreaWidth / IntervalDuration;
 		double graphPosX = column * XAxisSegmentSize;
+		double graphPosY = row * YAxisSegmentSize;
+		double width = additionalWidth * 2;
+		double height = additionalHeight * 2;
 		graphPosX += PaddingX;
 		graphPosX -= additionalWidth;
-		long startOffset = task.Start - IntervalStartSeconds;
-		graphPosX += ((double)startOffset % (double)TaskGridColumnDuration) * proportion;
-		double graphPosY = row * YAxisSegmentSize;
 		graphPosY += PaddingY;
-		graphPosY += cellTaskCount[row, column] * YAxisSegmentSize / MaxCellTasks * 1.5;
 		graphPosY -= additionalHeight;
-		long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
-		double graphLength = duration * proportion;
-		double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
-		double height = YAxisSegmentSize / MaxCellTasks + additionalHeight * 2;
+		graphPosY += YAxisSegmentSize * 0.05;
+		graphPosY += cellTaskCount[row, column] * YAxisSegmentSize / MaxCellTasks * 1.5;
+		height += YAxisSegmentSize / MaxCellTasks;
+		if (FillColumn) {
+			graphPosX += XAxisSegmentSize * 0.05;
+			width += XAxisSegmentSize * 0.9;
+		} else {
+			double proportion = GraphAreaWidth / IntervalDuration;
+			long startOffset = task.Start - IntervalStartSeconds;
+			graphPosX += ((double)startOffset % (double)TaskGridColumnDuration) * proportion;
+			long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
+			double graphLength = duration * proportion;
+			width += Math.Max(graphLength, MinimalGraphWidth);
+		}
 		Rect res = new(
 			graphPosX,
 			graphPosY,
@@ -279,8 +289,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	private void DrawTasks(DrawingContext context) {
 		int[,] cells = new int[TaskGridRowCount, TaskGridColumnCount];
-		for (int row = 0; row < TaskGridRowCount; row++)
-			for (int column = 0; column < TaskGridColumnCount; column++)
+		for (int row = 0; row < cells.GetLength(0); row++)
+			for (int column = 0; column < cells.GetLength(1); column++)
 				cells[row, column] = 0;
 		foreach (var task in Tasks ?? [])
 			DrawTaskGraph(context, task, cells);
@@ -328,8 +338,11 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	protected abstract void DrawTimeline(DrawingContext context);
 
 	private void DrawTodayMarker(DrawingContext context) {
+		Console.WriteLine($"""will draw from row "0" to row "{YAxisSegmentCount}" """);
+		Console.WriteLine($"""will draw from column "0" to column "{XAxisSegmentCount}" """);
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
+				Console.WriteLine($"drawing today marker for ({row}|{column}) with array ({IsToday.GetLength(0)}|{IsToday.GetLength(1)})");
 				if (IsToday[row, column]) {
 					Brush brush = new SolidColorBrush(Color.FromArgb(255, 170, 170, 170));
 					var rect = new Rect(
@@ -413,6 +426,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 				newList.CollectionChanged += OnTaskListChanged;
 			}
 			InvalidateVisual();
+		} else if (change.Property == XAxisSegmentCountProperty | change.Property == XAxisSegmentCountProperty) {
+			Console.WriteLine($"resizing isToday array to ({YAxisSegmentCount}, {YAxisSegmentCount})");
+			ResizeArray<bool>(IsToday, YAxisSegmentCount, XAxisSegmentCount);
 		}
 	}
 

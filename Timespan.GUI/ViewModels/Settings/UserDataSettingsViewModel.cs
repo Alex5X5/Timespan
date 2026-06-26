@@ -36,10 +36,4 @@ public partial class UserDataSettingsViewModel : ViewModelBase, ISettingsViewChi
 	partial void OnUsernameTextboxTextChanged(string value) {
 		settingsService.Username = UsernameTextboxText;
 	}
-
-	//public void OnPreSettingsSave() {
-	//	settingsService.Username = UsernameTextboxText;
-	//	settingsService.StartDateString = StartDateTextboxText;
-	//	settingsService.JobName = JobNameTextboxText;
-	//}
 }

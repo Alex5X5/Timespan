@@ -97,6 +97,9 @@ public partial class MonthPanelView : GraphPanelViewBase {
 			}
 		}
 	}
+	protected override int GetTaskRow(ObservableTask task) {
+		return DateTimeService.WeekOfMonth(task.StartDateTime) - 1;
+	}
 
 	//private void DrawTaskGraph(DrawingContext context, Timespan.Types.Models.Task task, int i) {
 	//	Rect rect = GetTaskRectanlge(task, 0, 0, i);

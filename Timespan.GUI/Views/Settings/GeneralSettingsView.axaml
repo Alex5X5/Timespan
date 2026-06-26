@@ -19,15 +19,15 @@
 
 	<Grid ShowGridLines="False">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="1*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="1*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="1*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="10*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="33*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="6*" />

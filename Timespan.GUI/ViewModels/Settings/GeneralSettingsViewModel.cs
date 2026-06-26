@@ -20,10 +20,9 @@ public partial class GeneralSettingsViewModel : ViewModelBase, ISettingsViewChil
 		this.settingsService = settingsService;
 		AvailableLanguages = TranslatorService.Singleton.AvailableTranslations.ToList();
 		SelectedLanguage = settingsService.Language;
-		settingsService.OnPreSettingsSave += OnPreSettingsSave;
 	}
 
-	private void OnPreSettingsSave() {
+	partial void OnSelectedLanguageChanged(string value) {
 		settingsService.Language = SelectedLanguage;
 	}
 }

@@ -88,6 +88,7 @@
 						Click="ColorButtonClick"
 						Background="{ StaticResource ResourceKey=TaskBackgroundDarkPurple }" />
 			</Viewbox>
+			<!--
 			<Viewbox Grid.Column="12" Stretch="Uniform">
 				<Button Name="PickerButton"
 						Classes="DynamicBackground Circle"
@@ -96,7 +97,7 @@
 						Click="PickerButtonClick"
 						Background="{ StaticResource ResourceKey=TaskBackgroundRed }" />
 			</Viewbox>
-			<ColorPicker IsVisible="True"/>
+			-->
 		</Grid>
 	</Panel>
 </UserControl>
