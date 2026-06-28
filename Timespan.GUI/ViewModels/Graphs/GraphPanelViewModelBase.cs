@@ -1,10 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
-using DynamicData;
 
 using System.Collections.ObjectModel;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,12 +74,16 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	[ObservableProperty]
 	private DateTime selectedDay;
 
+	[ObservableProperty]
+	private bool suspendRendering;
+
 	#endregion
 
 	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService, long start, long finish, int rows=1, int columns=24, int taskRows=1, int taskColumns=1, long duration=3600) : base() {
 		this.cacheService = cacheService;
 		this.dbService = dbService;
 		this.settingsService = settingsService;
+		suspendRendering = true;
 		TimeIntervallStartSeconds = start;
 		TimeIntervallStopSeconds = finish;
 		XAxisSegmentDuration = duration;
@@ -116,6 +116,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 			BlockedColumns[i] = new(false);
 			BlockedColumns[i] = new(false);
 		}
+		suspendRendering = false;
 		Tasks = new();
 	}
 
@@ -160,8 +161,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	}
 
 	[RelayCommand]
-	protected virtual void OnMissingContextMenuClicked(Timespan.Types.Models.BlockedTimeIntervallType reason) {
-		SetTimeIntervallBlocked(reason);
+	protected async Task OnMissingContextMenuClicked(Timespan.Types.Models.BlockedTimeIntervallType reason) {
+		await SetTimeIntervallBlocked(reason);
 	}
 
 	[RelayCommand]
@@ -211,6 +212,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected abstract DateTime CeilIntervall(DateTime date);
 
 	partial void OnXAxisSegmentCountChanged(long value) {
+		suspendRendering = true;
 		if (MarkedColumns != null) {
 			while (MarkedColumns.Count > value)
 				MarkedColumns.RemoveAt(MarkedColumns.Count - 1);
@@ -223,9 +225,11 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 			while (BlockedColumns.Count < value)
 				BlockedColumns.Add(new ObservableBool(false));
 		}
+		suspendRendering = false;
 	}
 
 	partial void OnYAxisSegmentCountChanged(long value) {
+		suspendRendering = true;
 		if (MarkedRows != null) {
 			while (MarkedRows.Count > value)
 				MarkedRows.RemoveAt(MarkedRows.Count - 1);
@@ -238,6 +242,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 			while (BlockedRows.Count < value)
 				BlockedRows.Add(new ObservableBool(false));
 		}
+		suspendRendering = false;
 	}
 
 	#endregion

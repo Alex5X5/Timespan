@@ -1,14 +1,12 @@
 ﻿using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
-
-using CommunityToolkit.Mvvm.Input;
 
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
 using Timespan.GUI.Generators.Attributes;
+using Timespan.GUI.Helpers;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
@@ -41,6 +39,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected double PaddingX => Bounds.Width * PADDING_X_WEIGHT / (GRAPH_AREA_X_WEIGHT + 2 * PADDING_X_WEIGHT);
 	protected double PaddingY => Bounds.Height * PADDING_Y_WEIGHT / (GRAPH_AREA_Y_WEIGHT + 2 * PADDING_Y_WEIGHT);
+
+	protected double TaskDescriptionPadding => 5;
 
 	protected double GraphAreaWidth => Bounds.Width - 2 * PaddingX;
 	protected double GraphAreaHeight => Bounds.Height - 2 * PaddingY;
@@ -107,7 +107,10 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	[BasicStyledProperty<GraphPanelViewBase>]
-	private bool fillColumn;
+	private bool fillColumn = false;
+
+	[BasicDirectProperty<GraphPanelViewBase>]
+	private bool suspendRendering = false;
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private IRelayCommand loadCommand;
@@ -166,9 +169,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	static GraphPanelViewBase() {
 		
 		AffectsRender<GraphPanelViewBase>(BoundsProperty);
-		AffectsRender<GraphPanelViewBase>(TasksProperty);
-		AffectsRender<GraphPanelViewBase>(TaskGridRowCountProperty);
-		AffectsRender<GraphPanelViewBase>(TaskGridColumnCountProperty);
+		//AffectsRender<GraphPanelViewBase>(TasksProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
 		//AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
@@ -177,7 +178,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	public GraphPanelViewBase() {
 		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
-		//this.Bind(MarkedColumnsProperty,new Binding(nameof(MarkedColumns)));
 
 		AddHandler(TappedEvent, OnClickBase);
 		AddHandler(DoubleTappedEvent, OnDoubleClickBase);
@@ -186,6 +186,18 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		AddHandler(PointerReleasedEvent, OnMouseReleasedBase);
 		AddHandler(LoadedEvent, OnLoadBase);
 		AddHandler(UnloadedEvent, OnUnloadBase);
+	}
+
+	private bool IsOutsideGraphArea(Point p) {
+		if (p.X < PaddingX)
+			return true;
+		if (p.X > Bounds.Width - PaddingX)
+			return true;
+		if (p.Y < PaddingY)
+			return true;
+		if (p.Y > Bounds.Height - PaddingY)
+			return true;
+		return false;
 	}
 
 	protected void ShowReasonContextMenu() {
@@ -199,33 +211,35 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		_contextMenu = new() {
 			ItemsSource = new List<MenuItem>() {
 				new() {
-					Header = "Krank",
+					Header = TranslatorService.Singleton["Absence.Sick"],
 					Command = new RelayCommand(()=>Callback(SharedTypes.BlockedTimeIntervallType.Sick))
 				},
 				new() {
-					Header = "Feiertag",
+					Header = TranslatorService.Singleton["Absence.Holiday"],
 					Command = new RelayCommand(()=>Callback(SharedTypes.BlockedTimeIntervallType.Holiday))
 				},
 				new() {
-					Header = "Urlaub",
+					Header = TranslatorService.Singleton["Absence.Vacant"],
 					Command = new RelayCommand(()=>Callback(SharedTypes.BlockedTimeIntervallType.Vacant))
 				},
 				new() {
-					Header = "Heimarbeitstag",
+					Header = TranslatorService.Singleton["Absence.HomeWork"],
 					Command = new RelayCommand(()=>Callback(SharedTypes.BlockedTimeIntervallType.HomeWork))
 				},
 				new() {
-					Header = "Unentschuldigt",
+					Header = TranslatorService.Singleton["Absence.NoExcuse"],
 					Command = new RelayCommand(()=>Callback(SharedTypes.BlockedTimeIntervallType.NoExcuse))
 				},
 				new() {
-					Header = "Anwesend",
+					Header = TranslatorService.Singleton["Absence.None"],
 					Command = new RelayCommand(()=>Callback(SharedTypes.BlockedTimeIntervallType.None))
 				}
 			}
 		};
 		_contextMenu?.Open(this);
 	}
+
+	#region rendering
 
 	protected virtual int GetTaskRow(ObservableTask task) {
 		long offset = task.Start - IntervalStartSeconds;
@@ -272,13 +286,43 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			width,
 			height
 		);
-		cellTaskCount[row, column] ++;
+		cellTaskCount[row, column]++;
 		return res;
 	}
 
-	#region rendering
+	private static Color GetTaskDescriptionTextColor(ObservableTask task) {
+		int average = (int)task.DisplayColorRed + (int)task.DisplayColorGreen + (int)task.DisplayColorBlue;
+		average /= 3;
+		if (average > 120) {
+			return Color.FromArgb(255, 0, 0, 0);
+		} else {
+			return Color.FromArgb(255, 255, 255, 255);
+		}
+	}
+
+	protected static Brush GetTaskGraphBrush(ObservableTask task) {
+		if (task.Running) {
+			Color gradientStartColor = Color.FromArgb(255, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+			Color gradientFinishColor = Color.FromArgb(20, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
+			return new LinearGradientBrush() {
+				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
+				EndPoint = new RelativePoint(1.0, 0.5, RelativeUnit.Relative),
+				GradientStops = {
+					new GradientStop(gradientStartColor, 0.0),
+					new GradientStop(gradientFinishColor, 1.0)
+				}
+			};
+		} else {
+			return new SolidColorBrush(task.DisplayColor);
+		}
+	}
+
+	protected virtual double ArialHeightToPt(double height, double x = 1) =>
+		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
 	public override void Render(DrawingContext context) {
+		if (SuspendRendering)
+			return;
 		DrawBackground(context);
 		DrawTimeline(context);
 		DrawTodayMarker(context);
@@ -296,25 +340,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			DrawTaskGraph(context, task, cells);
 	}
 
-	private void DrawTaskGraph(DrawingContext context, ObservableTask task, int[,] cellTaskCount) {
+	protected virtual void DrawTaskGraph(DrawingContext context, ObservableTask task, int[,] cellTaskCount) {
 		Rect rect = GetTaskRectangle(task, cellTaskCount, 0, 0);
-
-		Brush brush;
-		if (task.Running) {
-			Color gradientStartColor = Color.FromArgb(255, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
-			Color gradientFinishColor = Color.FromArgb(20, task.DisplayColorRed, task.DisplayColorGreen, task.DisplayColorBlue);
-			brush = new LinearGradientBrush() {
-				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
-				EndPoint = new RelativePoint(1.0, 0.5, RelativeUnit.Relative),
-				GradientStops = {
-					new GradientStop(gradientStartColor, 0.0),
-					new GradientStop(gradientFinishColor, 1.0)
-				}
-			};
-		} else {
-			brush = new SolidColorBrush(task.DisplayColor);
-		}
-
+		Brush brush = GetTaskGraphBrush(task);
 		double r = Math.Min(10, rect.Height / 4);
 		r = Math.Min(r, rect.Width / 2);
 		RectangleGeometry rrect = new(rect) {
@@ -322,7 +350,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			RadiusY = r
 		};
 		context.DrawGeometry(brush, null, rrect);
-		//DrawTaskDescriptionStub(context, task, rect);
+		DrawTaskDescriptionStub(context, task, rect);
 	}
 
 	protected virtual void DrawBackground(DrawingContext context) {
@@ -335,14 +363,41 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		context.DrawGeometry(background, null, rrect);
 	}
 
+	protected virtual bool DrawTaskDescriptionStub(DrawingContext context, ObservableTask task, Rect taskRect) {
+		bool didFit = false;
+		var formattedText = new FormattedText(
+			TaskHelper.GetTitleString(task.Description, true),
+			System.Globalization.CultureInfo.CurrentCulture,
+			FlowDirection.LeftToRight,
+			new Typeface("Arial"),
+			Math.Max(2.0, ArialHeightToPt(taskRect.Height, 0.9)),
+			null
+		);
+		double xPos = 0;
+		if (formattedText.Width < taskRect.Width) {
+			xPos = taskRect.X;
+			xPos += (taskRect.Width / 2.0);
+			xPos -= (formattedText.Width / 2.0);
+			formattedText.SetForegroundBrush(new SolidColorBrush(GetTaskDescriptionTextColor(task)));
+		} else if (taskRect.X - formattedText.Width > PaddingX) {
+			xPos = taskRect.X - formattedText.Width;
+			xPos -= TaskDescriptionPadding;
+			formattedText.SetForegroundBrush(new SolidColorBrush(Colors.Black));
+		} else {
+			xPos = taskRect.X + taskRect.Width;
+			xPos += TaskDescriptionPadding;
+			formattedText.SetForegroundBrush(new SolidColorBrush(Colors.Black));
+		}
+		double yPos = taskRect.Y + ((taskRect.Height / 2.0) - (formattedText.Height / 2.0));
+		context.DrawText(formattedText, new Point(xPos, yPos));
+		return didFit;
+	}
+
 	protected abstract void DrawTimeline(DrawingContext context);
 
 	private void DrawTodayMarker(DrawingContext context) {
-		Console.WriteLine($"""will draw from row "0" to row "{YAxisSegmentCount}" """);
-		Console.WriteLine($"""will draw from column "0" to column "{XAxisSegmentCount}" """);
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
-				Console.WriteLine($"drawing today marker for ({row}|{column}) with array ({IsToday.GetLength(0)}|{IsToday.GetLength(1)})");
 				if (IsToday[row, column]) {
 					Brush brush = new SolidColorBrush(Color.FromArgb(255, 170, 170, 170));
 					var rect = new Rect(
@@ -403,6 +458,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 					item.PropertyChanged += OnBoolValueChanged;
 				newList.CollectionChanged += OnBoolListChanged;
 			}
+			InvalidateVisual();
 		} else if (change.Property == BlockedColumnsProperty) {
 			if (change.OldValue is ObservableCollection<ObservableBool> oldList) {
 				foreach (ObservableBool item in oldList)
@@ -414,6 +470,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 					item.PropertyChanged += OnBoolValueChanged;
 				newList.CollectionChanged += OnBoolListChanged;
 			}
+			InvalidateVisual();
 		} else if (change.Property == TasksProperty) {
 			if (change.OldValue is ObservableCollection<ObservableTask> oldList) {
 				foreach (ObservableTask item in oldList)
@@ -426,9 +483,10 @@ public abstract partial class GraphPanelViewBase : UserControl {
 				newList.CollectionChanged += OnTaskListChanged;
 			}
 			InvalidateVisual();
-		} else if (change.Property == XAxisSegmentCountProperty | change.Property == XAxisSegmentCountProperty) {
-			Console.WriteLine($"resizing isToday array to ({YAxisSegmentCount}, {YAxisSegmentCount})");
-			ResizeArray<bool>(IsToday, YAxisSegmentCount, XAxisSegmentCount);
+		} else if (change.Property == XAxisSegmentCountProperty | change.Property == YAxisSegmentCountProperty) {
+			Console.WriteLine($"resizing isToday array to ({YAxisSegmentCount}, {XAxisSegmentCount})");
+			IsToday = ResizeArray<bool>(IsToday, YAxisSegmentCount, XAxisSegmentCount);
+			InvalidateVisual();
 		}
 	}
 
@@ -556,7 +614,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		//Console.WriteLine($"mouse released!");
 		if (!args.GetCurrentPoint(sender as Control).Properties.IsRightButtonPressed) {
 			if (RightMouseDown) {
-				ShowReasonContextMenu();
+				if(!IsOutsideGraphArea(MousePos))
+					ShowReasonContextMenu();
 			}
 			RightMouseDown = false;
 		}

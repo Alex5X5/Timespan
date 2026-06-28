@@ -98,12 +98,12 @@ Months.Short.October:Oct
 Months.Short.November:Nov
 Months.Short.December:Dec
 
-Absence.Sick:Krank
-Absence.Holiday:Feiertag
-Absence.Vacant:Urlaub
-Absence.HomeWork:Heimarbeitstag
-Absence.NoExcuse:Unentschuldigt
-Absence.None:Anwesend
+Absence.Sick:Sick
+Absence.Holiday:Holiday
+Absence.Vacant:Vacant
+Absence.HomeWork:Home Work
+Absence.NoExcuse:No Excuse
+Absence.None:Present
 
 TimeMode.Day:Day
 TimeMode.Week:Week

@@ -1,12 +1,9 @@
 ﻿namespace Timespan.GUI.ViewModels.Graphs;
 
-using Avalonia.Media;
-
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Types;
-using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class WeekPanelViewModel : GraphPanelViewModelBase {

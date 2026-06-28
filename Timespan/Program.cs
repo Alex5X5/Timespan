@@ -14,13 +14,16 @@ public class Program {
 
 		//PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Timespan");
-	
+
 		//PrintService ps = new PrintService();
 		//ps.Print(PathService.AssetsPath("output-readable-indexers.pdf"));
-
-		BuildAvaloniaApp()
-			.StartWithClassicDesktopLifetime(args);
-
+		try {
+			BuildAvaloniaApp()
+				.StartWithClassicDesktopLifetime(args);
+		} catch (Exception ex) {
+			string path = PathService.AssetsPath("crash.log");
+			File.WriteAllText(path, ex.ToString());
+		}
 		//EncryptionService service = new("test"); 
 		//service.EncryptFile(PathService.FilesPath("database"));
 	}

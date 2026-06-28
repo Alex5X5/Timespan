@@ -39,12 +39,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Controls\ColorSelectorControl.axaml.cs">
-		  <DependentUpon>ColorSelectorControl.axaml</DependentUpon>
-		</Compile>
-		<Compile Update="Controls\TaskDetailsControl.axaml.cs">
-			<DependentUpon>TaskDetailsControl.axaml</DependentUpon>
-		</Compile>
+	  <Compile Update="Controls\ColorSelectorControl.axaml.cs">
+	    <DependentUpon>ColorSelectorControl.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Controls\TaskDetailsControl.axaml.cs">
+	    <DependentUpon>TaskDetailsControl.axaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\ExportView.axaml.cs">
 	    <DependentUpon>ExportView.axaml</DependentUpon>
 	  </Compile>

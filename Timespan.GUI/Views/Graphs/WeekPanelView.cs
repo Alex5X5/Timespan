@@ -2,7 +2,6 @@ namespace Timespan.GUI.Views.Graphs;
 
 using Avalonia.Media;
 
-using Timespan.GUI.Types;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
 
@@ -54,15 +53,6 @@ public partial class WeekPanelView : GraphPanelViewBase {
 			TranslatorService.Singleton["Days.Thursday"],
 			TranslatorService.Singleton["Days.Friday"]
 		];
-		//for (int i = 0; i < XAxisSegmentCount; i++) {
-		//	double xPos = XAxisSegmentSize * i + PaddingX;
-		//	//if (i % 7 == 5 | i % 7 == 6)
-		//	//context.FillRectangle(weekedDayBackground, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-		//	if (i + 1 == (int)DateTime.Today.DayOfWeek)
-		//		if (DateTimeService.FloorWeek((DataContext as WeekPanelViewModel)!.cacheService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
-		//			context.FillRectangle(todayBackgroundColor, new(xPos + 1, PaddingY, XAxisSegmentSize - 2, Bounds.Height - (2 * PaddingY)));
-		//}
-		//context.DrawLine(timeLine, new(PaddingX, Bounds.Height - PaddingY), new(Bounds.Width - PaddingX, Bounds.Height - PaddingY));
 		double textSize = Math.Round(PaddingY * 0.7, 1);
 		for (int i = 0; i < 6; i++) {
 			double xPos = XAxisSegmentSize * i + PaddingX;

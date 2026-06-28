@@ -51,7 +51,7 @@ public partial class HourglassDbService {
 
     public async Task<List<Types.Task>> QueryTasksOfWeekAtDateAsync(DateTime date) {
         DateTime start = DateTimeService.FloorWeek(date);
-        DateTime finfish = start.AddDays(7);
+        DateTime finfish = start.AddDays(5);
         return await QueryTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
     }
 

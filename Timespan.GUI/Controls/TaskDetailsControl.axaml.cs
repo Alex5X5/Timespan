@@ -6,13 +6,12 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 
 using Timespan.GUI.Generators.Attributes;
+using Timespan.GUI.Helpers;
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class TaskDetailsControl : UserControl {
-
-	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
 
 	#region styled properties
 
@@ -131,32 +130,12 @@ public partial class TaskDetailsControl : UserControl {
 		if (SelectedTask == null)
 			return;
 		Description = SelectedTask.Description;
-		Title = GetTitleString(SelectedTask.Description);
+		Title = TaskHelper.GetTitleString(SelectedTask.Description);
 		DateString = GetDateString(SelectedTask.StartDateTime);
 		TimeString = GetTimeString(SelectedTask.StartDateTime, SelectedTask.FinishDateTime);
 		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.StartDateTime);
 		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.FinishDateTime);
 		SelectedColor = SelectedTask.DisplayColor;
-	}
-
-	private static string GetTitleString(string description) {
-		if (description.Length <= MAX_TASK_DESCRIPTION_CHARS)
-			return description;
-		List<char> res = [];
-		List<char> word = [];
-		for (int i = 0; i < MAX_TASK_DESCRIPTION_CHARS && i < description.Length; i++) {
-			char current = description[i];
-			if (current == ' ') {
-				if (res.Count + 1 + word.Count <= MAX_TASK_DESCRIPTION_CHARS) {
-					res.AddRange(word);
-					res.Add(current);
-					word = [];
-				}
-				continue;
-			}
-			word.Add(current);
-		}
-		return new(res.ToArray());
 	}
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
