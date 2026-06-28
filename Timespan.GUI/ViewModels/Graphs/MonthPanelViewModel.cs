@@ -2,6 +2,8 @@
 
 using Avalonia.Media;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
@@ -11,6 +13,11 @@ using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class MonthPanelViewModel : GraphPanelViewModelBase {
+
+	private DateTimeService dateTimeService;
+
+	[ObservableProperty]
+	private int weekOffset = 0;
 
 	public MonthPanelViewModel() : this(null, null, null) {
 
@@ -22,7 +29,7 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
 			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5,
 			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5, 86400) {
-		
+		dateTimeService = new(settingsService, cacheService);
 	}
 
 	protected override bool IsToday(int row, int column) {
@@ -58,6 +65,7 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
 		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
 		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
+		WeekOffset = dateTimeService.GetWeekCountAtDate(SelectedDay);
 		UpdateColumnMarkers();
 	}
 

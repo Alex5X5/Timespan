@@ -355,7 +355,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected virtual void DrawBackground(DrawingContext context) {
 		var background = new SolidColorBrush(Color.FromArgb(255, 235, 235, 235));
-		Pen pen = new(background, 0);
 		RectangleGeometry rrect = new(Bounds) {
 			RadiusX = 20,
 			RadiusY = 20
@@ -374,19 +373,26 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			null
 		);
 		double xPos = 0;
-		if (formattedText.Width < taskRect.Width) {
+		if (FillColumn) {
 			xPos = taskRect.X;
 			xPos += (taskRect.Width / 2.0);
 			xPos -= (formattedText.Width / 2.0);
 			formattedText.SetForegroundBrush(new SolidColorBrush(GetTaskDescriptionTextColor(task)));
-		} else if (taskRect.X - formattedText.Width > PaddingX) {
-			xPos = taskRect.X - formattedText.Width;
-			xPos -= TaskDescriptionPadding;
-			formattedText.SetForegroundBrush(new SolidColorBrush(Colors.Black));
 		} else {
-			xPos = taskRect.X + taskRect.Width;
-			xPos += TaskDescriptionPadding;
-			formattedText.SetForegroundBrush(new SolidColorBrush(Colors.Black));
+			if (formattedText.Width < taskRect.Width) {
+				xPos = taskRect.X;
+				xPos += (taskRect.Width / 2.0);
+				xPos -= (formattedText.Width / 2.0);
+				formattedText.SetForegroundBrush(new SolidColorBrush(GetTaskDescriptionTextColor(task)));
+			} else if (taskRect.X - formattedText.Width > PaddingX) {
+				xPos = taskRect.X - formattedText.Width;
+				xPos -= TaskDescriptionPadding;
+				formattedText.SetForegroundBrush(new SolidColorBrush(Colors.Black));
+			} else {
+				xPos = taskRect.X + taskRect.Width;
+				xPos += TaskDescriptionPadding;
+				formattedText.SetForegroundBrush(new SolidColorBrush(Colors.Black));
+			}
 		}
 		double yPos = taskRect.Y + ((taskRect.Height / 2.0) - (formattedText.Height / 2.0));
 		context.DrawText(formattedText, new Point(xPos, yPos));

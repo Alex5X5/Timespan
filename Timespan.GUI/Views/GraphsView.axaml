@@ -49,7 +49,7 @@
 									  BlockedColumns="{ Binding BlockedColumns }"
 									  IsToday="{ Binding IsTodaySegment }"
 									  Tasks="{ Binding Tasks }"
-									  MaxCellTasks="7"
+									  MaxCellTasks="10"
 									  FillColumn="True"
 									  MinimalGraphWidth="10"
 									  XAxisSegmentCount="{ Binding XAxisSegmentCount }"
@@ -90,7 +90,8 @@
 									   ClickedCommand="{ Binding ClickedCommand }"
 									   TaskClickedCommand="{ Binding TaskClickedCommand }"
 									   LoadCommand="{ Binding LoadCommand }"
-									   UnloadCommand="{ Binding UnloadCommand }"/>
+									   UnloadCommand="{ Binding UnloadCommand }"
+									   WeekOffset="{Binding WeekOffset}"/>
 		</DataTemplate>
 	</UserControl.DataTemplates>
 
