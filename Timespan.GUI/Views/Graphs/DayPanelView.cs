@@ -30,22 +30,6 @@ public partial class DayPanelView : GraphPanelViewBase {
 	private static double ArialHeightToPt(double height, double x = 1) =>
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
-	//protected override Rect GetTaskRectangle(ObservableTask task, double additionalWidth, double additionalHeight, int row, int column) {
-	//	double proportion = GraphAreaWidth / IntervalDuration;
-	//	double graphPosX = (task.Start - IntervalStartSeconds) * proportion + PaddingX;
-	//	long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
-	//	double graphLength = duration * proportion;
-	//	double width = Math.Max(graphLength, MinimalGraphWidth) + additionalWidth * 2;
-	//	Rect res = new(
-	//		graphPosX - additionalWidth,
-	//		YAxisSegmentSize * (i % (MaxTasks / 2)) * 1.5 - additionalHeight + PaddingY,
-	//		width,
-	//		YAxisSegmentSize + additionalHeight * 2
-	//	);
-	//	return res;
-	//}
-
-
 	protected override int GetTaskRow(ObservableTask task) {
 		return 0;
 	}
@@ -79,28 +63,4 @@ public partial class DayPanelView : GraphPanelViewBase {
 			);
 		}
 	}
-
-	//private void DrawTaskGraph(DrawingContext context, Timespan.Types.Models.Task task, int i) {
-	//	Rect rect = GetTaskRectanlge(task, 0, 0, i);
-	//	r = Math.Min(r, rect.Width / 2);
-	//	RectangleGeometry rrect = new(rect) {
-	//		RadiusX = r,
-	//		RadiusY = r
-	//	};
-	//	context.DrawGeometry(brush, null, rrect);
-	//	DrawTaskDescriptionStub(context, task, rect);
-	//}
-
-	//private void DrawTaskDescriptionStub(DrawingContext context, Types.Task task, Rect taskRect) {
-	//	var formattedText = new FormattedText(
-	//		task.description.Length <= MAX_TASK_DESCRIPTION_CHARS ? task.description : task.description[..MAX_TASK_DESCRIPTION_CHARS] + "...",
-	//		System.Globalization.CultureInfo.CurrentCulture,
-	//		FlowDirection.LeftToRight,
-	//		new Typeface("Arial"),
-	//		Math.Max(2.0, ArialHeightToPt(Y_AXIS_SEGMENT_SIZE)),
-	//		new SolidColorBrush(Colors.Black)
-	//	);
-	//	Point p = new(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);
-	//	context.DrawText(formattedText, p);
-	//}
 }

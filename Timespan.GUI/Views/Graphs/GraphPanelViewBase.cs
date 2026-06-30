@@ -4,6 +4,8 @@ using Avalonia.Interactivity;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Helpers;
@@ -54,23 +56,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	public static readonly StyledProperty<ObservableCollection<ObservableTask>> TasksProperty =
 		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableTask>>(nameof(Tasks), []);
-
-	public static readonly StyledProperty<ObservableCollection<ObservableBool>> MarkedRowsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedRows), []);
-
-	public static readonly StyledProperty<ObservableCollection<ObservableBool>> BlockedRowsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(BlockedRows), []);
-
-	public static readonly StyledProperty<ObservableCollection<ObservableBool>> MarkedColumnsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(MarkedColumns), []);
-
-	public static readonly StyledProperty<ObservableCollection<ObservableBool>> BlockedColumnsProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, ObservableCollection<ObservableBool>>(nameof(BlockedColumns), []);
-
-	public static readonly StyledProperty<bool[,]> IsTodayProperty =
-		AvaloniaProperty.Register<GraphPanelViewBase, bool[,]>(nameof(IsToday), new bool[0,0]);
-
-
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private double extraClickSize;
@@ -139,30 +124,14 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		set => SetValue(TasksProperty, value);
 	}
 
-	public ObservableCollection<ObservableBool> MarkedRows {
-		get => GetValue(MarkedRowsProperty);
-		set => SetValue(MarkedRowsProperty, value);
-	}
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private ObservableBool[,] isMarked;
 
-	public ObservableCollection<ObservableBool> BlockedRows {
-		get => GetValue(BlockedRowsProperty);
-		set => SetValue(BlockedRowsProperty, value);
-	}
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private ObservableBool[,] isBlocked;
 
-	public ObservableCollection<ObservableBool> MarkedColumns {
-		get => GetValue(MarkedColumnsProperty);
-		set => SetValue(MarkedColumnsProperty, value);
-	}
-
-	public ObservableCollection<ObservableBool> BlockedColumns {
-		get => GetValue(BlockedColumnsProperty);
-		set => SetValue(BlockedColumnsProperty, value);
-	}
-
-	public bool[,] IsToday {
-		get => GetValue(IsTodayProperty);
-		set => SetValue(IsTodayProperty, value);
-	}
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private bool[,] isToday;
 
 	#endregion
 
@@ -245,14 +214,20 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		long offset = task.Start - IntervalStartSeconds;
 		if (offset < 0)
 			return 0;
-		return (int)Math.Floor((double)offset / (double)YAxisSegmentDuration);
+		int res = (int)Math.Floor((double)offset / (double)YAxisSegmentDuration);
+		res = Math.Max(res, 0);
+		res = Math.Min(res, YAxisSegmentCount - 1);
+		return res;
 	}
 
 	protected virtual int GetTaskColummn(ObservableTask task) {
 		long offset = task.Start - IntervalStartSeconds;
 		if (offset < 0)
 			return 0;
-		return (int)Math.Floor(((double)offset % (double)YAxisSegmentDuration) / (double)XAxisSegmentDuration);
+		int res = (int)Math.Floor(((double)offset % (double)YAxisSegmentDuration) / (double)XAxisSegmentDuration);
+		res = Math.Max(res, 0);
+		res = Math.Min(res, XAxisSegmentCount - 1);
+		return res;
 	}
 
 	protected virtual Rect GetTaskRectangle(ObservableTask task, int[,] cellTaskCount, double additionalWidth, double additionalHeight) {
@@ -325,9 +300,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			return;
 		DrawBackground(context);
 		DrawTimeline(context);
-		DrawTodayMarker(context);
-		DrawTasks(context);
 		DrawColumnMarkers(context);
+		DrawTasks(context);
 		DrawMouseRectangle(context);
 	}
 
@@ -401,37 +375,22 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected abstract void DrawTimeline(DrawingContext context);
 
-	private void DrawTodayMarker(DrawingContext context) {
-		for (int row = 0; row < YAxisSegmentCount; row++) {
-			for (int column = 0; column < XAxisSegmentCount; column++) {
-				if (IsToday[row, column]) {
-					Brush brush = new SolidColorBrush(Color.FromArgb(255, 170, 170, 170));
-					var rect = new Rect(
-						PaddingX + column * XAxisSegmentSize + 2,
-						PaddingY + row * YAxisSegmentSize + 2,
-						XAxisSegmentSize - 4,
-						YAxisSegmentSize - 4);
-					context.FillRectangle(brush, rect);
-				}
-			}
-		}
-	}
-
 	private void DrawColumnMarkers(DrawingContext context) {
 		Brush markedBrush = new SolidColorBrush(Color.FromArgb(120, 120, 120, 240));
 		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
+		Brush todayBrush = new SolidColorBrush(Color.FromArgb(120, 130, 130, 130));
 		double y = PaddingY + 2;
 		double width = XAxisSegmentSize - 4;
 		double height = YAxisSegmentSize - 4;
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			double x = PaddingX + 2;
 			for (int column = 0; column < XAxisSegmentCount; column++) {
-				if (BlockedRows[row].Value)
-					if (BlockedColumns[column].Value)
-						context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
-				if (MarkedRows[row].Value)
-					if (MarkedColumns[column].Value)
-						context.FillRectangle(markedBrush, new Rect(x, y, width, height));
+				if (IsToday[row, column])
+					context.FillRectangle(todayBrush, new Rect(x, y, width, height));
+				if (IsBlocked[row, column].Value)
+					context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
+				if (IsMarked[row, column].Value)
+					context.FillRectangle(markedBrush, new Rect(x, y, width, height));
 				x += XAxisSegmentSize;
 			}
 			y += YAxisSegmentSize;
@@ -453,28 +412,24 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
 		base.OnPropertyChanged(change);
-		if (change.Property == MarkedColumnsProperty) {
-			if (change.OldValue is ObservableCollection<ObservableBool> oldList) {
+		if (change.Property == IsMarkedProperty) {
+			if (change.OldValue is ObservableBool[,] oldList) {
 				foreach (ObservableBool item in oldList)
 					item.PropertyChanged -= OnBoolValueChanged;
-				oldList.CollectionChanged -= OnBoolListChanged;
 			}
-			if (change.NewValue is ObservableCollection<ObservableBool> newList) {
+			if (change.NewValue is ObservableBool[,] newList) {
 				foreach (ObservableBool item in newList)
 					item.PropertyChanged += OnBoolValueChanged;
-				newList.CollectionChanged += OnBoolListChanged;
 			}
 			InvalidateVisual();
-		} else if (change.Property == BlockedColumnsProperty) {
-			if (change.OldValue is ObservableCollection<ObservableBool> oldList) {
+		} else if (change.Property == IsBlockedProperty) {
+			if (change.OldValue is ObservableBool[,] oldList) {
 				foreach (ObservableBool item in oldList)
 					item.PropertyChanged -= OnBoolValueChanged;
-				oldList.CollectionChanged -= OnBoolListChanged;
 			}
-			if (change.NewValue is ObservableCollection<ObservableBool> newList) {
+			if (change.NewValue is ObservableBool[,] newList) {
 				foreach (ObservableBool item in newList)
 					item.PropertyChanged += OnBoolValueChanged;
-				newList.CollectionChanged += OnBoolListChanged;
 			}
 			InvalidateVisual();
 		} else if (change.Property == TasksProperty) {
@@ -491,19 +446,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			InvalidateVisual();
 		} else if (change.Property == XAxisSegmentCountProperty | change.Property == YAxisSegmentCountProperty) {
 			Console.WriteLine($"resizing isToday array to ({YAxisSegmentCount}, {XAxisSegmentCount})");
-			IsToday = ResizeArray<bool>(IsToday, YAxisSegmentCount, XAxisSegmentCount);
+			IsToday = ArrayHelper.ResizeArray(IsToday, YAxisSegmentCount, XAxisSegmentCount, false);
 			InvalidateVisual();
 		}
-	}
-
-	private static T[,] ResizeArray<T>(T[,] original, int rows, int cols) {
-		var newArray = new T[rows, cols];
-		int minRows = Math.Min(rows, original.GetLength(0));
-		int minCols = Math.Min(cols, original.GetLength(1));
-		for(int i = 0; i<minRows; i++)
-			for(int j = 0; j<minCols; j++)
-			   newArray[i, j] = original[i, j];
-		return newArray;
 	}
 
 	private void OnBoolListChanged(object? sender, NotifyCollectionChangedEventArgs e) {
@@ -513,6 +458,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		if (e.NewItems != null)
 			foreach (ObservableBool item in e.NewItems)
 				item.PropertyChanged += OnBoolValueChanged;
+		InvalidateVisual();
 	}
 
 	private void OnBoolValueChanged(object? sender, PropertyChangedEventArgs e) {
@@ -570,10 +516,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			Math.Abs(MousePos.X - DragOrigin.X),
 			Math.Abs(MousePos.Y - DragOrigin.Y)
 		);
-		foreach (var flag in MarkedRows)
-			flag.Value = false;
-		foreach (var flag in MarkedColumns)
-			flag.Value = false;
 		if (RightMouseDown) {
 			var dragArgs = new MouseDraggingEventArgs(MarkerDragRectangle, GraphAreaWidth, GraphAreaHeight, PaddingX, PaddingY);
 			MouseDraggingCommand.Execute(dragArgs);
@@ -583,8 +525,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 				for (int column = 0; column < XAxisSegmentCount; column++) {
 					var segment = new Rect(xPos, yPos, XAxisSegmentSize, YAxisSegmentSize);
 					var intersects = MarkerDragRectangle.Intersects(segment);
-					MarkedRows[row].Value |= intersects;
-					MarkedColumns[column].Value |= intersects;
+					IsMarked[row, column].Value = intersects;
 					xPos += XAxisSegmentSize;
 				}
 				yPos += YAxisSegmentSize;

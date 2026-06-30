@@ -18,10 +18,8 @@
   
 	<UserControl.DataTemplates>
 		<DataTemplate DataType="graphModels:DayPanelViewModel">
-			<graphViews:DayPanelView MarkedRows="{ Binding MarkedRows }"
-									 MarkedColumns="{ Binding MarkedColumns }"
-									 BlockedRows="{ Binding BlockedRows }"
-									 BlockedColumns="{ Binding BlockedColumns }"
+			<graphViews:DayPanelView IsMarked="{ Binding IsMarked }"
+									 IsBlocked="{ Binding IsBlocked }"
 									 IsToday="{ Binding IsTodaySegment }"
 									 Tasks="{ Binding Tasks }"
 									 MaxCellTasks="7"
@@ -37,16 +35,15 @@
 									 MousePressedCommand="{ Binding MousePressedCommand }"
 									 MouseReleasedCommand="{ Binding MouseReleasedCommand }"
 									 MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									 MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
 									 ClickedCommand="{ Binding ClickedCommand }"
 									 TaskClickedCommand="{ Binding TaskClickedCommand }"
 									 LoadCommand="{ Binding LoadCommand }"
 									 UnloadCommand="{ Binding UnloadCommand }"/>
 		</DataTemplate>
 		<DataTemplate DataType="graphModels:WeekPanelViewModel">
-			<graphViews:WeekPanelView MarkedRows="{ Binding MarkedRows }"
-									  MarkedColumns="{ Binding MarkedColumns }"
-									  BlockedRows="{ Binding BlockedRows }"
-									  BlockedColumns="{ Binding BlockedColumns }"
+			<graphViews:WeekPanelView IsMarked="{ Binding IsMarked }"
+									  IsBlocked="{ Binding IsBlocked }"
 									  IsToday="{ Binding IsTodaySegment }"
 									  Tasks="{ Binding Tasks }"
 									  MaxCellTasks="10"
@@ -62,16 +59,15 @@
 									  MousePressedCommand="{ Binding MousePressedCommand }"
 									  MouseReleasedCommand="{ Binding MouseReleasedCommand }"
 									  MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									  MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
 									  ClickedCommand="{ Binding ClickedCommand }"
 									  TaskClickedCommand="{ Binding TaskClickedCommand }"
 									  LoadCommand="{ Binding LoadCommand }"
 									  UnloadCommand="{ Binding UnloadCommand }"/>
 		</DataTemplate>
 		<DataTemplate DataType="graphModels:MonthPanelViewModel">
-			<graphViews:MonthPanelView MarkedRows="{ Binding MarkedRows }"
-									   MarkedColumns="{ Binding MarkedColumns }"
-									   BlockedRows="{ Binding BlockedRows }"
-									   BlockedColumns="{ Binding BlockedColumns }"
+			<graphViews:MonthPanelView IsMarked="{ Binding IsMarked }"
+									   IsBlocked="{ Binding IsBlocked }"
 									   IsToday="{ Binding IsTodaySegment }"
 									   Tasks="{ Binding Tasks }"
 									   MaxCellTasks="7"
@@ -87,6 +83,7 @@
 									   MousePressedCommand="{ Binding MousePressedCommand }"
 									   MouseReleasedCommand="{ Binding MouseReleasedCommand }"
 									   MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									   MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
 									   ClickedCommand="{ Binding ClickedCommand }"
 									   TaskClickedCommand="{ Binding TaskClickedCommand }"
 									   LoadCommand="{ Binding LoadCommand }"

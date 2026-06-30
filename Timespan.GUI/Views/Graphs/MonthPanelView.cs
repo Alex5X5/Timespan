@@ -26,6 +26,20 @@ public partial class MonthPanelView : GraphPanelViewBase {
 	public MonthPanelView() : base() {
 	}
 
+	protected override int GetTaskRow(ObservableTask task) {
+		int res = DateTimeService.WeekOfMonth(task.StartDateTime);
+		res = Math.Max(res, 0);
+		res = Math.Min(res, YAxisSegmentCount - 1);
+		return res;
+	}
+
+	protected override int GetTaskColummn(ObservableTask task) {
+		int res = DateTimeService.DayOfWorkWeek(task.StartDateTime);
+		res = Math.Max(res, 0);
+		res = Math.Min(res, XAxisSegmentCount - 1);
+		return res;
+	}
+
 	protected override void DrawTimeline(DrawingContext context) {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
@@ -46,7 +60,7 @@ public partial class MonthPanelView : GraphPanelViewBase {
 			context.DrawLine(hintLine, new Point(PaddingX, yPos), new Point(Bounds.Width - PaddingX, yPos));
 		}
 
-		double textSize = Math.Round(PaddingY * 0.7, 1);
+		double textSize = ArialHeightToPt(PaddingY * 0.7);
 		for (int i = 0; i < YAxisSegmentCount; i++) {
 			double xPos = XAxisSegmentSize * i + PaddingX;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, PaddingY));
@@ -89,9 +103,5 @@ public partial class MonthPanelView : GraphPanelViewBase {
 				);
 			}
 		}
-	}
-
-	protected override int GetTaskRow(ObservableTask task) {
-		return DateTimeService.WeekOfMonth(task.StartDateTime) - 1;
 	}
 }

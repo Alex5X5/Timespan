@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
+using Timespan.GUI.Helpers;
 using Timespan.GUI.Interfaces;
 using Timespan.GUI.Services;
 using Timespan.GUI.Services.Mapping;
@@ -22,24 +24,29 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#region observable properties
 
-	[ObservableProperty]
-	public partial ObservableCollection<ObservableBool> MarkedRows { set; get; }
+	//[ObservableProperty]
+	//public partial ObservableCollection<ObservableBool> MarkedRows { set; get; }
 
-	[ObservableProperty]
-	public partial ObservableCollection<ObservableBool> BlockedRows { set; get; }
+	//[ObservableProperty]
+	//public partial ObservableCollection<ObservableBool> BlockedRows { set; get; }
 
-	[ObservableProperty]
-	public partial ObservableCollection<ObservableBool> MarkedColumns { set; get; }
+	//[ObservableProperty]
+	//public partial ObservableCollection<ObservableBool> MarkedColumns { set; get; }
 
-	[ObservableProperty]
-	public partial ObservableCollection<ObservableBool> BlockedColumns { set; get; }
+	//[ObservableProperty]
+	//public partial ObservableCollection<ObservableBool> BlockedColumns { set; get; }
 
 	[ObservableProperty]
 	public partial ObservableCollection<ObservableTask> Tasks { set; get; }
 
 	[ObservableProperty]
-	private bool[,] isTodaySegment = new bool[0,0];
+	private bool[,] isTodaySegment = new bool[0, 0];
 
+	[ObservableProperty]
+	private ObservableBool[,] isBlocked;
+
+	[ObservableProperty]
+	private ObservableBool[,] isMarked;
 
 	[ObservableProperty]
 	private double extraClickSize = 1;
@@ -87,35 +94,20 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		TimeIntervallStartSeconds = start;
 		TimeIntervallStopSeconds = finish;
 		XAxisSegmentDuration = duration;
-		MarkedRows = new();
-		BlockedRows = new();
-		MarkedColumns = new();
-		BlockedColumns = new();
 		XAxisSegmentCount = columns;
 		YAxisSegmentCount = rows;
 		TaskGridRowCount = taskRows;
 		TaskGridColumnCount = taskColumns;
 		IsTodaySegment = new bool[YAxisSegmentCount, XAxisSegmentCount];
+		IsBlocked = new ObservableBool[YAxisSegmentCount, XAxisSegmentCount];
+		IsMarked = new ObservableBool[YAxisSegmentCount, XAxisSegmentCount];
+		IsTodaySegment = new bool[YAxisSegmentCount, XAxisSegmentCount];
 		for (int row = 0; row < YAxisSegmentCount; row++)
 			for (int column = 0; column < XAxisSegmentCount; column++) {
 				IsTodaySegment[row, column] = IsToday(row, column);
+				IsBlocked[row, column] = new(false);
+				IsMarked[row, column] = new(false);
 			}
-		for (int i = 0; i < MarkedRows.Count; i++) {
-			MarkedRows[i] = new(false);
-			MarkedRows[i] = new(false);
-		}
-		for (int i = 0; i < BlockedRows.Count; i++) {
-			BlockedRows[i] = new(false);
-			BlockedRows[i] = new(false);
-		}
-		for (int i = 0; i < MarkedColumns.Count; i++) {
-			MarkedColumns[i] = new(false);
-			MarkedColumns[i] = new(false);
-		}
-		for (int i = 0; i < BlockedColumns.Count; i++) {
-			BlockedColumns[i] = new(false);
-			BlockedColumns[i] = new(false);
-		}
 		suspendRendering = false;
 		Tasks = new();
 	}
@@ -134,12 +126,12 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	[RelayCommand]
 	protected virtual void OnLoad() {
-		UpdateColumnMarkers();
 		GlobalEventService.Subscribe<IntervallChangedEventArgs>(OnIntervallChanged);
 		GlobalEventService.Subscribe<TasksChangedEventArgs>(OnTasksChanged);
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		GlobalEventService.Raise<TasksChangedEventArgs>();
+		UpdateColumnMarkers();
 	}
 
 	[RelayCommand]
@@ -161,15 +153,16 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	}
 
 	[RelayCommand]
-	protected async Task OnMissingContextMenuClicked(Timespan.Types.Models.BlockedTimeIntervallType reason) {
-		await SetTimeIntervallBlocked(reason);
+	protected async Task OnMissingContextMenuClicked(MissingContextClickedEventArgs args) {
+		await SetTimeIntervallBlocked(args.Reason);
 	}
 
 	[RelayCommand]
 	protected virtual void OnMousePressed(MousePressedEventArgs args) {
 		if (!args.Right)
-			for (int i = 0; i < XAxisSegmentCount; i++)
-				MarkedColumns[i].Value = false;
+			for (int row = 0; row < YAxisSegmentCount; row++)
+				for (int column = 0; column < XAxisSegmentCount; column++)
+					IsMarked[row, column].Value = false;
 	}
 
 	[RelayCommand]
@@ -186,6 +179,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	#region property changed events
 
 	protected virtual void OnIntervallChanged(IntervallChangedEventArgs args) {
+		cacheService.SelectedDay = FloorIntervall(cacheService.SelectedDay);
 		SelectedDay = cacheService.SelectedDay;
 		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
 		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
@@ -212,37 +206,17 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected abstract DateTime CeilIntervall(DateTime date);
 
 	partial void OnXAxisSegmentCountChanged(long value) {
-		suspendRendering = true;
-		if (MarkedColumns != null) {
-			while (MarkedColumns.Count > value)
-				MarkedColumns.RemoveAt(MarkedColumns.Count - 1);
-			while (MarkedColumns.Count < value)
-				MarkedColumns.Add(new ObservableBool(false));
-		}
-		if (BlockedColumns != null) {
-			while (BlockedColumns.Count > value)
-				BlockedColumns.RemoveAt(BlockedColumns.Count - 1);
-			while (BlockedColumns.Count < value)
-				BlockedColumns.Add(new ObservableBool(false));
-		}
-		suspendRendering = false;
+		SuspendRendering = true;
+		IsMarked = ArrayHelper.ResizeArray(IsMarked, (int)YAxisSegmentCount, (int)XAxisSegmentCount, (r, c) => new(false));
+		IsBlocked = ArrayHelper.ResizeArray(IsBlocked, (int)YAxisSegmentCount, (int)XAxisSegmentCount, (r, c) => new(false));
+		SuspendRendering = false;
 	}
 
 	partial void OnYAxisSegmentCountChanged(long value) {
-		suspendRendering = true;
-		if (MarkedRows != null) {
-			while (MarkedRows.Count > value)
-				MarkedRows.RemoveAt(MarkedRows.Count - 1);
-			while (MarkedRows.Count < value)
-				MarkedRows.Add(new ObservableBool(false));
-		}
-		if (BlockedRows != null) {
-			while (BlockedRows.Count > value)
-				BlockedRows.RemoveAt(BlockedRows.Count - 1);
-			while (BlockedRows.Count < value)
-				BlockedRows.Add(new ObservableBool(false));
-		}
-		suspendRendering = false;
+		SuspendRendering = true;
+		IsMarked = ArrayHelper.ResizeArray(IsMarked, (int)YAxisSegmentCount, (int)XAxisSegmentCount, (r, c) => new(false));
+		IsBlocked = ArrayHelper.ResizeArray(IsBlocked, (int)YAxisSegmentCount, (int)XAxisSegmentCount, (r, c) => new(false));
+		SuspendRendering = false;
 	}
 
 	#endregion
@@ -253,12 +227,14 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		long start = TimeIntervallStartSeconds;
 		long finish = start + XAxisSegmentDuration;
 		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			BlockedColumns[i].Value = tasks
-				.Where(x => x.start >= start && x.start <= finish)
-					.FirstOrDefault(x => x.finish >= start && x.finish <= finish) != null;
-			start += XAxisSegmentDuration;
-			finish += XAxisSegmentDuration;
+		for (int row = 0; row < YAxisSegmentCount; row++) {
+			for (int column = 0; column < XAxisSegmentCount; column++) {
+				IsBlocked[row, column].Value = tasks
+					.Where(x => x.start >= start && x.start <= finish)
+						.FirstOrDefault(x => x.finish >= start && x.finish <= finish) != null;
+				start += XAxisSegmentDuration;
+				finish += XAxisSegmentDuration;
+			}
 		}
 	}
 
@@ -270,17 +246,19 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		long start = TimeIntervallStartSeconds;
 		long finish = start + XAxisSegmentDuration;
 		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			if (MarkedColumns[i].Value) {
-				IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
-					.Where(x => x.start >= start && x.start <= finish)
-						.Where(x => x.finish >= start && x.finish <= finish);
-				if (!tasks_.Any()) {
-					await dbService.CreateIntervallBlockingTaskAsync(reason, new DateTime(start * TimeSpan.TicksPerSecond), XAxisSegmentDuration);
+		for (int row = 0; row < YAxisSegmentCount; row++) {
+			for (int column = 0; column < XAxisSegmentCount; column++) {
+				if (IsMarked[row, column].Value) {
+					IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
+						.Where(x => x.start >= start && x.start <= finish)
+							.Where(x => x.finish >= start && x.finish <= finish);
+					if (!tasks_.Any()) {
+						await dbService.CreateIntervallBlockingTaskAsync(reason, new DateTime(start * TimeSpan.TicksPerSecond), XAxisSegmentDuration - 1);
+					}
 				}
+				start += XAxisSegmentDuration;
+				finish += XAxisSegmentDuration;
 			}
-			start += XAxisSegmentDuration;
-			finish += XAxisSegmentDuration;
 		}
 		UpdateColumnMarkers();
 	}
@@ -289,16 +267,22 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 		long start = TimeIntervallStartSeconds;
 		long finish = start + XAxisSegmentDuration;
 		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
-		for (int i = 0; i < XAxisSegmentCount; i++) {
-			if (MarkedColumns[i].Value) {
-				IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
-					.Where(x => x.start >= start && x.start <= finish)
-						.Where(x => x.finish >= start && x.finish <= finish);
-				foreach (var task in tasks_)
-					await dbService.DeleteTaskAsync(task);
+		for (int row = 0; row < YAxisSegmentCount; row++) {
+			for (int column = 0; column < XAxisSegmentCount; column++) {
+				if (IsMarked[row, column].Value) {
+					IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
+						.Where(x => x.start >= start && x.start <= finish)
+							.Where(x => x.finish >= start && x.finish <= finish);
+					await Parallel.ForEachAsync(
+						tasks_,
+						async (task, token) => {
+							await dbService.DeleteTaskAsync(task);
+						});
+						
+				}
+				start += XAxisSegmentDuration;
+				finish += XAxisSegmentDuration;
 			}
-			start += XAxisSegmentDuration;
-			finish += XAxisSegmentDuration;
 		}
 		UpdateColumnMarkers();
 	}

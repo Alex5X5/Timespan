@@ -2,6 +2,7 @@ namespace Timespan.GUI.Views.Graphs;
 
 using Avalonia.Media;
 
+using Timespan.GUI.Types;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
 
@@ -25,20 +26,9 @@ public partial class WeekPanelView : GraphPanelViewBase {
 	public WeekPanelView() : base() {
 	}
 
-	//public Rect GetTaskRectanlge(Types.Task task, double additionalWidth, double additionalHeight, int i) {
-	//	double proportion = GRAPH_AREA_WIDTH / TIME_INTERVALL_DURATION;
-	//	double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
-	//	long duration = task.running ? DateTimeService.ToSeconds(DateTime.Now) - task.start : task.finish - task.start;
-	//	double graphLength = duration * proportion;
-	//	double width = Math.Max(graphLength, GRAPH_MINIMAL_WIDTH) + additionalWidth * 2;
-	//	Rect res = new(
-	//		graphPosX - additionalWidth,
-	//		Y_AXIS_SEGMENT_SIZE * (i % (MAX_TASKS / TASK_GRAPH_COLUMN_COUNT)) * 1.5 - additionalHeight + PADDING_Y,
-	//		width,
-	//		Y_AXIS_SEGMENT_SIZE + additionalHeight * 2
-	//	);
-	//	return res;
-	//}
+
+	private static double ArialHeightToPt(double height, double x = 1) =>
+		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
 	protected override void DrawTimeline(DrawingContext context) {
 		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));

@@ -4,6 +4,7 @@ using Avalonia.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using System.Linq;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
@@ -60,11 +61,31 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		return DateTimeService.CeilMonth(date);
 	}
 
+	protected override void UpdateColumnMarkers() {
+		long start = TimeIntervallStartSeconds;
+		long finish = start + XAxisSegmentDuration;
+		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
+		for (int row = 0; row < YAxisSegmentCount; row++) {
+			for (int column = 0; column < XAxisSegmentCount; column++) {
+				IsBlocked[row, column].Value = tasks
+					.Where(x => x.start >= start && x.start <= finish)
+						.Any(x => x.finish >= start && x.finish <= finish);
+				start += XAxisSegmentDuration;
+				finish += XAxisSegmentDuration;
+			}
+			start += XAxisSegmentDuration;
+			finish += XAxisSegmentDuration;
+			start += XAxisSegmentDuration;
+			finish += XAxisSegmentDuration;
+		}
+	}
+
 	protected override void OnIntervallChanged(IntervallChangedEventArgs args) {
+		cacheService.SelectedDay = FloorIntervall(cacheService.SelectedDay);
 		SelectedDay = cacheService.SelectedDay;
+		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
 		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
 		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
-		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
 		WeekOffset = dateTimeService.GetWeekCountAtDate(SelectedDay);
 		UpdateColumnMarkers();
 	}

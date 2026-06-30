@@ -33,10 +33,12 @@ public class DateTimeService {
 		return weeks;
 	}
 
-	public static int WeekOfMonth(DateTime date, DayOfWeek firstDayOfWeek = DayOfWeek.Monday) {
-		DateTime firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-		int offset = ((int)firstDayOfMonth.DayOfWeek - (int)firstDayOfWeek + 7) % 7;
-		return (int)Math.Ceiling((date.Day + offset) / 7.0);
+	public static int WeekOfMonth(DateTime date) {
+		DateTime firstWeek = FloorWeek(FloorMonth(date));
+		DateTime taskWeek = FloorWeek(date);
+		long diffSeconds = ToSeconds(taskWeek) - ToSeconds(firstWeek);
+		double weeks = (double)diffSeconds / 604800.0;
+		return (int)Math.Floor(weeks);
 	}
 
 
