@@ -255,7 +255,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
             }
 			dayCounter++;
 		}
-		data.TotalTime = DateTimeService.ToHourMinuteStringSinceMidnight(totalWeekSeconds);
+		data.TotalTime = DateTimeService.ToHourMinuteStringAbsolute(totalWeekSeconds);
 		int week = dateTimeService.GetWeekCountAtDate(selectedWeek);
         data.Week = Convert.ToString(week);
 		data.UserName = settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
