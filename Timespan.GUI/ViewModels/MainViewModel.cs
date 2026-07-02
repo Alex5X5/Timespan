@@ -53,10 +53,10 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	internal bool ExportSettingsButtonSelected =>
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<ExportSettingsViewModel>() ?? false;
 	
-	public MainViewModel(RedirectionService redirectionService, ViewModelFactory<IMainViewChild> factory, SettingsService settingsService) {
+	public MainViewModel(RedirectionService redirectionService, SettingsService settingsService) {
 		this.redirectionService = redirectionService;
 		this.settingsService = settingsService;
-		CurrentPageAnchor = new(factory);
+		CurrentPageAnchor = new RedirectionAnchor<IMainViewChild>();
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
 
 		CurrentPageAnchor.ModelChanged += OnPageChanged;

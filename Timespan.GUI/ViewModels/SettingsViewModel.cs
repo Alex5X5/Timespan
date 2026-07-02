@@ -22,7 +22,7 @@ public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 		this.scopeFactory = scopeFactory;
 		this.redirectionService = redirectionService;
 		this.settingsService = settingsService;
-		CurrentPageAnchor = new(factory, scopeFactory);
+		CurrentPageAnchor = new ScopedRedirectionAnchor<ISettingsViewChild>(scopeFactory);
 		redirectionService.Register<SettingsViewModel, ISettingsViewChild>(CurrentPageAnchor);
 		CurrentPageAnchor.ModelChanged += (from, to) => {
 			OnPropertyChanged(nameof(CurrentPage));

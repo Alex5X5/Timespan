@@ -18,8 +18,14 @@ using Timespan.GUI.ViewModels;
 using Timespan.GUI.ViewModels.Graphs;
 using Timespan.GUI.ViewModels.Settings;
 using Timespan.GUI.Views;
+using Timespan.GUI.Views.Graphs;
+using Timespan.GUI.Views.Settings;
 
 public partial class App : Application {
+
+	public static App Current => (App)Application.Current;
+
+    public IServiceProvider Services { private set; get; }
 
 	public override void Initialize() {
 		AvaloniaXamlLoader.Load(this);
@@ -45,36 +51,36 @@ public partial class App : Application {
 		instanciator.RegisterWindow<MainWindow>();
 
 		instanciator.AddContentBindingType<IGraphsViewChild>();
-		instanciator.RegisterPageTransient<DayPanelViewModel>();
-		instanciator.RegisterPageTransient<WeekPanelViewModel>();
-		instanciator.RegisterPageTransient<MonthPanelViewModel>();
+		instanciator.RegisterViewTransient<DayPanelView>();
+		instanciator.RegisterViewTransient<WeekPanelView>();
+		instanciator.RegisterViewTransient<MonthPanelView>();
 
 		instanciator.AddContentBindingType<IMainViewChild>();
-		instanciator.RegisterPageTransient<TimerViewModel>();
-		instanciator.RegisterPageSingleton<GraphsViewModel>();
-		instanciator.RegisterPageTransient<ExportViewModel>();
-		instanciator.RegisterPageSingleton<MainViewModel>();
+		instanciator.RegisterViewTransient<TimerView>();
+		instanciator.RegisterViewSingleton<GraphsView>();
+		instanciator.RegisterViewTransient<ExportView>();
+		instanciator.RegisterViewSingleton<MainView>();
 
 		instanciator.AddScopedContentBindingType<ISettingsViewChild>();
-		instanciator.RegisterPageScoped<GeneralSettingsViewModel>();
-		instanciator.RegisterPageScoped<UserDataSettingsViewModel>();
-		instanciator.RegisterPageScoped<AboutSettingsViewModel>();
-		instanciator.RegisterPageScoped<GraphicsSettingsViewModel>();
-		instanciator.RegisterPageScoped<ExportSettingsViewModel>();
-		instanciator.RegisterPageSingleton<SettingsViewModel>();
+		instanciator.RegisterViewScoped<GeneralSettingsView>();
+		instanciator.RegisterViewScoped<UserDataSettingsView>();
+		instanciator.RegisterViewScoped<AboutSettingsView>();
+		instanciator.RegisterViewScoped<GraphicsSettingsView>();
+		instanciator.RegisterViewScoped<ExportSettingsView>();
+		instanciator.RegisterViewSingleton<SettingsView>();
 
 
-		var services = instanciator.BuildPages();
+		Services = instanciator.BuildPages();
 
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
 			desktop.MainWindow = new MainWindow() {
-				DataContext = services.GetRequiredService<MainViewModel>(),
+				DataContext = Services.GetRequiredService<MainViewModel>(),
 				Title = "Timespan",
 				Icon = new WindowIcon(new Avalonia.Media.Imaging.Bitmap(PathService.AssetsPath("HourgalssIcon4.png")))
 			};
 		} else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform) {
 			singleViewPlatform.MainView = new MainView() {
-				DataContext = services.GetRequiredService<MainViewModel>()
+				DataContext = Services.GetRequiredService<MainViewModel>()
 			};
 		}
 

@@ -8,9 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 public class RedirectionService {
 
-
 	private interface IEntry { }
-
 
 	private sealed class Entry<TValue>(TValue value) : IEntry {
 		public TValue Value { get; set; } = value;
@@ -75,21 +73,16 @@ public partial class RedirectionAnchor<ChildT> : ObservableObject, IRedirectionA
 
 	public event Action<Type?, Type> ModelChanged = (from, to) => { };
 
-	private readonly ViewModelFactory<ChildT> factory;
-
-	public RedirectionAnchor(ViewModelFactory<ChildT> factory) {
-		this.factory = factory;
-	}
+	public RedirectionAnchor() { }
 
 	public bool IsActive<T>() =>
 		typeof(T) == CurrentModel?.GetType();
 
 	public void ChangeModel<T>(Action<T?>? afterChange=null) where T : ChildT {
 		lastModel = CurrentModel;
-		ChildT model = factory.BuildViewModel<T>();
-		CurrentModel = model;
+		CurrentModel = App.Current.Services.GetService<T>();
 		ModelChanged.Invoke(CurrentModel?.GetType(), typeof(T));
-		afterChange?.Invoke((T?)model);
+		afterChange?.Invoke((T?)CurrentModel);
 	}
 
 	public void GoBack() {
@@ -113,11 +106,9 @@ public partial class ScopedRedirectionAnchor<ChildT> : ObservableObject, IRedire
 
 	public event Action<Type?, Type> ModelChanged = (from, to) => { };
 
-	private readonly ScopedViewModelFactory<ChildT> factory;
 	private readonly IServiceScopeFactory scopeFactory;
 
-	public ScopedRedirectionAnchor(ScopedViewModelFactory<ChildT> factory, IServiceScopeFactory scopeFactory) {
-		this.factory = factory;
+	public ScopedRedirectionAnchor(IServiceScopeFactory scopeFactory) {
 		this.scopeFactory = scopeFactory;
 	}
 
@@ -136,10 +127,9 @@ public partial class ScopedRedirectionAnchor<ChildT> : ObservableObject, IRedire
 		if (scope == null)
 			throw new InvalidOperationException("can not change model while scope is null");
 		lastModel = CurrentModel;
-		ChildT model = factory.BuildViewModel<T>(scope);
-		CurrentModel = model;
+		CurrentModel = scope.ServiceProvider.GetService<T>();
 		ModelChanged.Invoke(CurrentModel?.GetType(), typeof(T));
-		afterChange?.Invoke((T?)model);
+		afterChange?.Invoke((T?)CurrentModel);
 	}
 
 	public void GoBack() {

@@ -2,8 +2,12 @@
 
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using System;
+
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public class PageInstanciator {
 
@@ -42,29 +46,35 @@ public class PageInstanciator {
 	}
 
 	public void RegisterWindow<T>() where T : Window {
-		serviceCollection.AddSingleton<T>();
+		var viewModelType = GetViewModelType(typeof(T));
+		serviceCollection.AddTransient(viewModelType);
 	}
 
-	public void RegisterPageSingleton<T>() where T : class {
-		serviceCollection.AddSingleton<T>();
+	private Type GetViewModelType(Type viewType) {
+		var viewModelTypeName = viewType.FullName!.Replace("View", "ViewModel");
+		var viewModelType = viewType.Assembly.GetType(viewModelTypeName);
+
+		if (viewModelType is null) {
+			throw new InvalidOperationException($"Could not find ViewModel type '{viewModelTypeName}' for view '{viewType.FullName}'.");
+		}
+
+		return viewModelType;
 	}
 
-	public void RegisterPageTransient<T>() where T : class {
-		serviceCollection.AddTransient<T>();
+	public void RegisterViewSingleton<T>() where T : class {
+		var viewModelType = GetViewModelType(typeof(T));
+		serviceCollection.AddSingleton(viewModelType);
 	}
 
-	public void RegisterPageScoped<T>() where T : class {
-		serviceCollection.AddScoped<T>();
+	public void RegisterViewTransient<T>() where T : class {
+		var viewModelType = GetViewModelType(typeof(T));
+		serviceCollection.AddTransient(viewModelType);
 	}
 
-	public void RegisterControl<ControlT>() where ControlT : class {
-		serviceCollection.AddTransient<ControlT>();
-		serviceCollection.AddSingleton<Func<ControlT>>(
-			(serviceProvider) => 
-				() => serviceProvider.GetService<ControlT>() ?? Activator.CreateInstance<ControlT>()
-		);
-        serviceCollection.AddSingleton<ComponentModelFactory<ControlT>>();
-    }
+	public void RegisterViewScoped<T>() where T : class {
+		var viewModelType = GetViewModelType(typeof(T));
+		serviceCollection.AddScoped(viewModelType);
+	}
 
 	public void AddContentBindingType<ContentBaseT>() {
 		serviceCollection.AddSingleton<Func<Type, ContentBaseT>>(

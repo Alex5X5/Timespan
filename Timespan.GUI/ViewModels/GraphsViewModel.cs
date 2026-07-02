@@ -64,10 +64,10 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	private GridLength taskPanelWidth = new(0, GridUnitType.Star);
 
-	public GraphsViewModel(RedirectionService redirectionService, ViewModelFactory<IGraphsViewChild> factory, IHourglassDbService dbService, Timespan.GUI.Services.CacheService cacheService) : base() {
+	public GraphsViewModel(RedirectionService redirectionService, IHourglassDbService dbService, Timespan.GUI.Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
-		CurrentPageAnchor = new RedirectionAnchor<IGraphsViewChild>(factory);
+		CurrentPageAnchor = new RedirectionAnchor<IGraphsViewChild>();
 		redirectionService.Register<GraphsViewModel, IGraphsViewChild>(CurrentPageAnchor);
 		CurrentPageAnchor.ModelChanged += (from, to) => {
 			OnPropertyChanged(nameof(CurrentPage));

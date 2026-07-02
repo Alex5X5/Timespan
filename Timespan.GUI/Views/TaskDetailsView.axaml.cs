@@ -73,6 +73,7 @@ public partial class TaskDetailsControl : UserControl {
 
 	public TaskDetailsControl() {
 		InitializeComponent();
+
 		AddHandler(LoadedEvent, OnLoad);
 		AddHandler(UnloadedEvent, OnUnload);
 	}

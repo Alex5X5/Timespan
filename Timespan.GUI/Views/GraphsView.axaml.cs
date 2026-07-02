@@ -2,6 +2,9 @@ using Avalonia.Interactivity;
 
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.Extensions.DependencyInjection;
+
+using Timespan.GUI.ViewModels;
 using Timespan.GUI.Views.Graphs;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
@@ -41,6 +44,7 @@ internal partial class GraphsView : UserControl {
         InitializeComponent();
 		AddHandler(LoadedEvent, OnLoad);
 		AddHandler(UnloadedEvent, OnUnload);
+		this.DataContext = App.Current.Services.GetService<GraphsViewModel>();
 	}
 
 	private void OnLoad(object? sender, RoutedEventArgs args) {

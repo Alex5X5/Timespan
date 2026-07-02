@@ -9,7 +9,7 @@
 			 x:CompileBindings="True"
 			 x:Class="Timespan.GUI.Controls.TaskDetailsControl">
 	<UserControl.Styles>
-		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/TaskDetailsControl.styles.axaml" />
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/TaskDetailsView.styles.axaml" />
 	</UserControl.Styles>
 
 	<Panel>
