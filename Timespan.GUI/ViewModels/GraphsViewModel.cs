@@ -1,20 +1,24 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
+using Avalonia.Controls.Documents;
+using Avalonia.Threading;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.AspNetCore.Mvc;
+
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
+using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Graphs;
 using Timespan.Util.Services;
-using System.Linq;
-using Avalonia.Threading;
-using Timespan.GUI.Services.Mapping;
 
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
@@ -97,25 +101,56 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	[RelayCommand]
-	internal async Task DeleteTask() {
+	internal async Task DeleteTask(Timespan.Types.Models.Task task) {
 		HideTask();
-		await dbService.DeleteTaskAsync(cacheService.SelectedTask);
-		await Task.Run(GlobalEventService.Raise<TasksChangedEventArgs>);
+		await dbService.DeleteTaskAsync(task);
+		await RaiseTaskChangedAsync();
+	}
+
+	[RelayCommand]
+	private async Task StartTask(Timespan.Types.Models.Task task) {
+		Console.WriteLine("start task button click!");
+		if (dbService != null)
+			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
+			   task.description,
+			   task.DisplayColor,
+			   task.project,
+			   task.owner,
+			   task.ticket
+		   );
+		await RaiseTaskChangedAsync();
+	}
+
+	[RelayCommand]
+	private async Task StopTask(Timespan.Types.Models.Task task) {
+		task.running = false;
+		await dbService.UpdateTaskAsync(task);
+		await FetchAndShowAsync(task);
+		await RaiseTaskChangedAsync();
+	}
+
+	[RelayCommand]
+	private async Task RestartTask(Timespan.Types.Models.Task task) {
+		Console.WriteLine("start new button click!");
+		await StopTask(task);
+		await StartTask(task);
+		cacheService.RunningTask = task;
+		await dbService.UpdateTaskAsync(cacheService.RunningTask);
+	}
+
+	[RelayCommand]
+	private async Task ContiniueTask(Timespan.Types.Models.Task task) {
+		Console.WriteLine("continiue task button click!");
+		await dbService.ContiniueTaskAsync(task);
+		await FetchAndShowAsync(task);
+		await RaiseTaskChangedAsync();
 	}
 
 	[RelayCommand]
 	internal async Task SaveTaskChanges(Timespan.Types.Models.Task task) {
 		await dbService.UpdateTaskAsync(task);
-		var refetchedTask = (await dbService.QueryTasksAsync()).First(x => x.Id == task.Id);
-		await Task.Run(
-		() => {
-			Dispatcher.UIThread.Invoke(
-				() => {
-					cacheService.SelectedTask = refetchedTask;
-					GlobalEventService.Raise<ShowTaksEventArgs>(new ShowTaksEventArgs(refetchedTask));
-					GlobalEventService.Raise<TasksChangedEventArgs>();
-				});
-		});
+		await FetchAndShowAsync(task);
+		await RaiseTaskChangedAsync();
 	}
 
 	[RelayCommand]
@@ -183,5 +218,22 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	private void UpdateIntervall(IntervallChangedEventArgs args) {
 		DateString = CurrentPage?.GetDateString() ?? "Date";
+	}
+
+	private async Task RaiseTaskChangedAsync() {
+		Action callback = () => Dispatcher.UIThread.Invoke(GlobalEventService.Raise<TasksChangedEventArgs>);
+		await Task.Run(callback);
+	}
+
+	private async Task FetchAndShowAsync(Timespan.Types.Models.Task task) {
+		var refetchedTask = (await dbService.QueryTasksAsync()).First(x => x.Id == task.Id);
+		await Task.Run(
+			() => {
+				Dispatcher.UIThread.Invoke(
+					() => {
+						cacheService.SelectedTask = refetchedTask;
+						GlobalEventService.Raise(new ShowTaksEventArgs(refetchedTask));
+					});
+			});
 	}
 }

@@ -250,6 +250,9 @@
 										 SelectedTask="{Binding ShowingTask}"
 										 CloseCommand="{Binding HideTaskCommand}"
 										 SaveCommand="{Binding SaveTaskChangesCommand}"
+										 ContiniueCommand="{Binding ContiniueTaskCommand}"
+										 StopCommand="{Binding StopTaskCommand}"
+										 RestartCommand="{Binding RestartTaskCommand}"
 										 DeleteCommand="{Binding DeleteTaskCommand}"/>
 		</Grid>
 	</Grid>

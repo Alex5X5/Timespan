@@ -61,15 +61,22 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		return DateTimeService.CeilMonth(date);
 	}
 
-	protected override void UpdateColumnMarkers() {
+	protected override void OnIntervallChanged(IntervallChangedEventArgs args) {
+		cacheService.SelectedDay = FloorIntervall(cacheService.SelectedDay);
+		SelectedDay = cacheService.SelectedDay;
+		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
+		WeekOffset = dateTimeService.GetWeekCountAtDate(SelectedDay);
+		UpdateColumnMarkers();
+	}
+
+	protected override void ForeachCell(List<Timespan.Types.Models.Task> tasks, Action<int, int, long, long, List<Timespan.Types.Models.Task>> callback) {
 		long start = TimeIntervallStartSeconds;
 		long finish = start + XAxisSegmentDuration;
-		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
-				IsBlocked[row, column].Value = tasks
-					.Where(x => x.start >= start && x.start <= finish)
-						.Any(x => x.finish >= start && x.finish <= finish);
+				callback(row, column, start, finish, tasks);
 				start += XAxisSegmentDuration;
 				finish += XAxisSegmentDuration;
 			}
@@ -80,15 +87,6 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		}
 	}
 
-	protected override void OnIntervallChanged(IntervallChangedEventArgs args) {
-		cacheService.SelectedDay = FloorIntervall(cacheService.SelectedDay);
-		SelectedDay = cacheService.SelectedDay;
-		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
-		WeekOffset = dateTimeService.GetWeekCountAtDate(SelectedDay);
-		UpdateColumnMarkers();
-	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(DateTimeService.FloorMonth(cacheService.SelectedDay)) : [];

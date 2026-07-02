@@ -25,7 +25,16 @@ public partial class TaskDetailsControl : UserControl {
 	private IRelayCommand<Timespan.Types.Models.Task> saveCommand;
 
 	[BasicStyledProperty<TaskDetailsControl>]
-	private IRelayCommand deleteCommand;
+	private IRelayCommand<Timespan.Types.Models.Task> continiueCommand;
+
+	[BasicStyledProperty<TaskDetailsControl>]
+	private IRelayCommand<Timespan.Types.Models.Task> stopCommand;
+
+	[BasicStyledProperty<TaskDetailsControl>]
+	private IRelayCommand<Timespan.Types.Models.Task> restartCommand;
+
+	[BasicStyledProperty<TaskDetailsControl>]
+	private IRelayCommand<Timespan.Types.Models.Task> deleteCommand;
 
 	[BasicDirectProperty<TaskDetailsControl>]
 	private string title = "A Title";
@@ -54,6 +63,12 @@ public partial class TaskDetailsControl : UserControl {
 	[BasicDirectProperty<TaskDetailsControl>]
 	private bool showEditTaskPanel = false;
 
+	[BasicDirectProperty<TaskDetailsControl>]
+	private bool taskRunning = false;
+
+	[BasicDirectProperty<TaskDetailsControl>]
+	private bool taskNotRunning = true;
+
 	#endregion
 
 	public TaskDetailsControl() {
@@ -63,26 +78,14 @@ public partial class TaskDetailsControl : UserControl {
 	}
 
 	public void EditButtonClick(object sender, RoutedEventArgs e) {
-		ShowReadonlyTaskPanel = false;
-		ShowEditTaskPanel = true;
+		SetEdit();
 		InvalidateVisual();
 	}
 
 	public void SaveButtonClick(object sender, RoutedEventArgs e) {
-		ShowReadonlyTaskPanel = true;
-		ShowEditTaskPanel = false;
+		SetReadonly();
 		InvalidateVisual();
-		var start = DateTimeService.InterpretDayAndTimeString(StartTextboxText) ?? SelectedTask.StartDateTime;
-		var finish = DateTimeService.InterpretDayAndTimeString(FinishTextboxText) ?? SelectedTask.FinishDateTime;
-		Timespan.Types.Models.Task task = new() {
-			Id = SelectedTask.Id,
-			description = Description,
-			start = DateTimeService.ToSeconds(start),
-			finish = DateTimeService.ToSeconds(finish),
-			running = SelectedTask.Running,
-			blocksTime = Timespan.Types.Models.BlockedTimeIntervallType.None,
-			DisplayColor = SelectedColor
-		};
+		Timespan.Types.Models.Task task = BuildTaskFromState();
 		if (SaveCommand.CanExecute(task))
 			SaveCommand.Execute(task);
 	}
@@ -92,17 +95,33 @@ public partial class TaskDetailsControl : UserControl {
 			if (CloseCommand.CanExecute(EventArgs.Empty))
 				CloseCommand.Execute(EventArgs.Empty);
 		} else {
-			ShowReadonlyTaskPanel = true;
-			ShowEditTaskPanel = false;
+			SetReadonly();
 			InsertSelectedTaskData();
 		}
 	}
 
 	public void DeleteButtonClick(object sender, RoutedEventArgs e) {
-		ShowReadonlyTaskPanel = true;
-		ShowEditTaskPanel = false;
-		if (DeleteCommand.CanExecute(EventArgs.Empty))
-			DeleteCommand.Execute(EventArgs.Empty);
+		SetReadonly();
+		DeleteCommand.Execute(SelectedTask.Value);
+	}
+
+	public void ContiniueButtonClick(object sender, RoutedEventArgs e) {
+		SetReadonly();
+		Timespan.Types.Models.Task task = BuildTaskFromState();
+		if (ContiniueCommand.CanExecute(task))
+			ContiniueCommand.Execute(task);
+	}
+
+	public void StopButtonClick(object sender, RoutedEventArgs e) {
+		Timespan.Types.Models.Task task = BuildTaskFromState();
+		if (StopCommand.CanExecute(task))
+			StopCommand.Execute(task);
+	}
+
+	public void RestartButtonClick(object sender, RoutedEventArgs e) {
+		Timespan.Types.Models.Task task = BuildTaskFromState();
+		if (RestartCommand.CanExecute(task))
+			RestartCommand.Execute(task);
 	}
 
 	private void OnLoad(object? sender, RoutedEventArgs args) {
@@ -121,14 +140,29 @@ public partial class TaskDetailsControl : UserControl {
 	}
 
 	private void OnShowTask(ShowTaksEventArgs args) {
-		ShowReadonlyTaskPanel = true;
-		ShowEditTaskPanel = false;
+		SetReadonly();
 		InsertSelectedTaskData();
+	}
+
+	private Timespan.Types.Models.Task BuildTaskFromState() {
+		var start = DateTimeService.InterpretDayAndTimeString(StartTextboxText) ?? SelectedTask.StartDateTime;
+		var finish = DateTimeService.InterpretDayAndTimeString(FinishTextboxText) ?? SelectedTask.FinishDateTime;
+		return new() {
+			Id = SelectedTask.Id,
+			description = Description,
+			start = DateTimeService.ToSeconds(start),
+			finish = DateTimeService.ToSeconds(finish),
+			running = SelectedTask.Running,
+			blocksTime = Timespan.Types.Models.BlockedTimeIntervallType.None,
+			DisplayColor = SelectedColor
+		};
 	}
 
 	private void InsertSelectedTaskData() {
 		if (SelectedTask == null)
 			return;
+		TaskRunning = SelectedTask.Running;
+		TaskNotRunning = !SelectedTask.Running;
 		Description = SelectedTask.Description;
 		Title = TaskHelper.GetTitleString(SelectedTask.Description);
 		DateString = GetDateString(SelectedTask.StartDateTime);
@@ -136,10 +170,6 @@ public partial class TaskDetailsControl : UserControl {
 		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.StartDateTime);
 		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.FinishDateTime);
 		SelectedColor = SelectedTask.DisplayColor;
-	}
-
-	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) {
-		base.OnPropertyChanged(change);
 	}
 
 	private static string GetDateString(DateTime date) {
@@ -152,5 +182,15 @@ public partial class TaskDetailsControl : UserControl {
 		string start_ = DateTimeService.ToHourMinuteString(start);
 		string stop_ = DateTimeService.ToHourMinuteString(stop);
 		return $"{start_} - {stop_}";
+	}
+
+	private void SetReadonly() {
+		ShowReadonlyTaskPanel = true;
+		ShowEditTaskPanel = false;
+	}
+
+	private void SetEdit() {
+		ShowReadonlyTaskPanel = false;
+		ShowEditTaskPanel = true;
 	}
 }

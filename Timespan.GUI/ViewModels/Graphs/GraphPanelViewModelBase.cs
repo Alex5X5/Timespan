@@ -1,7 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿namespace Timespan.GUI.ViewModels.Graphs;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,8 +14,6 @@ using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
-
-namespace Timespan.GUI.ViewModels.Graphs;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
 
@@ -224,18 +223,14 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	#region marked rows and columns
 
 	protected virtual void UpdateColumnMarkers() {
-		long start = TimeIntervallStartSeconds;
-		long finish = start + XAxisSegmentDuration;
 		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
-		for (int row = 0; row < YAxisSegmentCount; row++) {
-			for (int column = 0; column < XAxisSegmentCount; column++) {
-				IsBlocked[row, column].Value = tasks
-					.Where(x => x.start >= start && x.start <= finish)
-						.FirstOrDefault(x => x.finish >= start && x.finish <= finish) != null;
-				start += XAxisSegmentDuration;
-				finish += XAxisSegmentDuration;
-			}
-		}
+		ForeachCell(tasks, UpdateCellMarked);
+	}
+
+	private void UpdateCellMarked(int row, int column, long start, long finish, List<Timespan.Types.Models.Task> tasks) {
+		IsBlocked[row, column].Value = tasks
+			.Where(x => x.start >= start && x.start <= finish)
+				.FirstOrDefault(x => x.finish >= start && x.finish <= finish) != null;
 	}
 
 	protected virtual async Task SetTimeIntervallBlocked(Timespan.Types.Models.BlockedTimeIntervallType reason) {
@@ -243,48 +238,48 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 			await SetTimeIntervallUnblocked();
 			return;
 		}
-		long start = TimeIntervallStartSeconds;
-		long finish = start + XAxisSegmentDuration;
 		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
-		for (int row = 0; row < YAxisSegmentCount; row++) {
-			for (int column = 0; column < XAxisSegmentCount; column++) {
-				if (IsMarked[row, column].Value) {
-					IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
-						.Where(x => x.start >= start && x.start <= finish)
-							.Where(x => x.finish >= start && x.finish <= finish);
-					if (!tasks_.Any()) {
-						await dbService.CreateIntervallBlockingTaskAsync(reason, new DateTime(start * TimeSpan.TicksPerSecond), XAxisSegmentDuration - 1);
-					}
-				}
-				start += XAxisSegmentDuration;
-				finish += XAxisSegmentDuration;
-			}
-		}
+		ForeachCell(tasks, (row, col, start, finish, task)=>SetCellBlocked(row, col, start, finish, task, reason));
 		UpdateColumnMarkers();
 	}
 
+	private void SetCellBlocked(int row, int column, long start, long finish, List<Timespan.Types.Models.Task> tasks, Timespan.Types.Models.BlockedTimeIntervallType reason) {
+		if (IsMarked[row, column].Value) {
+			IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
+				.Where(x => x.start >= start && x.start <= finish)
+					.Where(x => x.finish >= start && x.finish <= finish);
+			if (!tasks_.Any()) {
+				dbService.CreateIntervallBlockingTaskAsync(reason, new DateTime(start * TimeSpan.TicksPerSecond), XAxisSegmentDuration - 1);
+			}
+		}
+	}
+
 	protected virtual async Task SetTimeIntervallUnblocked() {
+		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
+		ForeachCell(tasks, SetCellUnblocked);
+		UpdateColumnMarkers();
+	}
+
+	private void SetCellUnblocked(int row, int column, long start, long finish, List<Timespan.Types.Models.Task> tasks) {
+		if (IsMarked[row, column].Value) {
+			IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
+				.Where(x => x.start >= start && x.start <= finish)
+					.Where(x => x.finish >= start && x.finish <= finish);
+			foreach (var task in tasks_)
+				dbService.DeleteTaskAsync(task);
+		}
+	}
+
+	protected virtual void ForeachCell(List<Timespan.Types.Models.Task> tasks, Action<int, int, long, long, List<Timespan.Types.Models.Task>> callback) {
 		long start = TimeIntervallStartSeconds;
 		long finish = start + XAxisSegmentDuration;
-		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
-				if (IsMarked[row, column].Value) {
-					IEnumerable<Timespan.Types.Models.Task> tasks_ = tasks
-						.Where(x => x.start >= start && x.start <= finish)
-							.Where(x => x.finish >= start && x.finish <= finish);
-					await Parallel.ForEachAsync(
-						tasks_,
-						async (task, token) => {
-							await dbService.DeleteTaskAsync(task);
-						});
-						
-				}
+				callback(row, column, start, finish, tasks);
 				start += XAxisSegmentDuration;
 				finish += XAxisSegmentDuration;
 			}
 		}
-		UpdateColumnMarkers();
 	}
 
 	#endregion
