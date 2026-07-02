@@ -6,13 +6,17 @@ using System.Runtime.InteropServices;
 
 
 public unsafe partial class PdfService {
-	
-	public void BufferFieldValueUnsafe(string indexName, string value) {
+
+	private void BufferValue(string indexName, string value) {
+		BufferFieldValueUnsafe(indexName, value);
+		BufferAnnotationValueUnsafe(indexName, value);
+	}
+
+	private void BufferFieldValueUnsafe(string indexName, string value) {
 		InsertOperations[$"%%index-{indexName}-field"] = value;
 	}
 
-
-	public void BufferAnnotationValueUnsafe(string indexName, string value) {
+	private void BufferAnnotationValueUnsafe(string indexName, string value) {
 		InsertOperations[$"%%index-{indexName}-annotation"] = value;
 	}
 
@@ -58,9 +62,15 @@ public unsafe partial class PdfService {
 	}
 
 	private ValueTuple<string, string, string> BuildTuple(string dayName, int lineIndex) {
-		InsertOperations.TryGetValue($"%%index-{dayName}_line_{lineIndex}", out string? line);
-		InsertOperations.TryGetValue($"%%index-{dayName}_hour_{lineIndex}", out string? hour);
-		InsertOperations.TryGetValue($"%%index-{dayName}_hour_range_{lineIndex}", out string? range);
-		return new ValueTuple<string, string, string>(line ?? "", hour ?? "", range ?? "");
+		string line = "";
+		string hour = "";
+		string range = "";
+		if (InsertOperations.TryGetValue($"%%index-{dayName}_line_{lineIndex}", out string? line_))
+			line = line_!;
+		if (InsertOperations.TryGetValue($"%%index-{dayName}_hour_{lineIndex}", out string? hour_))
+			hour = hour_!;
+		if (InsertOperations.TryGetValue($"%%index-{dayName}_hour_range_{lineIndex}", out string? range_))
+			range = range_!;
+		return new ValueTuple<string, string, string>(line, hour, range);
 	}
 }

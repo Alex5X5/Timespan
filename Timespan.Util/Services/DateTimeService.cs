@@ -161,14 +161,21 @@ public class DateTimeService {
 	public static string ToHourMinuteString(DateTime date) =>
 		ToHourMinuteStringBase(date.Minute, date.Hour);
 
-	public static string ToHourMinuteString(long totalSeconds) {
-		long hours = (totalSeconds % TimeSpan.SecondsPerDay) / TimeSpan.SecondsPerHour;
-		long minutes = ((totalSeconds % TimeSpan.SecondsPerDay) % TimeSpan.SecondsPerHour) / TimeSpan.SecondsPerMinute;
+	public static string ToHourMinuteStringAbsolute(long totalSeconds) {
+		long hours = totalSeconds / TimeSpan.SecondsPerHour;
+		long minutes = (totalSeconds % TimeSpan.SecondsPerHour) / TimeSpan.SecondsPerMinute;
+		return ToHourMinuteStringBase(minutes, hours);
+	}
+
+	public static string ToHourMinuteStringSinceMidnight(long totalSeconds) {
+		long secondsSinceMidnight = totalSeconds % TimeSpan.SecondsPerDay;
+		long hours = secondsSinceMidnight / TimeSpan.SecondsPerHour;
+		long minutes = (secondsSinceMidnight % TimeSpan.SecondsPerHour) / TimeSpan.SecondsPerMinute;
 		return ToHourMinuteStringBase(minutes, hours);
 	}
 
 	private static string ToHourMinuteStringBase(long minutes, long hours) {
-		return (hours < 10 ? "0" + Convert.ToString(hours) : Convert.ToString(hours)) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
+		return Convert.ToString(hours) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
 	}
 
 	public static string ToDayAndMonthAndTimeString(DateTime time) =>

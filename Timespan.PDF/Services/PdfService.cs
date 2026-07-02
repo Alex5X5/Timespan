@@ -9,6 +9,7 @@ using System.Threading;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.PDF.Services.Interfaces;
+using Timespan.Types.Pdf;
 using Timespan.Util.Services;
 
 using Types = Timespan.Types.Models;
@@ -68,6 +69,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			if (IndexersLoaded)
 				return true;
 			Thread.Sleep(200);
+			counter++;
 		}
 		return false;
 	}
@@ -117,99 +119,6 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Console.WriteLine($"loading indexers took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
 	}
 
-	public void Export(IProgressReporter progressReporter, DateTime selectedWeek) {
-		if (!IndexersLoaded)
-			return;
-		Stopwatch totalStopwatch = new();
-		totalStopwatch.Start();
-		Console.WriteLine("started expoting");
-		selectedWeek = DateTimeService.FloorWeek(selectedWeek);
-		Stopwatch prepareContentStopwatch = new();
-		prepareContentStopwatch.Start();
-		Console.WriteLine("started preparing content for the document");
-		List<Types.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
-		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
-			{ "monday", DayOfWeek.Monday },
-			{ "tuesday", DayOfWeek.Tuesday },
-			{ "wendsday", DayOfWeek.Wednesday },
-			{ "thursday", DayOfWeek.Thursday },
-			{ "friday", DayOfWeek.Friday }
-		};
-		long totalWeekSeconds = 0;
-		string query = "";
-		string value = "";
-		const int progressUpdatesPerTask = 1;
-		int totalSteps = tasks.Count * progressUpdatesPerTask;
-		int currentStep = 0;
-		int percentage = 0;
-		foreach (string dayName in days.Keys) {
-			int offset = 0;
-			string[] lines = ["", "", "", "", "", ""];
-			List<Types.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
-			if (tasks_.Count == 0)
-				continue;
-			foreach (Types.Task task in tasks_) {
-				if (progressReporter.IsCancellationRequested) {
-					progressReporter.ReportProgress(currentStep, "Cancelling...");
-					Thread.Sleep(500);
-					return;
-				}
-				if (task.running)
-					continue;
-				string[] compiledTask = CompileTask(task);
-				try {
-					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-					query = $"{dayName}_hour_range_{offset + 1}";
-					value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
-					BufferAnnotationValueUnsafe(query, value);
-					BufferFieldValueUnsafe(query, value);
-					query = $"{dayName}_hour_{offset + 1}";
-					value = DateTimeService.ToHourMinuteString(task.finish-task.start);
-					BufferAnnotationValueUnsafe(query, value);
-					BufferFieldValueUnsafe(query, value);
-					offset += compiledTask.Length;
-				} catch (ArgumentOutOfRangeException) {
-					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
-					Console.WriteLine($"description of task was:'{task.description}'");
-					break;
-				} catch (ArgumentException) {
-					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
-					Console.WriteLine($"description of task was:'{task.description}'");
-					break;
-				}
-				totalWeekSeconds += task.finish - task.start;
-				currentStep++;
-				percentage = (int)(currentStep * 100.0 / totalSteps);
-				progressReporter.ReportProgress(percentage, $"Processing day {dayName}...");
-			}
-			for (int i = 0; i < lines.Length; i++) {
-				query = $"{dayName}_line_{i + 1}";
-				BufferAnnotationValueUnsafe(query, lines[i]);
-				BufferFieldValueUnsafe(query, lines[i]);
-			}
-		}
-		query = $"total_hour";
-		value = DateTimeService.ToHourMinuteString(totalWeekSeconds);
-		BufferAnnotationValueUnsafe(query, value);
-		BufferFieldValueUnsafe(query, value);
-		SetUtilityFields(selectedWeek);
-		prepareContentStopwatch.Stop();
-		Console.Write("finished preparing content for the document\n");
-		Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
-		char* document = BuildDocument(out int documentCharCount);
-		byte* resultFile = FileService.EncodeBufferAnsi(document, documentCharCount, out int fileSize);
-		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName(selectedWeek)}"), fileSize);
-		NativeMemory.Free(resultFile);
-		NativeMemory.Free(document);
-		InsertOperations.Clear();
-		totalStopwatch.Stop();
-		Console.Write("finished exporting unsafe\n");
-		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
-		progressReporter.ReportProgress(100, "finished exporting");
-	}
-
-
-
 	public void Export(DateTime selectedWeek) {
 		if (!IndexersLoaded)
 			if(!WaitForIndexing())
@@ -232,10 +141,6 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		long totalWeekSeconds = 0;
 		string query = "";
 		string value = "";
-		const int progressUpdatesPerTask = 1;
-		int totalSteps = tasks.Count * progressUpdatesPerTask;
-		int currentStep = 0;
-		int percentage = 0;
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
@@ -249,13 +154,11 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				try {
 					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
 					query = $"{dayName}_hour_range_{offset + 1}";
-					value = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
-					BufferAnnotationValueUnsafe(query, value);
-					BufferFieldValueUnsafe(query, value);
+					value = DateTimeService.ToHourMinuteStringSinceMidnight(task.start) + " - " + DateTimeService.ToHourMinuteStringSinceMidnight(task.finish);
+					BufferValue(query, value);
 					query = $"{dayName}_hour_{offset + 1}";
-					value = DateTimeService.ToHourMinuteString(task.finish - task.start);
-					BufferAnnotationValueUnsafe(query, value);
-					BufferFieldValueUnsafe(query, value);
+					value = DateTimeService.ToHourMinuteStringSinceMidnight(task.finish - task.start);
+					BufferValue(query, value);
 					offset += compiledTask.Length;
 				} catch (ArgumentOutOfRangeException) {
 					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
@@ -267,19 +170,15 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 					break;
 				}
 				totalWeekSeconds += task.finish - task.start;
-				currentStep++;
-				percentage = (int)(currentStep * 100.0 / totalSteps);
 			}
 			for (int i = 0; i < lines.Length; i++) {
 				query = $"{dayName}_line_{i + 1}";
-				BufferAnnotationValueUnsafe(query, lines[i]);
-				BufferFieldValueUnsafe(query, lines[i]);
+				BufferValue(query, lines[i]);
 			}
 		}
 		query = $"total_hour";
-		value = DateTimeService.ToHourMinuteString(totalWeekSeconds);
-		BufferAnnotationValueUnsafe(query, value);
-		BufferFieldValueUnsafe(query, value);
+		value = DateTimeService.ToHourMinuteStringSinceMidnight(totalWeekSeconds);
+		BufferValue(query, value);
 		SetUtilityFields(selectedWeek);
 		prepareContentStopwatch.Stop();
 		Console.Write("finished preparing content for the document\n");
@@ -295,11 +194,11 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
 	}
 
-	public Types.PdfDocumentData? GetExportData(DateTime selectedWeek) {
+	public PdfDocumentData? GetExportData(DateTime selectedWeek) {
 		if (!IndexersLoaded)
 			if (!WaitForIndexing())
 				return null;
-		Types.PdfDocumentData data = new Types.PdfDocumentData();
+		PdfDocumentData data = new PdfDocumentData();
 		List<Types.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
 		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
 			{ "monday", DayOfWeek.Monday },
@@ -336,8 +235,8 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 							lineTaks[offset + i] = task;
 						for (int i = 0; i < compiledTask.Length; i++)
 							lineTaks[offset + i] = task;
-						hourRanges[offset] = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
-						hours[offset] = DateTimeService.ToHourMinuteString(task.finish - task.start);
+						hourRanges[offset] = DateTimeService.ToHourMinuteStringSinceMidnight(task.start) + " - " + DateTimeService.ToHourMinuteStringSinceMidnight(task.finish);
+						hours[offset] = DateTimeService.ToHourMinuteStringSinceMidnight(task.finish - task.start);
 						offset += compiledTask.Length;
 					} catch (ArgumentOutOfRangeException) {
 						Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
@@ -352,14 +251,11 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				}
 			}
 			for (int i = 0; i < 6; i++) {
-				data.Data[dayCounter * Types.PdfDocumentData.DAY_LINE_COUNT + i].Item1 = lines[i];
-				data.Data[dayCounter * Types.PdfDocumentData.DAY_LINE_COUNT + i].Item2 = hours[i];
-                data.Data[dayCounter * Types.PdfDocumentData.DAY_LINE_COUNT + i].Item3 = hourRanges[i];
-                data.Data[dayCounter * Types.PdfDocumentData.DAY_LINE_COUNT + i].Item4 = lineTaks[i];
+				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i] = new(lines[i], hours[i], hourRanges[i], lineTaks[i]);
             }
 			dayCounter++;
 		}
-		data.TotalTime = DateTimeService.ToHourMinuteString(totalWeekSeconds);
+		data.TotalTime = DateTimeService.ToHourMinuteStringSinceMidnight(totalWeekSeconds);
 		int week = dateTimeService.GetWeekCountAtDate(selectedWeek);
         data.Week = Convert.ToString(week);
 		data.UserName = settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
@@ -401,60 +297,44 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	}
 
 	public static string[] CompileTask(Types.Task task) {
-		string source = "";
-		List<string> res = [];
 		var description = task.description;
 		description = description.Replace("""\""", """\\""");
 		description = description.Replace("""(""", """\(""");
 		description = description.Replace(""")""", """\)""");
-		source += description;
+		return CompileTaskBase(description);
+	}
+
+    public static string[] CompileTaskPreview(Types.Task task) {
+		return CompileTaskBase(task.description);
+    }
+
+	private static string[] CompileTaskBase(string description) {
+		string source = description;
+		List<string> res = [];
 		while (source.Length > 0) {
 			int CharacterRemoveCount;
 			if (source.Length >= MAX_LINE_LENGTH) {
 				CharacterRemoveCount = MAX_LINE_LENGTH;
 				while (source[CharacterRemoveCount] != ' ')
 					CharacterRemoveCount--;
-			}
-			else
+			} else
 				CharacterRemoveCount = source.Length;
-			res.Add((res.Count > 0 ? "     ":"") + source[..(source[CharacterRemoveCount-1]==' '? CharacterRemoveCount-1 : CharacterRemoveCount)]);
+			res.Add((res.Count > 0 ? "     " : "") + source[..(source[CharacterRemoveCount - 1] == ' ' ? CharacterRemoveCount - 1 : CharacterRemoveCount)]);
 			source = source[CharacterRemoveCount..source.Length];
 		}
 		return res.ToArray();
 	}
 
-    public static string[] CompileTaskPreview(Types.Task task) {
-        string source = "";
-        List<string> res = [];
-        source += task.description;
-        while (source.Length > 0) {
-            int CharacterRemoveCount;
-            if (source.Length >= MAX_LINE_LENGTH) {
-                CharacterRemoveCount = MAX_LINE_LENGTH;
-                while (source[CharacterRemoveCount] != ' ')
-                    CharacterRemoveCount--;
-            } else
-                CharacterRemoveCount = source.Length;
-            res.Add((res.Count > 0 ? "     " : "") + source[..(source[CharacterRemoveCount - 1] == ' ' ? CharacterRemoveCount - 1 : CharacterRemoveCount)]);
-            source = source[CharacterRemoveCount..source.Length];
-        }
-        return res.ToArray();
-    }
 
 
-    private void SetUtilityFields(DateTime selectedWeek) {
-		BufferAnnotationValueUnsafe("week", Convert.ToString(dateTimeService.GetWeekCountAtDate(selectedWeek)));
-		BufferFieldValueUnsafe("week", Convert.ToString(dateTimeService.GetWeekCountAtDate(selectedWeek)));
-		BufferAnnotationValueUnsafe("name", settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
-		BufferFieldValueUnsafe("name", settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
-		BufferAnnotationValueUnsafe("job", settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
-		BufferFieldValueUnsafe("job", settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
-		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
+	private void SetUtilityFields(DateTime selectedWeek) {
+		BufferValue("week", Convert.ToString(dateTimeService.GetWeekCountAtDate(selectedWeek)));
+		BufferValue("name", settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
+		BufferValue("job", settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
+		DateTime dayFrom = DateTimeService.FloorWeek(selectedWeek);
 		DateTime dayTo = dayFrom.AddDays(5);
-		BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
-		BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
-		BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
-		BufferFieldValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
+		BufferValue("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
+		BufferValue("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
 
         bool[] missingDays = new bool[5000];
         long startDateSeconds = DateTimeService.ToSeconds(settingsService.StartDate);
@@ -480,12 +360,9 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		int totalMissingDaysCount = missingDays.Count(c => c == true);
 		int missingDaysCount = newMissingDays.Count(c => c == true);
 		int sickDaysCount = newSickDays.Count(c => c == true);
-        BufferAnnotationValueUnsafe("total_sick_days", Convert.ToString(totalMissingDaysCount));
-        BufferFieldValueUnsafe("total_sick_days", Convert.ToString(totalMissingDaysCount));
-        BufferAnnotationValueUnsafe("new_missing_days", Convert.ToString(missingDaysCount));
-        BufferFieldValueUnsafe("new_missing_days", Convert.ToString(missingDaysCount));
-        BufferAnnotationValueUnsafe("new_sick_days", Convert.ToString(sickDaysCount));
-        BufferFieldValueUnsafe("new_sick_days", Convert.ToString(sickDaysCount));
+        BufferValue("total_sick_days", Convert.ToString(totalMissingDaysCount));
+        BufferValue("new_missing_days", Convert.ToString(missingDaysCount));
+        BufferValue("new_sick_days", Convert.ToString(sickDaysCount));
     }
 
 	private string GetNewFileName(DateTime selectedWeek) {

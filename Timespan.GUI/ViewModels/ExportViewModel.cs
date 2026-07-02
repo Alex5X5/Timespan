@@ -14,6 +14,7 @@ using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.PDF.Services.Interfaces;
 using Timespan.Types.Models;
+using Timespan.Types.Pdf;
 using Timespan.Util.Services;
 
 using Types = Timespan.Types.Models;
@@ -62,15 +63,16 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 		this.pdf = pdf;
 		this.cacheService = cacheService;
 		TableItems = [];
-		Dispatcher.UIThread.InvokeAsync(
+		Dispatcher.UIThread.Invoke(
 			() => {
 				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
 				for (int day = 0; day < 5; day++)
 					for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
 						int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
-						TableItems.Add(new DescriptionItem { RowIndex = line, Text = data.Data[line].Item1, Task = data.Data[line].Item4 });
-						TableItems.Add(new HourItem { RowIndex = line, Text = data.Data[line].Item2, Task = data.Data[line].Item4 });
-						TableItems.Add(new HourRangeItem { RowIndex = line, Text = data.Data[line].Item3, Task = data.Data[line].Item4 });
+						PdfDocumentLine entry = data.Data[line];
+						TableItems.Add(new DescriptionItem(entry.Task, line, entry.Description));
+						TableItems.Add(new HourItem(entry.Task, line, entry.Hours));
+						TableItems.Add(new HourRangeItem(entry.Task, line, entry.HourRange));
 					}
 			}
 		);
@@ -109,21 +111,26 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	public void OnLoad() {
-		Dispatcher.UIThread.InvokeAsync(
+		Dispatcher.UIThread.Invoke(
 			() => {
-				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new Types.PdfDocumentData();
+				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
 				JobNameText = data.JobName;
 				UserNameText = data.UserName;
 				DateFromText = data.DateFrom;
 				DateToText = data.DateTo;
 				WeekCount = data.Week;
+				SickDays = data.SickDays;
+				MissingDays = data.MissingDays;
+				TotalMissingDays = data.TotalMissingDays;
+				TotalTime = data.TotalTime;
 				TableItems = [];
 				for (int day = 0; day < 5; day++)
-					for (int i = 0; i < Types.PdfDocumentData.DAY_LINE_COUNT; i++) {
-						int line = day * Types.PdfDocumentData.DAY_LINE_COUNT + i;
-						TableItems.Add(new DescriptionItem { RowIndex = line, Text = data.Data[line].Item1, Task = data.Data[line].Item4 });
-						TableItems.Add(new HourItem { RowIndex = line, Text = data.Data[line].Item2, Task = data.Data[line].Item4 });
-						TableItems.Add(new HourRangeItem { RowIndex = line, Text = data.Data[line].Item3, Task = data.Data[line].Item4 });
+					for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
+						int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
+						PdfDocumentLine entry = data.Data[line];
+						TableItems.Add(new DescriptionItem(entry.Task, line, entry.Description));
+						TableItems.Add(new HourItem(entry.Task, line, entry.Hours));
+						TableItems.Add(new HourRangeItem(entry.Task, line, entry.HourRange));
 					}
 				OnPropertyChanged(nameof(TableItems));
 			}
@@ -131,26 +138,13 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	}
 }
 
-public abstract class TextboxItem {
-	public int RowIndex { get; set; } = 0;
+public abstract record TextboxItem(int ColumnIndex, Types.Task Task, int RowIndex = 0, string Text = "");
 
-	public abstract int ColumnIndex { get; }
+public record DescriptionItem(Types.Task Task, int RowIndex = 0, string Text = "")
+	: TextboxItem(0, Task, RowIndex, Text);
 
-	public string Text { get; set; } = "";
+public record HourItem(Types.Task Task, int RowIndex = 0, string Text = "")
+	: TextboxItem(1, Task, RowIndex, Text);
 
-	public Types.Task Task { set; get; }
-}
-
-public class DescriptionItem : TextboxItem {
-	public override int ColumnIndex => 0;
-
-}
-
-public class HourItem : TextboxItem {
-	public override int ColumnIndex => 1;
-
-}
-
-public class HourRangeItem : TextboxItem {
-	public override int ColumnIndex => 2;
-}
+public record HourRangeItem(Types.Task Task, int RowIndex = 0, string Text = "")
+	: TextboxItem(2, Task, RowIndex, Text);

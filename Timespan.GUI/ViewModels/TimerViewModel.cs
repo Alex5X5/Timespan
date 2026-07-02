@@ -35,6 +35,9 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	[ObservableProperty]
 	private ObservableTask selectedTask;
 
+	[ObservableProperty]
+	private Color selectedColor;
+
 	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
 	public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
 
@@ -85,7 +88,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		if (dbService != null)
 			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
-				new Color(255, 79, 79, 79),
+				SelectedColor,
 				null,
 				new Timespan.Types.Models.Worker { name = "new user" },
 				null
@@ -115,8 +118,11 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 
 	[RelayCommand]
 	private async Task OnColorSelected(Avalonia.Media.Color color) {
-		SelectedTask.DisplayColor = color;
-		await dbService.UpdateTaskAsync(SelectedTask.Value);
+		SelectedColor = color;
+		if (SelectedTask != null) {
+			SelectedTask.DisplayColor = color;
+			await dbService.UpdateTaskAsync(SelectedTask.Value);
+		}
 	}
 
 	private void UpdateButtons() {
