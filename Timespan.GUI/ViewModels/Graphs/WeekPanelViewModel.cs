@@ -31,10 +31,6 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 		return true;
 	}
 
-	protected override GridCellPosition GetCellForTask(ObservableTask task) {
-		return new(0, DateTimeService.DayOfWorkWeek(task.StartDateTime));
-	}
-
 	public override string GetDateString() {
 		int week = new DateTimeService(settingsService, cacheService).GetWeekCountAtDate(cacheService.SelectedDay);
 		return $"{TranslatorService.Singleton["Views.Pages.Graphs.Labels.Week"]} {week}";

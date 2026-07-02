@@ -28,10 +28,6 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		return false;
 	}
 
-	protected override GridCellPosition GetCellForTask(ObservableTask task) {
-		return new(0, 0);
-	}
-
 	public override string GetDateString() {
 		string day = TranslatorService.Singleton.TranslateDayShort(cacheService.SelectedDay.DayOfWeek);
 		string month = TranslatorService.Singleton.TranslateMonthShort(cacheService.SelectedDay.Month);

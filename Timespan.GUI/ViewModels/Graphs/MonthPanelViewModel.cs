@@ -40,14 +40,6 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		return (row * TaskGridColumnCount + column) == (DateTime.Today.Day + offset);
 	}
 
-	protected override GridCellPosition GetCellForTask(ObservableTask task) {
-		DateTime firstWeek = DateTimeService.FloorWeek(DateTimeService.FloorMonth(task.StartDateTime));
-		DateTime taskWeek = DateTimeService.FloorWeek(task.StartDateTime);
-		long diffSeconds = DateTimeService.ToSeconds(firstWeek) - DateTimeService.ToSeconds(taskWeek);
-		int row = (int)Math.Floor((double)(diffSeconds / 604800));
-		return new(row, DateTimeService.DayOfWorkWeek(task.StartDateTime));
-	}
-
 	public override string GetDateString() {
 		string month = TranslatorService.Singleton.TranslateMonth(cacheService.SelectedDay.Month);
 		return $"{month} {cacheService.SelectedDay.Year}";
@@ -86,7 +78,6 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 			finish += XAxisSegmentDuration;
 		}
 	}
-
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(DateTimeService.FloorMonth(cacheService.SelectedDay)) : [];

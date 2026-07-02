@@ -115,8 +115,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	protected abstract bool IsToday(int ro, int column);
 
-	protected abstract GridCellPosition GetCellForTask(ObservableTask task);
-
 	public virtual async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];
 	}
