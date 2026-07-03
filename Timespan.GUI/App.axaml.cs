@@ -50,6 +50,8 @@ public partial class App : Application {
 
 		instanciator.RegisterWindow<MainWindow>();
 
+		instanciator.RegisterViewTransient<TaskDetailsView>();
+
 		instanciator.AddContentBindingType<IGraphsViewChild>();
 		instanciator.RegisterViewTransient<DayPanelView>();
 		instanciator.RegisterViewTransient<WeekPanelView>();

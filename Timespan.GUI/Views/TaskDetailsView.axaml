@@ -2,12 +2,15 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:cls="using:Timespan.GUI.Controls"
+			 xmlns:cls="using:Timespan.GUI.Views"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
 			 xmlns:controls="using:Timespan.GUI.Controls"
 			 xmlns:vc="using:Timespan.GUI.Converters"
 			 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
 			 x:CompileBindings="True"
-			 x:Class="Timespan.GUI.Controls.TaskDetailsControl">
+			 x:DataType="models:TaskDetailsViewModel"
+			 x:Class="Timespan.GUI.Views.TaskDetailsView">
 	<UserControl.Styles>
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/TaskDetailsView.styles.axaml" />
 	</UserControl.Styles>
@@ -58,8 +61,8 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding $parent[cls:TaskDetailsControl].TaskNotRunning}"
-						Click="RestartButtonClick">
+						IsVisible="{Binding TaskNotRunning}"
+						Command="{Binding RestartTaskCommand}">
 					<Viewbox Stretch="Uniform">
 						<Svg Path="avares://Timespan.GUI/Assets/Images/restart.svg" />
 					</Viewbox>
@@ -68,8 +71,8 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding $parent[cls:TaskDetailsControl].TaskRunning}"
-						Click="StopButtonClick">
+						IsVisible="{Binding TaskRunning}"
+						Command="{Binding StopTaskCommand}">
 					<Viewbox Stretch="Uniform">
 						<Svg Path="avares://Timespan.GUI/Assets/Images/stop.svg" />
 					</Viewbox>
@@ -78,8 +81,8 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding $parent[cls:TaskDetailsControl].TaskNotRunning}"
-						Click="ContiniueButtonClick">
+						IsVisible="{Binding TaskNotRunning}"
+						Command="{Binding ContiniueTaskCommand}">
 					<Viewbox Stretch="Uniform">
 						<Svg Path="avares://Timespan.GUI/Assets/Images/start.svg" />
 					</Viewbox>
@@ -88,8 +91,8 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowReadonlyTaskPanel}"
-						Click="DeleteButtonClick">
+						IsVisible="{Binding ShowReadonlyTaskPanel}"
+						Command="{Binding DeleteTaskCommand}">
 					<Viewbox Stretch="Uniform">
 						<Svg Path="avares://Timespan.GUI/Assets/Images/loeschen.svg" />
 					</Viewbox>
@@ -98,8 +101,8 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowReadonlyTaskPanel}"
-						Click="EditButtonClick">
+						IsVisible="{Binding ShowReadonlyTaskPanel}"
+						Command="{Binding EditTaskCommand}">
 					<Viewbox Stretch="Uniform"
 							 HorizontalAlignment="Stretch"
 							 VerticalAlignment="Stretch">
@@ -110,8 +113,8 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowEditTaskPanel}"
-						Click="SaveButtonClick">
+						IsVisible="{Binding ShowEditTaskPanel}"
+						Command="{Binding SaveTaskCommand}">
 					<Viewbox Stretch="Uniform"
 							 HorizontalAlignment="Stretch"
 							 VerticalAlignment="Stretch">
@@ -122,7 +125,7 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="CloseButtonClick">
+						Command="{Binding CloseTaskCommand}">
 					<Viewbox Stretch="Uniform"
 							 HorizontalAlignment="Stretch"
 							 VerticalAlignment="Stretch">
@@ -134,7 +137,7 @@
 			<Grid Grid.Row="3"
 				  Grid.Column="1"
 				  ShowGridLines="False"
-				  IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowReadonlyTaskPanel}">
+				  IsVisible="{Binding ShowReadonlyTaskPanel}">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="12*" />
 					<RowDefinition Height="3*" />
@@ -150,33 +153,33 @@
 						   Classes="p1"
 						   HorizontalAlignment="Stretch"
 						   VerticalAlignment="Stretch"
-						   Text="{Binding $parent[cls:TaskDetailsControl].Title}"/>
+						   Text="{Binding Title}"/>
 				<Grid Grid.Row="2"
 					  ColumnDefinitions="8* * 8* 2*">
 					<TextBlock Name="DateTextBlock"
 							   Grid.Column="0"
 							   Classes="p3"
-							   IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowReadonlyTaskPanel}"
-							   Text="{Binding $parent[cls:TaskDetailsControl].DateString}"/>
+							   IsVisible="{Binding ShowReadonlyTaskPanel}"
+							   Text="{Binding DateString}"/>
 					<TextBlock Name="TimeTextBlock"
 							   Grid.Column="2"
 							   Classes="p3"
-							   IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowReadonlyTaskPanel}"
-							   Text="{Binding $parent[cls:TaskDetailsControl].TimeString}"/>
+							   IsVisible="{Binding ShowReadonlyTaskPanel}"
+							   Text="{Binding TimeString}"/>
 				</Grid>
 				<TextBlock Name="DescriptionTextBlock"
 						   Grid.Row="4"
 						   Grid.Column="1"
 						   Classes="p2_1"
 						   TextWrapping="Wrap"
-						   IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowReadonlyTaskPanel}"
-						   Text="{Binding $parent[cls:TaskDetailsControl].Description}"/>
+						   IsVisible="{Binding ShowReadonlyTaskPanel}"
+						   Text="{Binding Description}"/>
 			</Grid>
 			<!--Edit TextBoxes Container-->
 			<Grid Grid.Row="3"
 				  Grid.Column="1"
 				  ShowGridLines="False"
-				  IsVisible="{Binding $parent[cls:TaskDetailsControl].ShowEditTaskPanel}">
+				  IsVisible="{Binding ShowEditTaskPanel}">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="1*" />
 					<RowDefinition Height="2*" />
@@ -196,13 +199,13 @@
 						 Grid.Column="0"
 						 VerticalContentAlignment="Center"
 						 CornerRadius="5,5,5,5"
-						 Text="{Binding $parent[cls:TaskDetailsControl].StartTextboxText}"/>
+						 Text="{Binding StartTextboxText}"/>
 				<TextBox Classes="Default DynamicTextHeight"
 						 Grid.Row="1"
 						 Grid.Column="2"
 						 VerticalContentAlignment="Center"
 						 CornerRadius="5,5,5,5"
-						 Text="{Binding $parent[cls:TaskDetailsControl].FinishTextboxText}"/>
+						 Text="{Binding FinishTextboxText}"/>
 				<TextBox Grid.Row="3"
 						 Grid.Column="0"
 						 Grid.ColumnSpan="3"
@@ -210,14 +213,14 @@
 						 VerticalContentAlignment="Top"
 						 TextWrapping="Wrap"
 						 CornerRadius="5,5,5,5"
-						 Text="{Binding $parent[cls:TaskDetailsControl].Description}"/>
+						 Text="{Binding Description}"/>
 				<controls:ColorSelectorControl Grid.Row="5"
 											   Grid.Column="0"
 											   Grid.ColumnSpan="3"
 											   HorizontalAlignment="Stretch"
 											   VerticalAlignment="Stretch"
-											   ColorChangedCommand="{Binding $parent[cls:TaskDetailsControl].ColorSelectedCommand}"
-											   SelectedTask="{Binding $parent[cls:TaskDetailsControl].SelectedTask}"/>
+											   ColorChangedCommand="{Binding ColorSelectedCommand}"
+											   SelectedTask="{Binding SelectedTask}"/>
 			</Grid>
 		</Grid>
 	</Panel>

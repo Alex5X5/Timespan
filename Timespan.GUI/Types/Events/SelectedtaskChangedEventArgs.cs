@@ -2,5 +2,6 @@
 
 using Timespan.Types.Models;
 
-public class SelectedtaskChangedEventArgs(Task? task = null): ShowTaksEventArgs(task) {
+public class SelectedTaskChangedEventArgs(Task? task = null) : EventArgs() {
+	public Task? Task { get; set; } = task;
 }

@@ -244,16 +244,9 @@
 				<RowDefinition Height="17*" />
 				<RowDefinition Height="76*" />
 			</Grid.RowDefinitions>
-			<controls:TaskDetailsControl Grid.Row="1"
-										 HorizontalAlignment="Stretch"
-										 VerticalAlignment="Stretch"
-										 SelectedTask="{Binding ShowingTask}"
-										 CloseCommand="{Binding HideTaskCommand}"
-										 SaveCommand="{Binding SaveTaskChangesCommand}"
-										 ContiniueCommand="{Binding ContiniueTaskCommand}"
-										 StopCommand="{Binding StopTaskCommand}"
-										 RestartCommand="{Binding RestartTaskCommand}"
-										 DeleteCommand="{Binding DeleteTaskCommand}"/>
+			<views:TaskDetailsView Grid.Row="1"
+								   HorizontalAlignment="Stretch"	 
+								   VerticalAlignment="Stretch"/>
 		</Grid>
 	</Grid>
 </UserControl>

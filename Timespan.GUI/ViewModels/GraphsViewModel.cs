@@ -101,59 +101,6 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	[RelayCommand]
-	internal async Task DeleteTask(Timespan.Types.Models.Task task) {
-		HideTask();
-		await dbService.DeleteTaskAsync(task);
-		await RaiseTaskChangedAsync();
-	}
-
-	[RelayCommand]
-	private async Task StartTask(Timespan.Types.Models.Task task) {
-		Console.WriteLine("start task button click!");
-		if (dbService != null)
-			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
-			   task.description,
-			   task.DisplayColor,
-			   task.project,
-			   task.owner,
-			   task.ticket
-		   );
-		await RaiseTaskChangedAsync();
-	}
-
-	[RelayCommand]
-	private async Task StopTask(Timespan.Types.Models.Task task) {
-		task.running = false;
-		await dbService.UpdateTaskAsync(task);
-		await FetchAndShowAsync(task);
-		await RaiseTaskChangedAsync();
-	}
-
-	[RelayCommand]
-	private async Task RestartTask(Timespan.Types.Models.Task task) {
-		Console.WriteLine("start new button click!");
-		await StopTask(task);
-		await StartTask(task);
-		cacheService.RunningTask = task;
-		await dbService.UpdateTaskAsync(cacheService.RunningTask);
-	}
-
-	[RelayCommand]
-	private async Task ContiniueTask(Timespan.Types.Models.Task task) {
-		Console.WriteLine("continiue task button click!");
-		await dbService.ContiniueTaskAsync(task);
-		await FetchAndShowAsync(task);
-		await RaiseTaskChangedAsync();
-	}
-
-	[RelayCommand]
-	internal async Task SaveTaskChanges(Timespan.Types.Models.Task task) {
-		await dbService.UpdateTaskAsync(task);
-		await FetchAndShowAsync(task);
-		await RaiseTaskChangedAsync();
-	}
-
-	[RelayCommand]
 	internal async Task Select() {
 		var task = await dbService.QueryCurrentTaskAsync();
 		if (task is Timespan.Types.Models.Task) {
@@ -218,22 +165,5 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	private void UpdateIntervall(IntervallChangedEventArgs args) {
 		DateString = CurrentPage?.GetDateString() ?? "Date";
-	}
-
-	private async Task RaiseTaskChangedAsync() {
-		Action callback = () => Dispatcher.UIThread.Invoke(GlobalEventService.Raise<TasksChangedEventArgs>);
-		await Task.Run(callback);
-	}
-
-	private async Task FetchAndShowAsync(Timespan.Types.Models.Task task) {
-		var refetchedTask = (await dbService.QueryTasksAsync()).First(x => x.Id == task.Id);
-		await Task.Run(
-			() => {
-				Dispatcher.UIThread.Invoke(
-					() => {
-						cacheService.SelectedTask = refetchedTask;
-						GlobalEventService.Raise(new ShowTaksEventArgs(refetchedTask));
-					});
-			});
 	}
 }
