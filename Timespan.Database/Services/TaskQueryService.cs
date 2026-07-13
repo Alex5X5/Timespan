@@ -78,25 +78,9 @@ public partial class TimespanDbService {
 
 	public async Task<List<Types.Task>> QueryBlockingTasksInIntervallAsync(long intervallStartSeconds, long intervallFinishSeconds) {
 		IEnumerable<Types.Task> tasks = (await _accessor.QueryAllAsync<Types.Task>());
-		Console.WriteLine("all tasks are");
-		Console.WriteLine($"querying frm {intervallStartSeconds} to {intervallFinishSeconds}");
-		foreach (var task in tasks)
-			Console.WriteLine($"task is from {task.start} to {task.finish}");
 		tasks = tasks.Where(x => x.blocksTime != Types.BlockedTimeIntervallType.None);
-		Console.WriteLine("blocking tasks are");
-		Console.WriteLine($"querying frm {intervallStartSeconds} to {intervallFinishSeconds}");
-		foreach (var task in tasks)
-			Console.WriteLine($"task is from {task.start} to {task.finish}");
 		tasks = tasks.Where(x => x.start >= intervallStartSeconds && x.start <= intervallFinishSeconds);
-		Console.WriteLine("correctly starting tasks are");
-		Console.WriteLine($"querying frm {intervallStartSeconds} to {intervallFinishSeconds}");
-		foreach (var task in tasks)
-			Console.WriteLine($"task is from {task.start} to {task.finish}");
 		tasks = tasks.Where(x => x.finish >= intervallStartSeconds && x.finish <= intervallFinishSeconds);
-		Console.WriteLine("correctly ending tasks are");
-		Console.WriteLine($"querying frm {intervallStartSeconds} to {intervallFinishSeconds}");
-		foreach (var task in tasks)
-			Console.WriteLine($"task is from {task.start} to {task.finish}");
 		return tasks
 			.OrderBy(p => p.start)
 			.ToList();

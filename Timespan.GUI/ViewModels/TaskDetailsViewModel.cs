@@ -233,7 +233,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		return $"{start_} - {stop_}";
 	}
 
-	private async Task RaiseTaskChangedAsync() {
+	private static async Task RaiseTaskChangedAsync() {
 		await Dispatcher.UIThread.InvokeAsync(
 			()=> GlobalEventService.Raise<TasksChangedEventArgs>());
 	}

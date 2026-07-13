@@ -1,11 +1,14 @@
 ﻿namespace Timespan.PDF.Services;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.PDF.Services.Interfaces;
@@ -29,7 +32,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 
 	private readonly Dictionary<string, ValueTuple<IntPtr, IntPtr>> Indexers;
 
-	public Dictionary<string, string> InsertOperations;
+	public ConcurrentDictionary<string, string> InsertOperations;
 
 	private readonly int charCount;
 	private readonly char* text;
@@ -141,41 +144,46 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		long totalWeekSeconds = 0;
 		string query = "";
 		string value = "";
-		foreach (string dayName in days.Keys) {
-			int offset = 0;
-			string[] lines = ["", "", "", "", "", ""];
-			List<Types.Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
-			if (tasks_.Count == 0)
-				continue;
-			foreach (Types.Task task in tasks_) {
-				if (task.running)
-					continue;
-				string[] compiledTask = CompileTask(task);
-				try {
-					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-					query = $"{dayName}_hour_range_{offset + 1}";
-					value = DateTimeService.ToHourMinuteStringSinceMidnight(task.start) + " - " + DateTimeService.ToHourMinuteStringSinceMidnight(task.finish);
-					BufferValue(query, value);
-					query = $"{dayName}_hour_{offset + 1}";
-					value = DateTimeService.ToHourMinuteStringSinceMidnight(task.finish - task.start);
-					BufferValue(query, value);
-					offset += compiledTask.Length;
-				} catch (ArgumentOutOfRangeException) {
-					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
-					Console.WriteLine($"description of task was:'{task.description}'");
-					break;
-				} catch (ArgumentException) {
-					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
-					Console.WriteLine($"description of task was:'{task.description}'");
-					break;
+		Parallel.ForEach(
+			days.Keys,
+			dayName => {
+				int offset = 0;
+				string[] lines = ["", "", "", "", "", ""];
+				List<Types.Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
+				if (tasks_.Count == 0)
+					return;
+				foreach (Types.Task task in tasks_) {
+					if (task.running)
+						continue;
+					string[] compiledTask = CompileTask(task);
+					try {
+						Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+						query = $"{dayName}_hour_range_{offset + 1}";
+						value = DateTimeService.ToHourMinuteStringSinceMidnight(task.start) + " - " + DateTimeService.ToHourMinuteStringSinceMidnight(task.finish);
+						BufferValue(query, value);
+						query = $"{dayName}_hour_{offset + 1}";
+						value = DateTimeService.ToHourMinuteStringSinceMidnight(task.finish - task.start);
+						BufferValue(query, value);
+						offset += compiledTask.Length;
+					} catch (ArgumentOutOfRangeException) {
+						Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+						Console.WriteLine($"description of task was:'{task.description}'");
+						break;
+					} catch (ArgumentException) {
+						Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+						Console.WriteLine($"description of task was:'{task.description}'");
+						break;
+					}
+					totalWeekSeconds += task.finish - task.start;
 				}
-				totalWeekSeconds += task.finish - task.start;
-			}
-			for (int i = 0; i < lines.Length; i++) {
-				query = $"{dayName}_line_{i + 1}";
-				BufferValue(query, lines[i]);
-			}
-		}
+				for (int i = 0; i < lines.Length; i++) {
+					query = $"{dayName}_line_{i + 1}";
+					BufferValue(query, lines[i]);
+				}
+
+			});
+		//foreach (string dayName in days.Keys) {
+		//}
 		query = $"total_hour";
 		value = DateTimeService.ToHourMinuteStringSinceMidnight(totalWeekSeconds);
 		BufferValue(query, value);
