@@ -20,7 +20,7 @@ using Timespan.Util.Services;
 
 public partial class TaskDetailsViewModel : ViewModelBase {
 
-	private IHourglassDbService dbService;
+	private ITimespanDbService dbService;
 	private Timespan.GUI.Services.CacheService cacheService;
 
 	#region Observable Properties
@@ -63,11 +63,9 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 
 	#endregion
 
-	public TaskDetailsViewModel(IHourglassDbService dbService, Timespan.GUI.Services.CacheService cacheService) {
+	public TaskDetailsViewModel(ITimespanDbService dbService, Timespan.GUI.Services.CacheService cacheService) {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
-		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
-		GlobalEventService.Subscribe<SelectedTaskChangedEventArgs>(OnSelectedChanged);
 	}
 
 	#region Button Callbacks
@@ -151,10 +149,14 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 
 	[RelayCommand]
 	private void OnLoad() {
+		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
+		GlobalEventService.Subscribe<SelectedTaskChangedEventArgs>(OnSelectedChanged);
 	}
 
 	[RelayCommand]
 	private void OnUnload() {
+		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(OnShowTask);
+		GlobalEventService.UnSubscribe<SelectedTaskChangedEventArgs>(OnSelectedChanged);
 	}
 
 	[RelayCommand]
@@ -232,7 +234,8 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	}
 
 	private async Task RaiseTaskChangedAsync() {
-		await Dispatcher.UIThread.InvokeAsync(GlobalEventService.Raise<TasksChangedEventArgs>);
+		await Dispatcher.UIThread.InvokeAsync(
+			()=> GlobalEventService.Raise<TasksChangedEventArgs>());
 	}
 
 	private async Task RefetchAsync() {

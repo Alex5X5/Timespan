@@ -39,8 +39,8 @@ public partial class App : Application {
 		instanciator.AddCommonServiceSingleton<RedirectionService, RedirectionService>();
 
 		if (!Design.IsDesignMode) {
-			HourglassDbService dbService = new();
-			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>(dbService);
+			TimespanDbService dbService = new();
+			instanciator.AddCommonServiceSingleton<ITimespanDbService, TimespanDbService>(dbService);
 			Services.CacheService cacheService = new();
 			cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
 			instanciator.AddCommonServiceSingleton<Services.CacheService, Services.CacheService>(cacheService);

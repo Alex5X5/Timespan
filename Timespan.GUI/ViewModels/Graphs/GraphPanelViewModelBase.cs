@@ -18,7 +18,7 @@ using Timespan.Util.Services;
 public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
 
 	protected Services.CacheService cacheService;
-	protected IHourglassDbService dbService;
+	protected ITimespanDbService dbService;
 	protected SettingsService settingsService;
 
 	#region observable properties
@@ -85,7 +85,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#endregion
 
-	public GraphPanelViewModelBase(Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService, long start, long finish, int rows=1, int columns=24, int taskRows=1, int taskColumns=1, long duration=3600) : base() {
+	public GraphPanelViewModelBase(Services.CacheService cacheService, ITimespanDbService dbService, SettingsService settingsService, long start, long finish, int rows=1, int columns=24, int taskRows=1, int taskColumns=1, long duration=3600) : base() {
 		this.cacheService = cacheService;
 		this.dbService = dbService;
 		this.settingsService = settingsService;

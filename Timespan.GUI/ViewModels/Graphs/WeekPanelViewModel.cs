@@ -12,7 +12,7 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public WeekPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService) : base(
+	public WeekPanelViewModel(GUI.Services.CacheService cacheService, ITimespanDbService dbService, SettingsService settingsService) : base(
 			cacheService, dbService, settingsService,
 			DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),

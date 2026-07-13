@@ -22,7 +22,7 @@ using Timespan.Util.Services;
 
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
-	private IHourglassDbService dbService;
+	private ITimespanDbService dbService;
 	private Timespan.GUI.Services.CacheService cacheService;
 
 	public IRedirectionAnchor<IGraphsViewChild> CurrentPageAnchor;
@@ -64,7 +64,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	private GridLength taskPanelWidth = new(0, GridUnitType.Star);
 
-	public GraphsViewModel(RedirectionService redirectionService, IHourglassDbService dbService, Timespan.GUI.Services.CacheService cacheService) : base() {
+	public GraphsViewModel(RedirectionService redirectionService, ITimespanDbService dbService, Timespan.GUI.Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
 		CurrentPageAnchor = new RedirectionAnchor<IGraphsViewChild>();

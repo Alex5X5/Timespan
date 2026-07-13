@@ -15,7 +15,7 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		
 	}
 
-    public DayPanelViewModel(GUI.Services.CacheService cacheService, IHourglassDbService dbService, SettingsService settingsService) : base(
+    public DayPanelViewModel(GUI.Services.CacheService cacheService, ITimespanDbService dbService, SettingsService settingsService) : base(
 			cacheService, dbService, settingsService,
 			DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay)),

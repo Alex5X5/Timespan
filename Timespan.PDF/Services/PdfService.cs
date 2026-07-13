@@ -16,7 +16,7 @@ using Types = Timespan.Types.Models;
 
 public unsafe partial class PdfService : IPdfService, IDisposable {
 
-	private readonly IHourglassDbService _dbService;
+	private readonly ITimespanDbService _dbService;
 	private SettingsService settingsService;
 	DateTimeService dateTimeService;
 	CacheService cacheService;
@@ -34,7 +34,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	private readonly int charCount;
 	private readonly char* text;
 
-	public PdfService(IHourglassDbService dbService, SettingsService settingsService, DateTimeService dateTimeService, CacheService cacheService) {
+	public PdfService(ITimespanDbService dbService, SettingsService settingsService, DateTimeService dateTimeService, CacheService cacheService) {
 		this.dateTimeService = dateTimeService;
 		this.settingsService = settingsService;
 		this.cacheService = cacheService;

@@ -8,10 +8,11 @@ using Avalonia.Media;
 
 using Types = Timespan.Types.Models;
 
-public interface IHourglassDbService {
-
+public interface ITimespanDbService {
 
 	public Task<List<Types.Task>> QueryTasksAsync();
+
+	public Task<Types.Task?> QueryTasksByIdAsync(int id);
 
 	public Task<Types.Task?> QueryCurrentTaskAsync();
 

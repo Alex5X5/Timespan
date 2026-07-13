@@ -15,7 +15,7 @@ using Timespan.Util.Services;
 
 public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyPropertyChanged {
 
-	private IHourglassDbService dbService;
+	private ITimespanDbService dbService;
 	private Services.CacheService cacheService;
 
 	private readonly DispatcherTimer _timer;
@@ -42,7 +42,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
 
 
-	public TimerViewModel(IHourglassDbService dbService, Services.CacheService cacheService) : base() {
+	public TimerViewModel(ITimespanDbService dbService, Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
 		_timer = new DispatcherTimer {

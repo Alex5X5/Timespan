@@ -10,7 +10,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-public partial class HourglassDbService : IHourglassDbService {
+public partial class TimespanDbService : ITimespanDbService {
 
 	DatabaseAccessor<HourglassDbContext> _accessor = 
 		new(PathService.FilesPath("database"), DatabasePathFormat.FileName, null);
@@ -109,5 +109,4 @@ public partial class HourglassDbService : IHourglassDbService {
         return (await QueryAllIntervallBlockingTasksAsync())
             .FirstOrDefault(x => x.start == seconds)?.description;
     }
-
 }
