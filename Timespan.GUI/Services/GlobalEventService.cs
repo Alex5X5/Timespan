@@ -2,36 +2,38 @@
 
 public class GlobalEventService {
 	
-	private static readonly Dictionary<Type, EventDispatcherBase> _store = [];
+	private static readonly Dictionary<Type, Dictionary<string, EventDispatcherBase>> _store = [];
 
-	public static EventDispatcher<T> GetEvent<T>() where T : EventArgs {
+	public static EventDispatcher<T> GetEvent<T>(string descriptor = "e") where T : EventArgs {
 		var key = typeof(T);
 		if(!_store.ContainsKey(key))
-			_store[key] = new EventDispatcher<T>();
-		return (EventDispatcher<T>)_store[key];
+			_store[key] = new Dictionary<string, EventDispatcherBase>();
+		if(!_store[key].ContainsKey(descriptor))
+			_store[key][descriptor] = new EventDispatcher<T>();
+		return (EventDispatcher<T>)_store[key][descriptor];
 	}
 
-	public static void Subscribe<T>(Action<T> handler) where T : EventArgs {
-		GetEvent<T>().Subscribe(handler);
+	public static void Subscribe<T>(Action<T> handler, string descriptor = "e") where T : EventArgs {
+		GetEvent<T>(descriptor).Subscribe(handler);
 	}
 
-	public static void UnSubscribe<T>(Action<T> handler) where T : EventArgs {
-		GetEvent<T>().UnSubscribe(handler);
+	public static void UnSubscribe<T>(Action<T> handler, string descriptor = "e") where T : EventArgs {
+		GetEvent<T>(descriptor).UnSubscribe(handler);
 	}
 
-	public static void Raise<T>(T args) where T : EventArgs {
-		GetEvent<T>().Invoke(args);
+	public static void Raise<T>(T args, string descriptor = "e") where T : EventArgs {
+		GetEvent<T>(descriptor).Invoke(args);
 	}
 
-	public static void Raise<T>() where T : EventArgs, new(){
-		GetEvent<T>().Invoke(new T());
+	public static void Raise<T>(string descriptor = "e") where T : EventArgs, new(){
+		GetEvent<T>(descriptor).Invoke(new T());
 	}
 }
 
 public class EventDispatcherBase {
 }
 
-public partial class EventDispatcher<T> : EventDispatcherBase where T : EventArgs {
+public class EventDispatcher<T> : EventDispatcherBase where T : EventArgs {
 
 	private Action<T>? callback;
 
