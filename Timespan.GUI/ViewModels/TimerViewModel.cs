@@ -7,6 +7,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using System.ComponentModel;
 using System.Threading.Tasks;
+
+using Timespan.Database.Services;
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types;
@@ -41,6 +43,9 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
 	public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
 
+	public TimerViewModel() : this(new TimespanDbService(), new Services.CacheService()) {
+		
+	}
 
 	public TimerViewModel(ITimespanDbService dbService, Services.CacheService cacheService) : base() {
 		this.dbService = dbService;

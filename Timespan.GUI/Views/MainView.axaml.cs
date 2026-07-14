@@ -1,8 +1,10 @@
+namespace Timespan.GUI.Views;
+
+using Avalonia.Interactivity;
+
 using Timespan.GUI.ViewModels;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
-
-namespace Timespan.GUI.Views;
 
 internal partial class MainView : UserControl {
 
@@ -34,10 +36,17 @@ internal partial class MainView : UserControl {
 	public MainView() {
 		TranslatorService.Singleton.TranslateAnnotatedMembers(this);
 		InitializeComponent();
+		AddHandler(LoadedEvent, OnLoad);
+		AddHandler(UnloadedEvent, OnUnload);
 	}
 
-	private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+	private void OnLoad(object? sender, RoutedEventArgs args) {
 		Console.WriteLine("Main View loaded!");
 		(DataContext as MainViewModel)?.OnLoad();
+	}
+
+	private void OnUnload(object? sender, RoutedEventArgs args) {
+		Console.WriteLine("Main View loaded!");
+		(DataContext as MainViewModel)?.OnUnload();
 	}
 }

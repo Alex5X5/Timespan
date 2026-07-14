@@ -138,13 +138,13 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	}
 }
 
-public abstract record TextboxItem(int ColumnIndex, Types.Task Task, int RowIndex = 0, string Text = "");
+public abstract record TextboxItem(int ColumnIndex, Types.Task? Task, int RowIndex = 0, string Text = "");
 
-public record DescriptionItem(Types.Task Task, int RowIndex = 0, string Text = "")
+public record DescriptionItem(Types.Task? Task, int RowIndex = 0, string Text = "")
 	: TextboxItem(0, Task, RowIndex, Text);
 
-public record HourItem(Types.Task Task, int RowIndex = 0, string Text = "")
+public record HourItem(Types.Task? Task, int RowIndex = 0, string Text = "")
 	: TextboxItem(1, Task, RowIndex, Text);
 
-public record HourRangeItem(Types.Task Task, int RowIndex = 0, string Text = "")
+public record HourRangeItem(Types.Task? Task, int RowIndex = 0, string Text = "")
 	: TextboxItem(2, Task, RowIndex, Text);

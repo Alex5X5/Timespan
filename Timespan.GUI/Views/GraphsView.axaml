@@ -92,7 +92,6 @@
 		</DataTemplate>
 	</UserControl.DataTemplates>
 
-	
 	<Grid ShowGridLines="False">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="61*" />

@@ -1,13 +1,75 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Timespan.GUI.Views.Settings.AboutSettingsView"
-			 Unloaded="UserControl_Unloaded">
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views.Settings"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
+			 xmlns:settingsModels="using:Timespan.GUI.ViewModels.Settings"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="settingsModels:AboutSettingsViewModel"
+			 x:Class="Timespan.GUI.Views.Settings.AboutSettingsView">
 	
 	<UserControl.Styles>
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/SettingsViewCommon.axaml" />
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/AboutSettingsView.styles.axaml" />
+		
+		<Style Selector="TextBlock.link" >
+			<Setter Property="TextDecorations" Value="Underline"/>
+			<Setter Property="Foreground" Value="Blue"/>
+		</Style>
 	</UserControl.Styles>
+
+	<Grid ShowGridLines="True">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="24*" />
+			<RowDefinition Height="33*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*" />
+			<ColumnDefinition Width="13*" />
+			<ColumnDefinition Width="3*" />
+		</Grid.ColumnDefinitions>
+		<TextBlock Text="{ Binding $parent[cls:AboutSettingsView].TitleLabelText }"
+				   Grid.Row="1"
+				   Grid.Column="1"
+				   Classes="h2" />
+		<StackPanel Grid.Row="3"
+					Grid.Column="1"
+					Orientation="Vertical">
+			<TextBlock Text="Timespan wurde durch Alexander Lehnert, ein Azubi aus der IT-Ausbildung des" />
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Name="SrhButton" Text="SRH Berufssbildungswerk Dresden" Classes="link" PointerPressed="TextClick"/>
+				<TextBlock Text=" ins Leben gerufen und entwickelt, sowie von"/>
+			</StackPanel>
+			<TextBlock Text="Ben Müller, Azubi aus der Mediengestalter-Ausbildung im SRH Berufsbildungwerk" />
+			<TextBlock Text="Dresden gestaltet." />
+			<TextBlock Text="" />
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="Du benötigst Hilfe mit dem "/>
+				<TextBlock Name="ProgrammButton" Text="Programm" Classes="link" PointerPressed="TextClick"/>
+				<TextBlock Text=", hast eine Frage oder möchtest Feedback"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="teilen? Dann melde ich gerne "/>
+				<TextBlock Name="EmailButton" Text="per E-Mail" Classes="link" PointerPressed="TextClick"/>
+				<TextBlock Text=" an uns." />
+			</StackPanel>
+			<TextBlock Text="" />
+			<TextBlock Text="" />
+			<TextBlock Text="Credits" />
+			<TextBlock Text="" />
+			<TextBlock Name="DotnetButton" Text="Dotnet" Classes="link" PointerPressed="TextClick"/>
+			<TextBlock Name="AvaloniaButton" Text="AvaloniaUi" Classes="link" PointerPressed="TextClick"/>
+			<TextBlock Name="VisualStudioButton" Text="Visual Studio" Classes="link" PointerPressed="TextClick"/>
+			<TextBlock Name="FigmaButton" Text="Figma" Classes="link" PointerPressed="TextClick"/>
+			<TextBlock Name="IllustratorButton" Text="Adobe Illustrator" Classes="link" PointerPressed="TextClick"/>
+			<TextBlock Name="GithubButton" Text="Github Repo" Classes="link" PointerPressed="TextClick"/>
+			<TextBlock Name="KofiButton" Text="Kofi" Classes="link" PointerPressed="TextClick"/>
+		</StackPanel>
+	</Grid>
 </UserControl>

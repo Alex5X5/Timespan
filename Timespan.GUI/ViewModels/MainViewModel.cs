@@ -1,5 +1,7 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
+using Avalonia.Threading;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -7,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using System.ComponentModel;
 
+using Timespan.Database.Services;
+using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Settings;
@@ -16,6 +20,9 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	private readonly RedirectionService redirectionService;
 	private readonly SettingsService settingsService;
+	private readonly ITimespanDbService dbService;
+
+	private readonly DispatcherTimer _timer;
 
 	internal RedirectionAnchor<IMainViewChild> CurrentPageAnchor;
 	internal IMainViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
@@ -26,9 +33,14 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	private bool settingsNavigationBarActive = true;
 
 	[ObservableProperty]
-	internal bool showBackButton = true;
+	private bool showTimer = false;
 	[ObservableProperty]
-	internal bool showSettingsButton = true;
+	private bool showBackButton = false;
+	[ObservableProperty]
+	private bool showSettingsButton = true;
+
+	[ObservableProperty]
+	private string timerString = "0:00";
 
 	internal bool TimerButtonSelected =>
 		CurrentPageAnchor.IsActive<TimerViewModel>();
@@ -38,9 +50,9 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor.IsActive<ExportViewModel>();
 
 	[ObservableProperty]
-	internal bool showSettingsNavigationBar = false;
+	private bool showSettingsNavigationBar = false;
 	[ObservableProperty]
-	internal bool showNormalNavigationBar = true;
+	private bool showNormalNavigationBar = true;
 
 	internal bool GeneralSettingsButtonSelected =>
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<GeneralSettingsViewModel>() ?? false;
@@ -52,18 +64,23 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<GraphicsSettingsViewModel>() ?? false;
 	internal bool ExportSettingsButtonSelected =>
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<ExportSettingsViewModel>() ?? false;
-	
-	public MainViewModel(RedirectionService redirectionService, SettingsService settingsService) {
+
+	public MainViewModel() : this(new RedirectionService(), new SettingsService(), new TimespanDbService()) {
+		
+	}
+
+	public MainViewModel(RedirectionService redirectionService, SettingsService settingsService, ITimespanDbService dbService) {
 		this.redirectionService = redirectionService;
 		this.settingsService = settingsService;
+		this.dbService = dbService;
 		CurrentPageAnchor = new RedirectionAnchor<IMainViewChild>();
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
-
+		_timer = new DispatcherTimer {
+			Interval = TimeSpan.FromSeconds(1)
+		};
+		_timer.Tick += TimerTick;
 		CurrentPageAnchor.ModelChanged += OnPageChanged;
 		CurrentPageAnchor.ModelChanged += UpdateNormalNavigationBar;
-
-		if (GlobalEventService.GetEvent<ShowTaksEventArgs>() is EventDispatcher<ShowTaksEventArgs> dispatcher)
-			dispatcher.Subscribe(args => CurrentPageAnchor.ChangeModel<GraphsViewModel>());
 	}
 
 	[RelayCommand]
@@ -160,5 +177,35 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	internal void OnLoad() {
 		CurrentPageAnchor?.ChangeModel<TimerViewModel>();
+		GlobalEventService.Subscribe<TasksChangedEventArgs>(TasksChanged);
+		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
+		_timer.Start();
+	}
+
+	internal void OnUnload() {
+		GlobalEventService.UnSubscribe<TasksChangedEventArgs>(TasksChanged);
+		_timer.Stop();
+	}
+
+	private void TasksChanged(TasksChangedEventArgs args) {
+		if (dbService.QueryCurrentTaskAsync().Result is Timespan.Types.Models.Task task) {
+			ShowTimer = true;
+			TimerString = DateTimeService.ToHourMinuteStringAbsolute(task.Duration);
+		} else {
+			ShowTimer = false;
+		}
+	}
+
+	private async void TimerTick(object? sender, EventArgs args) {
+		if ((await dbService.QueryCurrentTaskAsync()) is Timespan.Types.Models.Task task) {
+			ShowTimer = true;
+			TimerString = DateTimeService.ToHourMinuteStringAbsolute(task.Duration);
+		} else {
+			ShowTimer = false;
+		}
+	}
+
+	private void ShowTask(ShowTaksEventArgs args) {
+		CurrentPageAnchor.ChangeModel<GraphsViewModel>();
 	}
 }
