@@ -26,10 +26,6 @@ public partial class DayPanelView : GraphPanelViewBase {
 	public DayPanelView() : base() {
 	}
 
-
-	private static double ArialHeightToPt(double height, double x = 1) =>
-		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
-
 	protected override int GetTaskRow(ObservableTask task) {
 		return 0;
 	}
@@ -43,7 +39,7 @@ public partial class DayPanelView : GraphPanelViewBase {
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
 		//context.DrawLine(timeLine, new(PaddingX, Bounds.Height - PaddingY), new(Bounds.Width - PaddingX, Bounds.Height - PaddingY));
-		double textSize = Math.Round(PaddingY * 0.7, 1);
+		double textSize = ArialHeightToPt(PaddingY, 0.7);
 		for (int i = 0; i < 25; i++) {
 			double xPos = XAxisSegmentSize * i + PaddingX;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, PaddingY));

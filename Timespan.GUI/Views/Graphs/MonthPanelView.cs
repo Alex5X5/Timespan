@@ -42,7 +42,7 @@ public partial class MonthPanelView : GraphPanelViewBase {
 
 	protected override void DrawTimeline(DrawingContext context) {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
-		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
+		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 0, 0, 0)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
 		string[] days = [
 			TranslatorService.Singleton["Days.Monday"],
@@ -60,7 +60,7 @@ public partial class MonthPanelView : GraphPanelViewBase {
 			context.DrawLine(hintLine, new Point(PaddingX, yPos), new Point(Bounds.Width - PaddingX, yPos));
 		}
 
-		double textSize = ArialHeightToPt(PaddingY * 0.7);
+		double textSize = ArialHeightToPt(PaddingY, 0.7);
 		for (int i = 0; i < YAxisSegmentCount; i++) {
 			double xPos = XAxisSegmentSize * i + PaddingX;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PaddingY), new Point(xPos, PaddingY));

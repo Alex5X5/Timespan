@@ -36,8 +36,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	private const double GRAPH_AREA_X_WEIGHT = 28;
 	private const double GRAPH_AREA_Y_WEIGHT = 28;
-	private const double PADDING_X_WEIGHT = 1;
-	private const double PADDING_Y_WEIGHT = 1;
+	private const double PADDING_X_WEIGHT = 2;
+	private const double PADDING_Y_WEIGHT = 2;
 
 	protected double PaddingX => Bounds.Width * PADDING_X_WEIGHT / (GRAPH_AREA_X_WEIGHT + 2 * PADDING_X_WEIGHT);
 	protected double PaddingY => Bounds.Height * PADDING_Y_WEIGHT / (GRAPH_AREA_Y_WEIGHT + 2 * PADDING_Y_WEIGHT);
@@ -292,8 +292,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		}
 	}
 
-	protected virtual double ArialHeightToPt(double height, double x = 1) =>
-		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
+	protected double ArialHeightToPt(double height, double x = 1) =>
+		Math.Round(height * 0.7 * x, 1);
 
 	public override void Render(DrawingContext context) {
 		if (SuspendRendering)
