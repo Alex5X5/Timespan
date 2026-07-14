@@ -13,7 +13,7 @@ public partial class TimespanDbService {
 	public async Task<List<Types.Task>> QueryTasksAsync() =>
 		await _accessor.QueryAllAsync<Types.Task>();
 
-	public async Task<Types.Task?> QueryTasksByIdAsync(int id) =>
+	public async Task<Types.Task?> QueryTasksByIdAsync(long id) =>
 		await _accessor.QuerySingleByKeyAsync<Types.Task>(id);
 	
 	public async Task<List<Types.Task>> QueryTasksInIntervallAsync(long intervallStartSeconds, long intervallFinishSeconds) {

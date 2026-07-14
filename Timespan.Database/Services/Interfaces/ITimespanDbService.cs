@@ -12,7 +12,7 @@ public interface ITimespanDbService {
 
 	public Task<List<Types.Task>> QueryTasksAsync();
 
-	public Task<Types.Task?> QueryTasksByIdAsync(int id);
+	public Task<Types.Task?> QueryTasksByIdAsync(long id);
 
 	public Task<Types.Task?> QueryCurrentTaskAsync();
 

@@ -88,7 +88,10 @@ public static class PathService {
     public static string LanguagesPath(string fileName) =>
         AssetsPath(@"lang\" + fileName);
 
-    public static string DesktopPath(string fileName) =>
+	public static string CrashesPath(string fileName) =>
+		FilesPath(@"logs\" + fileName);
+
+	public static string DesktopPath(string fileName) =>
 		Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), fileName);
 
     public static string GetMainEntryPointPath() {

@@ -21,7 +21,7 @@ public class Program {
 			BuildAvaloniaApp()
 				.StartWithClassicDesktopLifetime(args);
 		} catch (Exception ex) {
-			string path = PathService.AssetsPath($"crash-{DateTimeService.ToDayAndMonthAndYearString(DateTime.Now)}.log");
+			string path = PathService.CrashesPath($"crash-{DateTimeService.ToDayAndMonthAndYearString(DateTime.Now)}.log");
 			File.WriteAllText(path, ex.ToString());
 		}
 		//EncryptionService service = new("test"); 
