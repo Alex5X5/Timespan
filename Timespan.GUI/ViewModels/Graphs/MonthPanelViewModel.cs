@@ -15,8 +15,6 @@ using Timespan.Util.Services;
 
 public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
-	private DateTimeService dateTimeService;
-
 	[ObservableProperty]
 	private int weekOffset = 0;
 
@@ -30,7 +28,7 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
 			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5,
 			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5, 86400) {
-		dateTimeService = new(settingsService, cacheService);
+		//dateTimeService = new(settingsService, cacheService);
 	}
 
 	protected override bool IsToday(int row, int column) {
@@ -59,12 +57,13 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
 		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
 		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
-		WeekOffset = dateTimeService.GetWeekCountAtDate(SelectedDay);
+		WeekOffset = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, SelectedDay);
 		UpdateColumnMarkers();
 	}
 
 	protected override void ForeachCell(List<Timespan.Types.Models.Task> tasks, Action<int, int, long, long, List<Timespan.Types.Models.Task>> callback) {
-		long start = TimeIntervallStartSeconds;
+		var startDate = DateTimeService.FloorWeek(DateTimeService.FromSeconds(TimeIntervallStartSeconds));
+		long start = DateTimeService.ToSeconds(startDate);
 		long finish = start + XAxisSegmentDuration;
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
@@ -73,8 +72,8 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 				finish += XAxisSegmentDuration;
 			}
 			start += XAxisSegmentDuration;
-			finish += XAxisSegmentDuration;
 			start += XAxisSegmentDuration;
+			finish += XAxisSegmentDuration;
 			finish += XAxisSegmentDuration;
 		}
 	}

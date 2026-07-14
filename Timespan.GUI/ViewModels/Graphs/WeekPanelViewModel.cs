@@ -32,7 +32,7 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override string GetDateString() {
-		int week = new DateTimeService(settingsService, cacheService).GetWeekCountAtDate(cacheService.SelectedDay);
+		int week = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, cacheService.SelectedDay);
 		return $"{TranslatorService.Singleton["Views.Pages.Graphs.Labels.Week"]} {week}";
 	}
 

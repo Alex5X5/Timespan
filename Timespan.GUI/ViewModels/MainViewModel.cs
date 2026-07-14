@@ -40,7 +40,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	private bool showSettingsButton = true;
 
 	[ObservableProperty]
-	private string timerString = "0:00";
+	private string timerString = "0:00:00";
 
 	internal bool TimerButtonSelected =>
 		CurrentPageAnchor.IsActive<TimerViewModel>();
@@ -76,9 +76,9 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor = new RedirectionAnchor<IMainViewChild>();
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
 		_timer = new DispatcherTimer {
-			Interval = TimeSpan.FromSeconds(1)
+			Interval = TimeSpan.FromSeconds(20)
 		};
-		_timer.Tick += TimerTick;
+		_timer.Tick += UpdateTimer;
 		CurrentPageAnchor.ModelChanged += OnPageChanged;
 		CurrentPageAnchor.ModelChanged += UpdateNormalNavigationBar;
 	}
@@ -188,18 +188,13 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	}
 
 	private void TasksChanged(TasksChangedEventArgs args) {
-		if (dbService.QueryCurrentTaskAsync().Result is Timespan.Types.Models.Task task) {
-			ShowTimer = true;
-			TimerString = DateTimeService.ToHourMinuteStringAbsolute(task.Duration);
-		} else {
-			ShowTimer = false;
-		}
+		UpdateTimer(this, args);
 	}
 
-	private async void TimerTick(object? sender, EventArgs args) {
+	private async void UpdateTimer(object? sender, EventArgs args) {
 		if ((await dbService.QueryCurrentTaskAsync()) is Timespan.Types.Models.Task task) {
 			ShowTimer = true;
-			TimerString = DateTimeService.ToHourMinuteStringAbsolute(task.Duration);
+			TimerString = DateTimeService.ToHourMinuteSecondsStringAbsolute(task.Duration);
 		} else {
 			ShowTimer = false;
 		}

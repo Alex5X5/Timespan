@@ -34,7 +34,6 @@ public partial class App : Application {
 	public override void OnFrameworkInitializationCompleted() {
 		PageInstanciator instanciator = new(this);
 
-		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
 		instanciator.AddCommonServiceSingleton<RedirectionService, RedirectionService>();
 

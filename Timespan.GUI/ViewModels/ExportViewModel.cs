@@ -22,7 +22,6 @@ using Types = Timespan.Types.Models;
 public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 
 	private readonly RedirectionService redirectionService;
-	private readonly DateTimeService? dateTimeService;
 	private readonly Services.CacheService cacheService;
 	private readonly IPdfService? pdf;
 
@@ -57,9 +56,8 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	public string totalMissingDays;
 
-	public ExportViewModel(DateTimeService? dateTimeService, IPdfService? pdf, Services.CacheService cacheService, RedirectionService redirectionService) : base() {
+	public ExportViewModel(IPdfService? pdf, Services.CacheService cacheService, RedirectionService redirectionService) : base() {
 		this.redirectionService = redirectionService;
-		this.dateTimeService = dateTimeService;
 		this.pdf = pdf;
 		this.cacheService = cacheService;
 		TableItems = [];

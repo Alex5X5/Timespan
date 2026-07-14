@@ -11,12 +11,23 @@ public static class PathService {
 	public const int ASSETS_VERSION = 6;
 	public const string APP_NAME = "Timespan";
 
-	public static readonly string APP_FILES_DIRECTORY = Path.Combine(GetMainEntryPointDirectory(), APP_NAME);
-
 	public static readonly string APP_DATA_DIRECTORY = Path.Combine(GetAppDataDirectory(), APP_NAME);
+	public static readonly string ASSETS_DIRECTORY = Path.Combine(APP_DATA_DIRECTORY, "assets");
+	public static readonly string LANGUAGES_DIRECTORY = Path.Combine(ASSETS_DIRECTORY, "lang");
+	public static readonly string CRASHES_DIRECTORY = Path.Combine(APP_DATA_DIRECTORY, "logs");
 
-	public static readonly string LANGUAGES_DIRECTORY = LanguagesPath("");
 
+	static PathService() {
+		EnsurePathExists(APP_DATA_DIRECTORY);
+		EnsurePathExists(ASSETS_DIRECTORY);
+		EnsurePathExists(LANGUAGES_DIRECTORY);
+		EnsurePathExists(CRASHES_DIRECTORY);
+	}
+
+	private static void EnsurePathExists(string path) {
+		if (!Directory.Exists(path))
+			Directory.CreateDirectory(path);
+	}
 
 	private static bool RequireExtractAssets() {
 		string fileName = AssetsPath("assets_version");
@@ -79,17 +90,14 @@ public static class PathService {
 	public static string FilesPath(string fileName) =>
 		Path.Combine(APP_DATA_DIRECTORY, fileName);
 
-    public static string AppDataFilesPath(string fileName) =>
-		Path.Combine(APP_DATA_DIRECTORY, fileName);
-
     public static string AssetsPath(string fileName) =>
-		FilesPath(@"Assets\" + fileName);
+		Path.Combine(ASSETS_DIRECTORY, fileName);
 
-    public static string LanguagesPath(string fileName) =>
-        AssetsPath(@"lang\" + fileName);
+	public static string LanguagesPath(string fileName) =>
+		Path.Combine(LANGUAGES_DIRECTORY, fileName);
 
 	public static string CrashesPath(string fileName) =>
-		FilesPath(@"logs\" + fileName);
+		Path.Combine(CRASHES_DIRECTORY, fileName);
 
 	public static string DesktopPath(string fileName) =>
 		Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), fileName);

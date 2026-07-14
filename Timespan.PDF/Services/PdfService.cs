@@ -21,7 +21,6 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 
 	private readonly ITimespanDbService _dbService;
 	private SettingsService settingsService;
-	DateTimeService dateTimeService;
 	CacheService cacheService;
 
 	public const int MAX_LINE_LENGTH = 85;
@@ -37,8 +36,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	private readonly int charCount;
 	private readonly char* text;
 
-	public PdfService(ITimespanDbService dbService, SettingsService settingsService, DateTimeService dateTimeService, CacheService cacheService) {
-		this.dateTimeService = dateTimeService;
+	public PdfService(ITimespanDbService dbService, SettingsService settingsService, CacheService cacheService) {
 		this.settingsService = settingsService;
 		this.cacheService = cacheService;
 		_dbService = dbService;
@@ -264,7 +262,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			dayCounter++;
 		}
 		data.TotalTime = DateTimeService.ToHourMinuteStringAbsolute(totalWeekSeconds);
-		int week = dateTimeService.GetWeekCountAtDate(selectedWeek);
+		int week = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, selectedWeek);
         data.Week = Convert.ToString(week);
 		data.UserName = settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
 		data.JobName = settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name";
@@ -336,7 +334,8 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 
 
 	private void SetUtilityFields(DateTime selectedWeek) {
-		BufferValue("week", Convert.ToString(dateTimeService.GetWeekCountAtDate(selectedWeek)));
+		var week = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, selectedWeek);
+		BufferValue("week", Convert.ToString(week));
 		BufferValue("name", settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
 		BufferValue("job", settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
 		DateTime dayFrom = DateTimeService.FloorWeek(selectedWeek);
@@ -376,7 +375,8 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	private string GetNewFileName(DateTime selectedWeek) {
 		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
 		DateTime dayTo = DateTimeService.GetFridayOfWeekAtDate(selectedWeek);
-		string path = $"Ausbildungsnachweis{dateTimeService.GetWeekCountAtDate(selectedWeek)}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
+		var week = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, selectedWeek);
+		string path = $"Ausbildungsnachweis{week}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
 		Console.WriteLine($"generated file path:{path}");
 		return path;
 	}

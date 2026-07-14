@@ -1,22 +1,8 @@
 ﻿namespace Timespan.Util.Services;
 
-using Microsoft.VisualBasic;
-
 using System;
 
-using Timespan.Util.Services;
-
-public class DateTimeService {
-
-	//public static DateTime START_DATE = GetStartDate();
-
-	private SettingsService settingsService;
-	private CacheService cacheService;
-
-	public DateTimeService(SettingsService settingsService, CacheService cacheService) {
-		this.cacheService = cacheService;
-		this.settingsService = settingsService;
-	}
+public static partial class DateTimeService {
 
 	//returns 0 on modays, 1 on tuesdays, 2 on wendsdays ...
 	public static int DayOfWorkWeek(DateTime day) =>
@@ -89,6 +75,7 @@ public class DateTimeService {
 			return null;
 		int startIndex = 0;
 		int finishIndex = 0;
+
 		int getSelectionValue(char? nextSeperator, int nextOffset, int defaultValue) {
 			int result = defaultValue;
 			try {
@@ -105,6 +92,7 @@ public class DateTimeService {
             }
             return result;
         }
+		
 		DateTime res = new(DateTime.Now.Year, month, day, hour, minute, second);
         try {
             res = new DateTime(res.Year, res.Month, getSelectionValue('.', 1, day));
@@ -154,30 +142,6 @@ public class DateTimeService {
         }
     }
 
-
-    public static string ToTimeString(DateTime time) =>
-		$"{time.Hour}:{time.Minute}:{time.Second}";
-
-	public static string ToHourMinuteString(DateTime date) =>
-		ToHourMinuteStringBase(date.Minute, date.Hour);
-
-	public static string ToHourMinuteStringAbsolute(long totalSeconds) {
-		long hours = totalSeconds / TimeSpan.SecondsPerHour;
-		long minutes = (totalSeconds % TimeSpan.SecondsPerHour) / TimeSpan.SecondsPerMinute;
-		return ToHourMinuteStringBase(minutes, hours);
-	}
-
-	public static string ToHourMinuteStringSinceMidnight(long totalSeconds) {
-		long secondsSinceMidnight = totalSeconds % TimeSpan.SecondsPerDay;
-		long hours = secondsSinceMidnight / TimeSpan.SecondsPerHour;
-		long minutes = (secondsSinceMidnight % TimeSpan.SecondsPerHour) / TimeSpan.SecondsPerMinute;
-		return ToHourMinuteStringBase(minutes, hours);
-	}
-
-	private static string ToHourMinuteStringBase(long minutes, long hours) {
-		return Convert.ToString(hours) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
-	}
-
 	public static string ToDayAndMonthAndTimeString(DateTime time) =>
 		$"{time.Day}.{time.Month}. {time.Hour}:{time.Minute}:{time.Second}";
 
@@ -207,10 +171,6 @@ public class DateTimeService {
 	public static DateTime GetFirstDayOfMonthAtDate(DateTime date) =>
 		new(date.Year, date.Month, 1);
 
-
-	public int GetCurrentWeekCount() =>
-		GetWeekCountAtDate(DateTime.Now);
-
-	public int GetWeekCountAtDate(DateTime date) =>
-		(int)Math.Floor(FloorWeek(date).Subtract(settingsService.StartDate).Days / 7.0) + 1;
+	public static int GetWeekCountAtDate(DateTime start, DateTime date) =>
+		(int)Math.Floor(FloorWeek(date).Subtract(start).Days / 7.0) + 1;
 }

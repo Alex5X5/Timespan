@@ -228,8 +228,8 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	}
 
 	private static string GetTimeString(DateTime start, DateTime stop) {
-		string start_ = DateTimeService.ToHourMinuteString(start);
-		string stop_ = DateTimeService.ToHourMinuteString(stop);
+		string start_ = DateTimeService.ToHourMinuteStringSinceMidnight(start);
+		string stop_ = DateTimeService.ToHourMinuteStringSinceMidnight(stop);
 		return $"{start_} - {stop_}";
 	}
 

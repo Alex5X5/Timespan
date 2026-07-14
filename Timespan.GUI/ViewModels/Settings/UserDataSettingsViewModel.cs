@@ -17,7 +17,7 @@ public partial class UserDataSettingsViewModel : ViewModelBase, ISettingsViewChi
 	[ObservableProperty]
 	private string jobNameTextboxText = "";
 
-	public UserDataSettingsViewModel(DateTimeService dateTimeService, SettingsService settingsService) : base() {
+	public UserDataSettingsViewModel(SettingsService settingsService) : base() {
 		this.settingsService = settingsService;
 		UsernameTextboxText = settingsService.Username;
 		StartDateTextboxText = settingsService.StartDateString;
