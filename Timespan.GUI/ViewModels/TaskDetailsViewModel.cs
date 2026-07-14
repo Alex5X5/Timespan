@@ -242,7 +242,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		if (SelectedTask == null)
 			return;
 		var task = TaskMapper.ToSharedType(SelectedTask);
-		var refetchedTask = (await dbService.QueryTasksAsync()).First(x => x.Id == task.Id);
+		var refetchedTask = await dbService.QueryTasksByIdAsync(task.Id);
 		await Dispatcher.UIThread.InvokeAsync(
 			() => {
 				SelectedTask = TaskMapper.ToGuiType(refetchedTask);
