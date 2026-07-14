@@ -72,9 +72,8 @@
 				</Grid.ColumnDefinitions>
 
 				<Viewbox Grid.Row="1"
-							Grid.Column="1"
-							Stretch="Uniform"
-							IsVisible="{Binding ShowTimer}">
+						 Grid.Column="1"
+						 Stretch="Uniform">
 					<Svg Path="avares://Timespan.GUI/Assets/Images/timespan.svg" />
 				</Viewbox>
 

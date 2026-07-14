@@ -2,7 +2,6 @@ namespace Timespan.GUI.Views;
 
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 
 using CommunityToolkit.Mvvm.Input;
 

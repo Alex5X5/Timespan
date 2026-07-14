@@ -15,7 +15,7 @@ using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
-public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild, IGraphViewModel {
+public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild {
 
 	protected Services.CacheService cacheService;
 	protected ITimespanDbService dbService;

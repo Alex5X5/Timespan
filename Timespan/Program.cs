@@ -11,12 +11,7 @@ public class Program {
 	/// </summary>
 	[STAThread]
 	public static void Main(string[] args) {
-
-		//PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Timespan");
-
-		//PrintService ps = new PrintService();
-		//ps.Print(PathService.AssetsPath("output-readable-indexers.pdf"));
 		try {
 			BuildAvaloniaApp()
 				.StartWithClassicDesktopLifetime(args);
@@ -24,8 +19,6 @@ public class Program {
 			string path = PathService.CrashesPath($"crash-{DateTimeService.ToDayAndMonthAndYearString(DateTime.Now)}.log");
 			File.WriteAllText(path, ex.ToString());
 		}
-		//EncryptionService service = new("test"); 
-		//service.EncryptFile(PathService.FilesPath("database"));
 	}
 
 	public static AppBuilder BuildAvaloniaApp()
