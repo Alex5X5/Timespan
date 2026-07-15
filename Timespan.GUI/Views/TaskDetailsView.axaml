@@ -61,7 +61,7 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding TaskNotRunning}"
+						IsVisible="{Binding ShowRestartButton}"
 						Command="{Binding RestartTaskCommand}">
 					<Viewbox Stretch="Uniform">
 						<Svg Path="avares://Timespan.GUI/Assets/Images/restart.svg" />
@@ -71,7 +71,7 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding TaskRunning}"
+						IsVisible="{Binding ShowStopButton}"
 						Command="{Binding StopTaskCommand}">
 					<Viewbox Stretch="Uniform">
 						<Svg Path="avares://Timespan.GUI/Assets/Images/stop.svg" />
@@ -81,7 +81,7 @@
 						Classes="OnlyClick"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						IsVisible="{Binding TaskNotRunning}"
+						IsVisible="{Binding ShowContiniueButton}"
 						Command="{Binding ContiniueTaskCommand}">
 					<Viewbox Stretch="Uniform">
 						<Svg Path="avares://Timespan.GUI/Assets/Images/start.svg" />

@@ -3,11 +3,16 @@
 		xmlns:vc="using:Timespan.GUI.Converters">
 	<!--
 	<Design.PreviewWith>
-		<StackPanel Width="100" Height="100">
-			<TextBlock Classes="DynamictextHeight" Width="50" Height="50" Text="test" />
-		</StackPanel>
+	</Design.PreviewWith>
+	<Design.PreviewWith>
+		<Border Padding="10" BorderBrush="green" BorderThickness="5">
+			<WrapPanel Width="100" Height="100">
+				<TextBlock Classes="DynamictextHeight" Width="50" Height="50" Text="test" />
+			</WrapPanel>
+		</Border>	
 	</Design.PreviewWith>
 	-->
+	
 	<Style Selector="TextBlock"> 
 		<Style Selector="^.h1">
 			<Setter Property="FontWeight" Value="ExtraBold" />
@@ -17,7 +22,37 @@
 			<Setter Property="FontWeight" Value="ExtraBold" />
 			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.3}" />
 		</Style>
+		<Style Selector="^.p1">
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="MinHeight" Value="0"/>
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter }, ConverterParameter=1.20 }" />
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Setter Property="Foreground" Value="Black" />
+			<Setter Property="FontFamily" Value="Anybody" />
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+			<Setter Property="VerticalAlignment" Value="Stretch" />
+		</Style>
+
+		<Style Selector="^.p2">
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+			<Setter Property="VerticalAlignment" Value="Stretch" />
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter }, ConverterParameter=2.0 }" />
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Setter Property="FontFamily" Value="Anybody" />
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+
+		<Style Selector="^.p3">
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+			<Setter Property="VerticalAlignment" Value="Stretch" />
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter }, ConverterParameter=2.0 }" />
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
 	</Style>
+
 	<Style Selector="TextBlock.Default">
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="Margin" Value="0"/>

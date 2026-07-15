@@ -50,10 +50,13 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	private bool showEditTaskPanel = false;
 
 	[ObservableProperty]
-	private bool taskRunning = false;
+	private bool showStopButton = false;
 
 	[ObservableProperty]
-	private bool taskNotRunning = false;
+	private bool showRestartButton = false;
+
+	[ObservableProperty]
+	private bool showContiniueButton = false;
 
 	[ObservableProperty]
 	private Color selectedColor = Color.FromArgb(255, 70, 70, 70);
@@ -81,7 +84,6 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	private async Task ContiniueTask() {
 		var task = TaskMapper.ToSharedType(SelectedTask);
 		await dbService.ContiniueTaskAsync(task);
-		await RefetchAndShowAsync();
 		await RaiseTaskChangedAsync();
 	}
 
@@ -91,7 +93,6 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		if (dbService != null) {
 			task.running = false;
 			await dbService.UpdateTaskAsync(task);
-			await RefetchAndShowAsync();
 			await RaiseTaskChangedAsync();
 		}
 	}
@@ -124,8 +125,8 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		SetReadonly();
 		var task = GetTaskFromState();
 		await dbService.UpdateTaskAsync(task);
-		await RefetchAndShowAsync();
 		await RaiseTaskChangedAsync();
+		await RefetchAndShowAsync();
 	}
 
 	[RelayCommand]
@@ -150,13 +151,13 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	[RelayCommand]
 	private void OnLoad() {
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
-		GlobalEventService.Subscribe<SelectedTaskChangedEventArgs>(OnSelectedChanged);
+		GlobalEventService.Subscribe<TasksChangedEventArgs>(OnTasksChanged);
 	}
 
 	[RelayCommand]
 	private void OnUnload() {
 		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(OnShowTask);
-		GlobalEventService.UnSubscribe<SelectedTaskChangedEventArgs>(OnSelectedChanged);
+		GlobalEventService.UnSubscribe<TasksChangedEventArgs>(OnTasksChanged);
 	}
 
 	[RelayCommand]
@@ -169,17 +170,15 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		if(args.Task != null)
 			SelectedTask = TaskMapper.ToGuiType(args.Task);
 		await SetStateFromTaskAsync();
-		await UpdateTaskRunningAsync();
 	}
 
-	private async void OnSelectedChanged(SelectedTaskChangedEventArgs args) {
-		if (args.Task != null)
-			SelectedTask = TaskMapper.ToGuiType(args.Task);
-		await SetStateFromTaskAsync();
-		await UpdateTaskRunningAsync();
+	private async void OnTasksChanged(TasksChangedEventArgs args) {
+		await RefetchAndShowAsync();
 	}
 
 	#endregion
+
+	#region display logic
 
 	private void SetReadonly() {
 		ShowReadonlyTaskPanel = true;
@@ -189,6 +188,9 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	private void SetEdit() {
 		ShowReadonlyTaskPanel = false;
 		ShowEditTaskPanel = true;
+		ShowContiniueButton = false;
+		ShowRestartButton = false;
+		ShowStopButton = false;
 	}
 
 	private Timespan.Types.Models.Task GetTaskFromState() {
@@ -205,22 +207,6 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		};
 	}
 
-	private void SetStateFromTask() {
-		if (SelectedTask == null)
-			return;
-		Description = SelectedTask.Description;
-		Title = TaskHelper.GetTitleString(SelectedTask.Description);
-		DateString = GetDateString(SelectedTask.StartDateTime);
-		TimeString = GetTimeString(SelectedTask.StartDateTime, SelectedTask.FinishDateTime);
-		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.StartDateTime);
-		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.FinishDateTime);
-		SelectedColor = SelectedTask.DisplayColor;
-	}
-
-	private async Task SetStateFromTaskAsync() {
-		await Dispatcher.UIThread.InvokeAsync(SetStateFromTask);
-	}
-
 	private static string GetDateString(DateTime date) {
 		string day = TranslatorService.Singleton.TranslateDayShort(date.DayOfWeek);
 		string month = TranslatorService.Singleton.TranslateMonthShort(date.Month);
@@ -233,33 +219,60 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		return $"{start_} - {stop_}";
 	}
 
+	#endregion
+
+	#region data updating
+
 	private static async Task RaiseTaskChangedAsync() {
 		await Dispatcher.UIThread.InvokeAsync(
 			()=> GlobalEventService.Raise<TasksChangedEventArgs>());
 	}
 
-	private async Task RefetchAsync() {
+	private async Task RefetchAndShowAsync() {
 		if (SelectedTask == null)
 			return;
-		var task = TaskMapper.ToSharedType(SelectedTask);
-		var refetchedTask = await dbService.QueryTasksByIdAsync(task.Id);
+		var refetchedTask = await dbService.QueryTasksByIdAsync(SelectedTask.Id);
 		await Dispatcher.UIThread.InvokeAsync(
 			() => {
 				SelectedTask = TaskMapper.ToGuiType(refetchedTask);
 			});
-	}
-
-	private async Task RefetchAndShowAsync() {
-		await RefetchAsync();
 		await SetStateFromTaskAsync();
 	}
 
+	private async Task SetStateFromTaskAsync() {
+		await Dispatcher.UIThread.InvokeAsync(SetStateFromTask);
+	}
+
+	private void SetStateFromTask() {
+		if (SelectedTask == null)
+			return;
+		Description = SelectedTask.Description;
+		Title = TaskHelper.GetTitleString(SelectedTask.Description);
+		DateString = GetDateString(SelectedTask.StartDateTime);
+		TimeString = GetTimeString(SelectedTask.StartDateTime, SelectedTask.FinishDateTime);
+		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.StartDateTime);
+		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.FinishDateTime);
+		SelectedColor = SelectedTask.DisplayColor;
+		UpdateTaskRunningAsync();
+	}
+
 	private async Task UpdateTaskRunningAsync() {
-		var running = (await dbService.QueryCurrentTaskAsync()) != null;
+		var task = (await dbService.QueryCurrentTaskAsync());
+		var anyRunning = task != null;
+		var selectedRunning = task?.Id == SelectedTask?.Id;
 		await Dispatcher.UIThread.InvokeAsync(
 			() => {
-				TaskRunning = running;
-				TaskNotRunning = !running;
+				if (ShowEditTaskPanel) {
+					ShowRestartButton = false;
+					ShowStopButton = false;
+					ShowContiniueButton = false;
+				} else {
+					ShowRestartButton = !anyRunning;
+					ShowStopButton = selectedRunning;
+					ShowContiniueButton = !anyRunning;
+				}
 			});
 	}
+
+	#endregion
 }
