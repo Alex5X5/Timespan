@@ -105,7 +105,7 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	public void OnTaskRedirect(Types.Task task) {
 		Console.WriteLine($"redirect event for task {task}");
 		stateService.SelectedTask = task;
-		GlobalEventService.Raise(new ShowTaksEventArgs(task));
+		GlobalEventService.Raise<ShowTaksEventArgs>();
 	}
 
 	public void OnLoad() {

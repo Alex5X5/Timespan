@@ -192,7 +192,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	}
 
 	private async void UpdateTimer(object? sender, EventArgs args) {
-		if ((await dbService.QueryCurrentTaskAsync()) is Timespan.Types.Models.Task task) {
+		if (stateService.RunningTask is Timespan.Types.Models.Task task) {
 			ShowTimer = true;
 			TimerString = DateTimeService.ToHourMinuteSecondsStringAbsolute(task.Duration);
 		} else {

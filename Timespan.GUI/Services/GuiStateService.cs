@@ -15,7 +15,7 @@ public partial class GuiStateService : ObservableObject {
 	private DateTime selectedDay = DateTime.MinValue;
 
 	[ObservableProperty]
-	private Timespan.Types.Models.Task selectedTask;
+	private Timespan.Types.Models.Task? selectedTask;
 
 	[ObservableProperty]
 	private Timespan.Types.Models.Task? runningTask;

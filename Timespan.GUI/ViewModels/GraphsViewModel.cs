@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
-using Timespan.GUI.Services.Mapping;
-using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Graphs;
 using Timespan.Util.Services;
@@ -38,9 +36,6 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[ObservableProperty]
 	private bool showTaskPanel = false;
-
-	[ObservableProperty]
-	private ObservableTask showingTask;
 
     partial void OnShowTaskPanelChanged(bool value)
 	{
@@ -81,10 +76,9 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	internal void ShowTask(ShowTaksEventArgs args) {
-		if (args.Task is null) {
+		if (stateService.SelectedTask is null) {
 			HideTask();
 		} else {
-			ShowingTask = TaskMapper.ToGuiType(args.Task);
 			ShowTaskPanel = true;
 		}
 	}
@@ -98,8 +92,8 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	internal async Task Select() {
 		var task = await dbService.QueryCurrentTaskAsync();
 		if (task is Timespan.Types.Models.Task) {
-			var args = new ShowTaksEventArgs(task);
-			GlobalEventService.Raise(args);
+			stateService.SelectedTask = task;
+			GlobalEventService.Raise<ShowTaksEventArgs>();
 		}
 	}
 

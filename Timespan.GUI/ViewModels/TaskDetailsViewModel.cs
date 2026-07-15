@@ -65,7 +65,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		get => stateService.SelectedColor;
 	}
 
-	public Timespan.Types.Models.Task SelectedTask {
+	public Timespan.Types.Models.Task? SelectedTask {
 		set {
 			OnPropertyChanging(nameof(SelectedTask));
 			stateService.SelectedTask = value;
@@ -142,7 +142,8 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	[RelayCommand]
 	private async Task CloseTask() {
 		if (ShowReadonlyTaskPanel == true) {
-			GlobalEventService.Raise(new ShowTaksEventArgs(null));
+			stateService.SelectedTask = null;
+			GlobalEventService.Raise<ShowTaksEventArgs>();
 		} else {
 			SetReadonly();
 			SetStateFromTask();

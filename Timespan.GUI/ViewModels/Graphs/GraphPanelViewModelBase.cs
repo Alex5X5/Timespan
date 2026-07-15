@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Helpers;
-using Timespan.GUI.Interfaces;
 using Timespan.GUI.Services;
 using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types;
@@ -146,7 +145,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	[RelayCommand]
 	protected virtual void OnTaskClicked(TaskClickedEventArgs args) {
 		stateService.SelectedTask = args.Task;
-		GlobalEventService.Raise(new ShowTaksEventArgs(args.Task));
+		GlobalEventService.Raise<ShowTaksEventArgs>();
 	}
 
 	[RelayCommand]
