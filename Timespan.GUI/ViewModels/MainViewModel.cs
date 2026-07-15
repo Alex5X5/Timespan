@@ -181,6 +181,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	internal void OnUnload() {
 		GlobalEventService.UnSubscribe<TasksChangedEventArgs>(TasksChanged);
+		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(ShowTask);
 		_timer.Stop();
 	}
 

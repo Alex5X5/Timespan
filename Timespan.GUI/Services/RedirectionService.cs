@@ -1,6 +1,4 @@
-﻿namespace Timespan.GUI.Services; 
-
-using System.Linq;
+﻿namespace Timespan.GUI.Services;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -13,7 +11,6 @@ public class RedirectionService {
 	private sealed class Entry<TValue>(TValue value) : IEntry {
 		public TValue Value { get; set; } = value;
 	}
-
 
 	private readonly Dictionary<Type, Dictionary<string, IEntry>> _store;
 
@@ -79,6 +76,8 @@ public partial class RedirectionAnchor<ChildT> : ObservableObject, IRedirectionA
 		typeof(T) == CurrentModel?.GetType();
 
 	public void ChangeModel<T>(Action<T?>? afterChange=null) where T : ChildT {
+		if(CurrentModel?.GetType() == typeof(T))
+			return;
 		lastModel = CurrentModel;
 		CurrentModel = App.Current.Services.GetService<T>();
 		ModelChanged.Invoke(CurrentModel?.GetType(), typeof(T));
@@ -126,6 +125,8 @@ public partial class ScopedRedirectionAnchor<ChildT> : ObservableObject, IRedire
 	public void ChangeModel<T>(Action<T?>? afterChange = null) where T : ChildT {
 		if (scope == null)
 			throw new InvalidOperationException("can not change model while scope is null");
+		if (CurrentModel?.GetType() == typeof(T))
+			return;
 		lastModel = CurrentModel;
 		CurrentModel = scope.ServiceProvider.GetService<T>();
 		ModelChanged.Invoke(CurrentModel?.GetType(), typeof(T));

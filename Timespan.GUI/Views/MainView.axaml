@@ -165,13 +165,13 @@
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="3*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="3*" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="3*" />
 					<!--
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
 					-->
 					<ColumnDefinition Width="5*" />
 				</Grid.ColumnDefinitions>
@@ -190,7 +190,6 @@
 					<TextBlock Text="{Binding $parent[cls:MainView].UserDataSettingsButtonText}"/>
 				</Button>
 				<!--
-				-->
 				<Button Grid.Row="1"
 						Grid.Column="5"
 						Classes="Rounded Navigation"
@@ -212,6 +211,7 @@
 						Command="{Binding GoToExportSettingsCommand}">
 					<TextBlock Text="{Binding $parent[cls:MainView].ExportSettingsButtonText}"/>
 				</Button>
+				-->
 			</Grid>
 
 			<Grid ShowGridLines="False"
