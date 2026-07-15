@@ -17,6 +17,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	private readonly RedirectionService redirectionService;
 	private readonly SettingsService settingsService;
+	private readonly GuiStateService stateService;
 	private readonly ITimespanDbService dbService;
 
 	private readonly DispatcherTimer _timer;
@@ -62,14 +63,15 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	internal bool ExportSettingsButtonSelected =>
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<ExportSettingsViewModel>() ?? false;
 
-	public MainViewModel() : this(new RedirectionService(), new SettingsService(), new TimespanDbService()) {
+	public MainViewModel() : this(new RedirectionService(), new SettingsService(), new TimespanDbService(), new GuiStateService(new CacheService())) {
 		
 	}
 
-	public MainViewModel(RedirectionService redirectionService, SettingsService settingsService, ITimespanDbService dbService) {
+	public MainViewModel(RedirectionService redirectionService, SettingsService settingsService, ITimespanDbService dbService, GuiStateService stateService) {
 		this.redirectionService = redirectionService;
 		this.settingsService = settingsService;
 		this.dbService = dbService;
+		this.stateService = stateService;
 		CurrentPageAnchor = new RedirectionAnchor<IMainViewChild>();
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
 		_timer = new DispatcherTimer {

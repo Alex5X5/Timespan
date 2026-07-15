@@ -17,7 +17,7 @@ using Timespan.Util.Services;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsViewChild {
 
-	protected Services.CacheService cacheService;
+	protected GuiStateService stateService;
 	protected ITimespanDbService dbService;
 	protected SettingsService settingsService;
 
@@ -85,8 +85,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#endregion
 
-	public GraphPanelViewModelBase(Services.CacheService cacheService, ITimespanDbService dbService, SettingsService settingsService, long start, long finish, int rows=1, int columns=24, int taskRows=1, int taskColumns=1, long duration=3600) : base() {
-		this.cacheService = cacheService;
+	public GraphPanelViewModelBase(GuiStateService stateService, ITimespanDbService dbService, SettingsService settingsService, long start, long finish, int rows=1, int columns=24, int taskRows=1, int taskColumns=1, long duration=3600) : base() {
+		this.stateService = stateService;
 		this.dbService = dbService;
 		this.settingsService = settingsService;
 		suspendRendering = true;
@@ -116,7 +116,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected abstract bool IsToday(int ro, int column);
 
 	public virtual async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(stateService.SelectedDay)) : [];
 	}
 
 	#region commands
@@ -145,7 +145,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	[RelayCommand]
 	protected virtual void OnTaskClicked(TaskClickedEventArgs args) {
-		cacheService.SelectedTask = args.Task;
+		stateService.SelectedTask = args.Task;
 		GlobalEventService.Raise(new ShowTaksEventArgs(args.Task));
 	}
 
@@ -176,10 +176,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	#region property changed events
 
 	protected virtual void OnIntervallChanged(IntervallChangedEventArgs args) {
-		cacheService.SelectedDay = FloorIntervall(cacheService.SelectedDay);
-		SelectedDay = cacheService.SelectedDay;
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
+		stateService.SelectedDay = FloorIntervall(stateService.SelectedDay);
+		SelectedDay = stateService.SelectedDay;
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(stateService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(stateService.SelectedDay));
 		UpdateColumnMarkers();
 	}
 

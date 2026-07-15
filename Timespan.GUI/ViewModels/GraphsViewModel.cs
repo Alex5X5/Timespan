@@ -1,15 +1,9 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
-using Avalonia.Controls.Documents;
-using Avalonia.Threading;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Microsoft.AspNetCore.Mvc;
-
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
@@ -23,7 +17,7 @@ using Timespan.Util.Services;
 public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 
 	private ITimespanDbService dbService;
-	private Timespan.GUI.Services.CacheService cacheService;
+	private readonly GuiStateService stateService;
 
 	public IRedirectionAnchor<IGraphsViewChild> CurrentPageAnchor;
 	public IGraphsViewChild? CurrentPage => CurrentPageAnchor.CurrentModel;
@@ -64,9 +58,9 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	private GridLength taskPanelWidth = new(0, GridUnitType.Star);
 
-	public GraphsViewModel(RedirectionService redirectionService, ITimespanDbService dbService, Timespan.GUI.Services.CacheService cacheService) : base() {
+	public GraphsViewModel(RedirectionService redirectionService, ITimespanDbService dbService, GuiStateService stateService) : base() {
 		this.dbService = dbService;
-		this.cacheService = cacheService;
+		this.stateService = stateService;
 		CurrentPageAnchor = new RedirectionAnchor<IGraphsViewChild>();
 		redirectionService.Register<GraphsViewModel, IGraphsViewChild>(CurrentPageAnchor);
 		CurrentPageAnchor.ModelChanged += (from, to) => {
@@ -80,7 +74,7 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 		];
 		SelectedTimeMode = TimeModes[0];
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
-		cacheService.SelectedDay = DateTimeService.FloorDay(DateTime.Now);
+		stateService.SelectedDay = DateTimeService.FloorDay(DateTime.Now);
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		CurrentPageAnchor.ChangeModel<DayPanelViewModel>();
 	}
@@ -116,11 +110,11 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[RelayCommand]
 	protected void PreviousIntervallClick() {
 		if (SelectedTimeMode == TimeModes[0])
-			cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(-1));
+			stateService.SelectedDay = DateTimeService.FloorDay(stateService.SelectedDay.AddDays(-1));
 		if (SelectedTimeMode == TimeModes[1])
-			cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(-7));
+			stateService.SelectedDay = DateTimeService.FloorWeek(stateService.SelectedDay.AddDays(-7));
 		if (SelectedTimeMode == TimeModes[2])
-			cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(-1));
+			stateService.SelectedDay = DateTimeService.FloorMonth(stateService.SelectedDay.AddMonths(-1));
 		DateString = CurrentPage?.GetDateString() ?? "Date";
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		GlobalEventService.Raise<TasksChangedEventArgs>();
@@ -129,11 +123,11 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[RelayCommand]
 	protected void FollowingIntervallClick() {
 		if (SelectedTimeMode == TimeModes[0])
-			cacheService.SelectedDay = DateTimeService.FloorDay(cacheService.SelectedDay.AddDays(1));
+			stateService.SelectedDay = DateTimeService.FloorDay(stateService.SelectedDay.AddDays(1));
 		if (SelectedTimeMode == TimeModes[1])
-			cacheService.SelectedDay = DateTimeService.FloorWeek(cacheService.SelectedDay.AddDays(7));
+			stateService.SelectedDay = DateTimeService.FloorWeek(stateService.SelectedDay.AddDays(7));
 		if (SelectedTimeMode == TimeModes[2])
-			cacheService.SelectedDay = DateTimeService.FloorMonth(cacheService.SelectedDay.AddMonths(1));
+			stateService.SelectedDay = DateTimeService.FloorMonth(stateService.SelectedDay.AddMonths(1));
 		DateString = CurrentPage?.GetDateString() ?? "Date";
 		GlobalEventService.Raise<IntervallChangedEventArgs>();
 		GlobalEventService.Raise<TasksChangedEventArgs>();

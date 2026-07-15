@@ -22,25 +22,25 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public MonthPanelViewModel(GUI.Services.CacheService cacheService, ITimespanDbService dbService, SettingsService settingsService) : base(
-			cacheService, dbService, settingsService,
-			DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay)),
-			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
-			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5,
-			DateTimeService.WeeksInMonth(cacheService.SelectedDay), 5, 86400) {
-		//dateTimeService = new(settingsService, cacheService);
+	public MonthPanelViewModel(GuiStateService stateService, ITimespanDbService dbService, SettingsService settingsService) : base(
+			stateService, dbService, settingsService,
+			DateTimeService.ToSeconds(DateTimeService.FloorWeek(stateService.SelectedDay)),
+			DateTimeService.ToSeconds(DateTimeService.CeilWeek(stateService.SelectedDay)),
+			DateTimeService.WeeksInMonth(stateService.SelectedDay), 5,
+			DateTimeService.WeeksInMonth(stateService.SelectedDay), 5, 86400) {
+		//dateTimeService = new(settingsService, stateService);
 	}
 
 	protected override bool IsToday(int row, int column) {
-		if(cacheService.SelectedDay.Month != DateTime.Today.Month)
+		if(stateService.SelectedDay.Month != DateTime.Today.Month)
 			return false;
-		int offset = DateTimeService.DayOfWorkWeek(DateTimeService.GetFirstDayOfMonthAtDate(cacheService.SelectedDay));
+		int offset = DateTimeService.DayOfWorkWeek(DateTimeService.GetFirstDayOfMonthAtDate(stateService.SelectedDay));
 		return (row * TaskGridColumnCount + column) == (DateTime.Today.Day + offset);
 	}
 
 	public override string GetDateString() {
-		string month = TranslatorService.Singleton.TranslateMonth(cacheService.SelectedDay.Month);
-		return $"{month} {cacheService.SelectedDay.Year}";
+		string month = TranslatorService.Singleton.TranslateMonth(stateService.SelectedDay.Month);
+		return $"{month} {stateService.SelectedDay.Year}";
 	}
 
 	protected override DateTime FloorIntervall(DateTime date) {
@@ -52,11 +52,11 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	protected override void OnIntervallChanged(IntervallChangedEventArgs args) {
-		cacheService.SelectedDay = FloorIntervall(cacheService.SelectedDay);
-		SelectedDay = cacheService.SelectedDay;
-		YAxisSegmentCount = DateTimeService.WeeksInMonth(cacheService.SelectedDay);
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(cacheService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(cacheService.SelectedDay));
+		stateService.SelectedDay = FloorIntervall(stateService.SelectedDay);
+		SelectedDay = stateService.SelectedDay;
+		YAxisSegmentCount = DateTimeService.WeeksInMonth(stateService.SelectedDay);
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(stateService.SelectedDay));
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(stateService.SelectedDay));
 		WeekOffset = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, SelectedDay);
 		UpdateColumnMarkers();
 	}
@@ -79,6 +79,6 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(DateTimeService.FloorMonth(cacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(DateTimeService.FloorMonth(stateService.SelectedDay)) : [];
 	}
 }

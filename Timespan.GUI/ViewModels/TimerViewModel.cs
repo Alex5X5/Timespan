@@ -2,6 +2,7 @@
 
 using Avalonia.Media;
 using Avalonia.Threading;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 using Timespan.Database.Services;
 using Timespan.Database.Services.Interfaces;
+using Timespan.GUI.Services;
 using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types;
 using Timespan.Util.Services;
@@ -18,7 +20,7 @@ using Timespan.Util.Services;
 public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyPropertyChanged {
 
 	private ITimespanDbService dbService;
-	private Services.CacheService cacheService;
+	private readonly GuiStateService stateService;
 
 	private readonly DispatcherTimer _timer;
 	
@@ -40,16 +42,16 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	[ObservableProperty]
 	private Color selectedColor;
 
-	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
-	public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
+	public bool IsStartButtonEnabled { get => stateService.RunningTask == null; }
+	public bool IsStopButtonEnabled { get => stateService?.RunningTask != null; }
 
-	public TimerViewModel() : this(new TimespanDbService(), new Services.CacheService()) {
+	public TimerViewModel() : this(new TimespanDbService(), new GuiStateService(new CacheService())) {
 		
 	}
 
-	public TimerViewModel(ITimespanDbService dbService, Services.CacheService cacheService) : base() {
+	public TimerViewModel(ITimespanDbService dbService, GuiStateService stateService) : base() {
 		this.dbService = dbService;
-		this.cacheService = cacheService;
+		this.stateService = stateService;
 		_timer = new DispatcherTimer {
 			Interval = TimeSpan.FromSeconds(1)
 		};
@@ -57,21 +59,21 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	}
 
 	private void UpdateDisplayTask() {
-		if (cacheService.RunningTask is not Timespan.Types.Models.Task running)
+		if (stateService.RunningTask is not Timespan.Types.Models.Task running)
 			return;
-		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime);
-		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
-		DescriptionTextboxText = cacheService.RunningTask.description;
+		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(stateService.RunningTask.StartDateTime);
+		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(stateService.RunningTask.FinishDateTime);
+		DescriptionTextboxText = stateService.RunningTask.description;
 		SelectedTask = TaskMapper.ToGuiType(running);
 	}
 
 	private async Task UpdateCacheTask() {
-		if (cacheService.RunningTask is not Timespan.Types.Models.Task running)
+		if (stateService.RunningTask is not Timespan.Types.Models.Task running)
 			return;
 		running.StartDateTime = DateTimeService.InterpretDayAndTimeString(StartTextboxText) ?? running.StartDateTime;
 		running.FinishDateTime = DateTimeService.InterpretDayAndTimeString(FinishTextboxText) ?? running.FinishDateTime;
 		running.description = DescriptionTextboxText;
-		cacheService.RunningTask = running;
+		stateService.RunningTask = running;
 		await dbService.UpdateTaskAsync(running);
 	}
 
@@ -82,7 +84,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	}
 
 	partial void OnDescriptionTextboxTextChanged(string value) {
-		if (cacheService.RunningTask is not Timespan.Types.Models.Task running)
+		if (stateService.RunningTask is not Timespan.Types.Models.Task running)
 			return;
 		running.description = DescriptionTextboxText;
 	}
@@ -91,7 +93,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	private async Task StartTask() {
 		Console.WriteLine("model start task button event!");
 		if (dbService != null)
-			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
+			stateService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
 				SelectedColor,
 				null,
@@ -108,8 +110,8 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		Console.WriteLine("model stop task button event!");
 		_timer.Stop();
 		if (dbService != null)
-			cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
-				cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
+			stateService.RunningTask = await dbService.FinishCurrentTaskAsync(
+				stateService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
 				DateTimeService.ToSeconds(DateTime.Now),
 				DescriptionTextboxText,
 				null,
@@ -136,9 +138,9 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	}
 
 	public void OnLoad() {
-		cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
+		stateService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
 		UpdateButtons();
-		if (cacheService.RunningTask?.running ?? false) {
+		if (stateService.RunningTask?.running ?? false) {
 			UpdateDisplayTask();
 			_timer.Start();
 		}

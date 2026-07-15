@@ -13,7 +13,6 @@ using System.Threading;
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.PDF.Services.Interfaces;
-using Timespan.Types.Models;
 using Timespan.Types.Pdf;
 using Timespan.Util.Services;
 
@@ -22,7 +21,7 @@ using Types = Timespan.Types.Models;
 public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 
 	private readonly RedirectionService redirectionService;
-	private readonly Services.CacheService cacheService;
+	private readonly GuiStateService stateService;
 	private readonly IPdfService? pdf;
 
 	public ObservableCollection<TextboxItem> TableItems {
@@ -56,14 +55,14 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	[ObservableProperty]
 	public string totalMissingDays;
 
-	public ExportViewModel(IPdfService? pdf, Services.CacheService cacheService, RedirectionService redirectionService) : base() {
-		this.redirectionService = redirectionService;
+	public ExportViewModel(IPdfService? pdf, RedirectionService redirectionService, GuiStateService stateService) : base() {
 		this.pdf = pdf;
-		this.cacheService = cacheService;
+		this.redirectionService = redirectionService;
+		this.stateService = stateService;
 		TableItems = [];
 		Dispatcher.UIThread.Invoke(
 			() => {
-				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
+				var data = pdf?.GetExportData(stateService.SelectedDay) ?? new PdfDocumentData();
 				for (int day = 0; day < 5; day++)
 					for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
 						int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
@@ -86,7 +85,7 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 		Console.WriteLine("export button click!");
 		new Thread(
 			() => {
-				pdf?.Export(cacheService.SelectedDay);
+				pdf?.Export(stateService.SelectedDay);
 			}
 		).Start();
 	}
@@ -105,13 +104,14 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 
 	public void OnTaskRedirect(Types.Task task) {
 		Console.WriteLine($"redirect event for task {task}");
+		stateService.SelectedTask = task;
 		GlobalEventService.Raise(new ShowTaksEventArgs(task));
 	}
 
 	public void OnLoad() {
 		Dispatcher.UIThread.Invoke(
 			() => {
-				var data = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
+				var data = pdf?.GetExportData(stateService.SelectedDay) ?? new PdfDocumentData();
 				JobNameText = data.JobName;
 				UserNameText = data.UserName;
 				DateFromText = data.DateFrom;

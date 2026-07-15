@@ -8,20 +8,18 @@ using CommunityToolkit.Mvvm.Input;
 
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Timespan.Database.Services.Interfaces;
-using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Helpers;
 using Timespan.GUI.Services;
-using Timespan.GUI.Services.Mapping;
-using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class TaskDetailsViewModel : ViewModelBase {
 
 	private ITimespanDbService dbService;
-	private Timespan.GUI.Services.CacheService cacheService;
+	private GuiStateService stateService;
 
 	#region Observable Properties
 
@@ -50,7 +48,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	private bool showEditTaskPanel = false;
 
 	[ObservableProperty]
-	private bool showStopButton = false;
+	public partial bool ShowStopButton { get; set; } = false;
 
 	[ObservableProperty]
 	private bool showRestartButton = false;
@@ -58,58 +56,65 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	[ObservableProperty]
 	private bool showContiniueButton = false;
 
-	[ObservableProperty]
-	private Color selectedColor = Color.FromArgb(255, 70, 70, 70);
+	public Color SelectedColor {
+		set {
+			OnPropertyChanging(nameof(SelectedColor));
+			stateService.SelectedColor = value;
+			OnPropertyChanged(nameof(SelectedColor));
+		}
+		get => stateService.SelectedColor;
+	}
 
-	[ObservableProperty]
-	private ObservableTask selectedTask;
+	public Timespan.Types.Models.Task SelectedTask {
+		set {
+			OnPropertyChanging(nameof(SelectedTask));
+			stateService.SelectedTask = value;
+			OnPropertyChanged(nameof(SelectedTask));
+		}
+		get => stateService.SelectedTask;
+	}
 
 	#endregion
 
-	public TaskDetailsViewModel(ITimespanDbService dbService, Timespan.GUI.Services.CacheService cacheService) {
+	public TaskDetailsViewModel(ITimespanDbService dbService, GuiStateService stateService) {
 		this.dbService = dbService;
-		this.cacheService = cacheService;
+		this.stateService = stateService;
 	}
 
 	#region Button Callbacks
 
 	[RelayCommand]
 	public async Task DeleteTask() {
-		var task = TaskMapper.ToSharedType(SelectedTask);
-		await dbService.DeleteTaskAsync(task);
-		await RaiseTaskChangedAsync();
+		await dbService.DeleteTaskAsync(SelectedTask);
+		await RaiseTasksChangedAsync();
 	}
 
 	[RelayCommand]
 	private async Task ContiniueTask() {
-		var task = TaskMapper.ToSharedType(SelectedTask);
-		await dbService.ContiniueTaskAsync(task);
-		await RaiseTaskChangedAsync();
+		await dbService.ContiniueTaskAsync(SelectedTask);
+		await RaiseTasksChangedAsync();
 	}
 
 	[RelayCommand]
 	private async Task StopTaskAsync() {
-		var task = TaskMapper.ToSharedType(SelectedTask);
 		if (dbService != null) {
-			task.running = false;
-			await dbService.UpdateTaskAsync(task);
-			await RaiseTaskChangedAsync();
+			SelectedTask.running = false;
+			await dbService.UpdateTaskAsync(SelectedTask);
+			await RaiseTasksChangedAsync();
 		}
 	}
 
 	private async Task StartTask() {
-		var task = TaskMapper.ToSharedType(SelectedTask);
 		if (dbService != null) {
 			var task_ = await dbService.StartNewTaskAsnc(
-				task.description,
-				task.DisplayColor,
-				task.project,
-				task.owner,
-				task.ticket
+				SelectedTask.description,
+				SelectedTask.DisplayColor,
+				SelectedTask.project,
+				SelectedTask.owner,
+				SelectedTask.ticket
 			);
-			cacheService.RunningTask = task_;
-			SelectedTask = TaskMapper.ToGuiType(task_);
-			await RaiseTaskChangedAsync();
+			stateService.RunningTask = task_;
+			await RaiseTasksChangedAsync();
 		}
 	}
 
@@ -117,7 +122,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	private async Task RestartTask() {
 		await StopTaskAsync();
 		await StartTask();
-		await RaiseTaskChangedAsync();
+		await RaiseTasksChangedAsync();
 	}
 
 	[RelayCommand]
@@ -125,7 +130,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		SetReadonly();
 		var task = GetTaskFromState();
 		await dbService.UpdateTaskAsync(task);
-		await RaiseTaskChangedAsync();
+		await RaiseTasksChangedAsync();
 		await RefetchAndShowAsync();
 	}
 
@@ -167,8 +172,6 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 
 	private async void OnShowTask(ShowTaksEventArgs args) {
 		SetReadonly();
-		if(args.Task != null)
-			SelectedTask = TaskMapper.ToGuiType(args.Task);
 		await SetStateFromTaskAsync();
 	}
 
@@ -201,7 +204,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 			description = Description,
 			start = DateTimeService.ToSeconds(start),
 			finish = DateTimeService.ToSeconds(finish),
-			running = SelectedTask.Running,
+			running = SelectedTask.running,
 			blocksTime = Timespan.Types.Models.BlockedTimeIntervallType.None,
 			DisplayColor = SelectedColor
 		};
@@ -223,7 +226,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 
 	#region data updating
 
-	private static async Task RaiseTaskChangedAsync() {
+	private static async Task RaiseTasksChangedAsync() {
 		await Dispatcher.UIThread.InvokeAsync(
 			()=> GlobalEventService.Raise<TasksChangedEventArgs>());
 	}
@@ -234,7 +237,7 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 		var refetchedTask = await dbService.QueryTasksByIdAsync(SelectedTask.Id);
 		await Dispatcher.UIThread.InvokeAsync(
 			() => {
-				SelectedTask = TaskMapper.ToGuiType(refetchedTask);
+				SelectedTask = refetchedTask ?? SelectedTask;
 			});
 		await SetStateFromTaskAsync();
 	}
@@ -246,8 +249,8 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	private void SetStateFromTask() {
 		if (SelectedTask == null)
 			return;
-		Description = SelectedTask.Description;
-		Title = TaskHelper.GetTitleString(SelectedTask.Description);
+		Description = SelectedTask.description;
+		Title = TaskHelper.GetTitleString(SelectedTask.description);
 		DateString = GetDateString(SelectedTask.StartDateTime);
 		TimeString = GetTimeString(SelectedTask.StartDateTime, SelectedTask.FinishDateTime);
 		StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(SelectedTask.StartDateTime);

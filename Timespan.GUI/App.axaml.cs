@@ -34,16 +34,14 @@ public partial class App : Application {
 	public override void OnFrameworkInitializationCompleted() {
 		PageInstanciator instanciator = new(this);
 
+		instanciator.AddCommonServiceSingleton<CacheService, CacheService>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
 		instanciator.AddCommonServiceSingleton<RedirectionService, RedirectionService>();
+		instanciator.AddCommonServiceSingleton<GuiStateService, GuiStateService>();
 
 		if (!Design.IsDesignMode) {
 			TimespanDbService dbService = new();
 			instanciator.AddCommonServiceSingleton<ITimespanDbService, TimespanDbService>(dbService);
-			Services.CacheService cacheService = new();
-			cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
-			instanciator.AddCommonServiceSingleton<Services.CacheService, Services.CacheService>(cacheService);
-			instanciator.AddCommonServiceSingleton<Timespan.Util.Services.CacheService, Services.CacheService>(cacheService);
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
 		}
 

@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
+using Timespan.GUI.Services;
 using Timespan.GUI.Types;
 using Timespan.Util.Services;
 
@@ -12,10 +13,10 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public WeekPanelViewModel(GUI.Services.CacheService cacheService, ITimespanDbService dbService, SettingsService settingsService) : base(
-			cacheService, dbService, settingsService,
-			DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay)),
-			DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay)),
+	public WeekPanelViewModel(GuiStateService stateService, ITimespanDbService dbService, SettingsService settingsService) : base(
+			stateService, dbService, settingsService,
+			DateTimeService.ToSeconds(DateTimeService.FloorWeek(stateService.SelectedDay)),
+			DateTimeService.ToSeconds(DateTimeService.CeilWeek(stateService.SelectedDay)),
 			1, 5,
 			1, 5, 86400) {
 		this.settingsService = settingsService;
@@ -24,7 +25,7 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 	protected override bool IsToday(int row, int column) {
 		if (row != 0)
 			return false;
-		if (DateTimeService.FloorWeek(cacheService.SelectedDay) != DateTimeService.FloorWeek(DateTime.Today))
+		if (DateTimeService.FloorWeek(stateService.SelectedDay) != DateTimeService.FloorWeek(DateTime.Today))
 			return false;
 		if (DateTimeService.DayOfWorkWeek(DateTime.Today) != column)
 			return false;
@@ -32,7 +33,7 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override string GetDateString() {
-		int week = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, cacheService.SelectedDay);
+		int week = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, stateService.SelectedDay);
 		return $"{TranslatorService.Singleton["Views.Pages.Graphs.Labels.Week"]} {week}";
 	}
 
@@ -45,6 +46,6 @@ public partial class WeekPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(DateTimeService.FloorWeek(cacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(DateTimeService.FloorWeek(stateService.SelectedDay)) : [];
 	}
 }

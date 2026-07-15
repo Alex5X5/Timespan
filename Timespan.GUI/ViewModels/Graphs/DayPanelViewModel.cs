@@ -5,8 +5,7 @@ using Avalonia.Media;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
-using Timespan.GUI.Types;
-using Timespan.GUI.Types.Events;
+using Timespan.GUI.Services;
 using Timespan.Util.Services;
 
 public partial class DayPanelViewModel : GraphPanelViewModelBase {
@@ -15,10 +14,10 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 		
 	}
 
-    public DayPanelViewModel(GUI.Services.CacheService cacheService, ITimespanDbService dbService, SettingsService settingsService) : base(
-			cacheService, dbService, settingsService,
-			DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay)),
-			DateTimeService.ToSeconds(DateTimeService.CeilDay(cacheService.SelectedDay)),
+    public DayPanelViewModel(GuiStateService stateService, ITimespanDbService dbService, SettingsService settingsService) : base(
+			stateService, dbService, settingsService,
+			DateTimeService.ToSeconds(DateTimeService.FloorDay(stateService.SelectedDay)),
+			DateTimeService.ToSeconds(DateTimeService.CeilDay(stateService.SelectedDay)),
 			1, 24,
 			1, 1, 3600) {
 
@@ -29,9 +28,9 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override string GetDateString() {
-		string day = TranslatorService.Singleton.TranslateDayShort(cacheService.SelectedDay.DayOfWeek);
-		string month = TranslatorService.Singleton.TranslateMonthShort(cacheService.SelectedDay.Month);
-		return $"{day}. {cacheService.SelectedDay.Day}. {month}. {cacheService.SelectedDay.Year}";
+		string day = TranslatorService.Singleton.TranslateDayShort(stateService.SelectedDay.DayOfWeek);
+		string month = TranslatorService.Singleton.TranslateMonthShort(stateService.SelectedDay.Month);
+		return $"{day}. {stateService.SelectedDay.Day}. {month}. {stateService.SelectedDay.Year}";
 	}
 
 	protected override DateTime FloorIntervall(DateTime date) {
@@ -43,6 +42,6 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
-		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(cacheService.SelectedDay)) : [];
+		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(stateService.SelectedDay)) : [];
 	}
 }
