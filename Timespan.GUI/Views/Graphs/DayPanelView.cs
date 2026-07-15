@@ -1,5 +1,6 @@
 namespace Timespan.GUI.Views.Graphs;
 
+using Avalonia.Input;
 using Avalonia.Media;
 
 using Timespan.GUI.Types;

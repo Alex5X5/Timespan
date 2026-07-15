@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Helpers;
+using Timespan.GUI.Services;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
@@ -104,6 +105,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private IRelayCommand clickedCommand;
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private IRelayCommand<DoubleClickedEventArgs> doubleClickedCommand;
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private IRelayCommand<TaskClickedEventArgs> taskClickedCommand;
 	[BasicStyledProperty<GraphPanelViewBase>]
@@ -504,7 +507,12 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	private void OnDoubleClickBase(object? sender, TappedEventArgs args) {
-		//Console.WriteLine("Double Click!");
+		var point = args.GetPosition(this);
+		int row = (int)Math.Floor(point.Y / YAxisSegmentSize);
+		int col = (int)Math.Floor(point.X / XAxisSegmentSize);
+		var args_ = new DoubleClickedEventArgs(row, col);
+		if(DoubleClickedCommand.CanExecute(args_))
+			DoubleClickedCommand.Execute(args_);
 	}
 
 	private void OnMouseMovedBase(object? sender, PointerEventArgs args) {

@@ -38,6 +38,7 @@
 									 MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
 									 ClickedCommand="{ Binding ClickedCommand }"
 									 TaskClickedCommand="{ Binding TaskClickedCommand }"
+									 DoubleClickedCommand="{Binding DoubleClickCommand}"
 									 LoadCommand="{ Binding LoadCommand }"
 									 UnloadCommand="{ Binding UnloadCommand }"/>
 		</DataTemplate>
@@ -62,6 +63,7 @@
 									  MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
 									  ClickedCommand="{ Binding ClickedCommand }"
 									  TaskClickedCommand="{ Binding TaskClickedCommand }"
+									  DoubleClickedCommand="{Binding DoubleClickCommand}"
 									  LoadCommand="{ Binding LoadCommand }"
 									  UnloadCommand="{ Binding UnloadCommand }"/>
 		</DataTemplate>
@@ -86,6 +88,7 @@
 									   MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
 									   ClickedCommand="{ Binding ClickedCommand }"
 									   TaskClickedCommand="{ Binding TaskClickedCommand }"
+									   DoubleClickedCommand="{Binding DoubleClickCommand}"
 									   LoadCommand="{ Binding LoadCommand }"
 									   UnloadCommand="{ Binding UnloadCommand }"
 									   WeekOffset="{Binding WeekOffset}"/>

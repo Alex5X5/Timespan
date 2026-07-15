@@ -84,7 +84,17 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#endregion
 
-	public GraphPanelViewModelBase(GuiStateService stateService, ITimespanDbService dbService, SettingsService settingsService, long start, long finish, int rows=1, int columns=24, int taskRows=1, int taskColumns=1, long duration=3600) : base() {
+	public GraphPanelViewModelBase(
+			GuiStateService stateService,
+			ITimespanDbService dbService,
+			SettingsService settingsService,
+			long start,
+			long finish,
+			int rows=1,
+			int columns=24,
+			int taskRows=1,
+			int taskColumns=1,
+			long duration=3600) : base() {
 		this.stateService = stateService;
 		this.dbService = dbService;
 		this.settingsService = settingsService;
@@ -169,6 +179,9 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	[RelayCommand]
 	protected virtual void OnMouseDragging(MouseDraggingEventArgs args) {
 	}
+
+	[RelayCommand]
+	protected abstract void OnDoubleClick(DoubleClickedEventArgs args);
 
 	#endregion
 

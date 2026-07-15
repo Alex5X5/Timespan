@@ -2,10 +2,12 @@
 
 using Avalonia.Media;
 
+using System.Security.Cryptography.Pkcs;
 using System.Threading.Tasks;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
+using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 public partial class DayPanelViewModel : GraphPanelViewModelBase {
@@ -43,5 +45,9 @@ public partial class DayPanelViewModel : GraphPanelViewModelBase {
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(DateTimeService.FloorDay(stateService.SelectedDay)) : [];
+	}
+
+	protected override void OnDoubleClick(DoubleClickedEventArgs args) {
+		
 	}
 }

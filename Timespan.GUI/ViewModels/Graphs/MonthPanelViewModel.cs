@@ -15,20 +15,27 @@ using Timespan.Util.Services;
 
 public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
+	private RedirectionService redirectionService;
+
 	[ObservableProperty]
 	private int weekOffset = 0;
 
-	public MonthPanelViewModel() : this(null, null, null) {
+	public MonthPanelViewModel() : this(null, null, null, null) {
 
 	}
 
-	public MonthPanelViewModel(GuiStateService stateService, ITimespanDbService dbService, SettingsService settingsService) : base(
+	public MonthPanelViewModel(
+			GuiStateService stateService,
+			ITimespanDbService dbService,
+			SettingsService settingsService,
+			RedirectionService redirectionService)
+		: base(
 			stateService, dbService, settingsService,
 			DateTimeService.ToSeconds(DateTimeService.FloorWeek(stateService.SelectedDay)),
 			DateTimeService.ToSeconds(DateTimeService.CeilWeek(stateService.SelectedDay)),
 			DateTimeService.WeeksInMonth(stateService.SelectedDay), 5,
 			DateTimeService.WeeksInMonth(stateService.SelectedDay), 5, 86400) {
-		//dateTimeService = new(settingsService, stateService);
+		this.redirectionService = redirectionService;
 	}
 
 	protected override bool IsToday(int row, int column) {
@@ -80,5 +87,13 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 
 	public override async Task<List<Timespan.Types.Models.Task>> GetTasksAsync() {
 		return dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(DateTimeService.FloorMonth(stateService.SelectedDay)) : [];
+	}
+
+	protected override void OnDoubleClick(DoubleClickedEventArgs args) {
+		var start = DateTimeService.FloorMonth(stateService.SelectedDay);
+		start = DateTimeService.FloorWeek(start);
+		start = start.AddDays(args.Row * 7);
+		stateService.SelectedDay = start;
+		redirectionService.GetAnchor<GraphsViewModel, IGraphsViewChild>()?.ChangeModel<WeekPanelViewModel>();
 	}
 }

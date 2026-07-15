@@ -192,13 +192,18 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	}
 
 	private async void UpdateTimer(object? sender, EventArgs args) {
-		if (stateService.RunningTask is Timespan.Types.Models.Task task) {
-			ShowTimer = true;
-			TimerString = DateTimeService.ToHourMinuteSecondsStringAbsolute(task.Duration);
-		} else {
+		var task = await dbService.QueryCurrentTaskAsync();
+		if (task == null) {
 			ShowTimer = false;
+			return;
 		}
+		task.FinishDateTime = DateTime.Now;
+		await dbService.UpdateTaskAsync(task);
+		stateService.RunningTask = await dbService.QueryCurrentTaskAsync();
+		ShowTimer = true;
+		TimerString = DateTimeService.ToHourMinuteSecondsStringAbsolute(stateService.RunningTask!.Duration);
 	}
+
 
 	private void ShowTask(ShowTaksEventArgs args) {
 		CurrentPageAnchor.ChangeModel<GraphsViewModel>();
