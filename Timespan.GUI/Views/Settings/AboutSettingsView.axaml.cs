@@ -32,8 +32,6 @@ public partial class AboutSettingsView : UserControl {
 			AboutSettingsViewModel.OnFigmaButtonClick();
 		} else if (sender == IllustratorButton) {
 			AboutSettingsViewModel.OnIllustratorButtonClick();
-		} else if (sender == GithubButton) {
-			AboutSettingsViewModel.OnGithubButtonClick();
 		} else if (sender == ProgrammButton) {
 			AboutSettingsViewModel.OnGithubButtonClick();
 		} else if (sender == KofiButton) {

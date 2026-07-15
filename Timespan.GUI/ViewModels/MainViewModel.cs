@@ -5,8 +5,6 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
 using System.ComponentModel;
 
 using Timespan.Database.Services;
@@ -15,7 +13,6 @@ using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Settings;
 using Timespan.Util.Services;
-
 public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	private readonly RedirectionService redirectionService;
@@ -76,7 +73,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor = new RedirectionAnchor<IMainViewChild>();
 		redirectionService.Register<MainViewModel, IMainViewChild>(CurrentPageAnchor);
 		_timer = new DispatcherTimer {
-			Interval = TimeSpan.FromSeconds(20)
+			Interval = TimeSpan.FromSeconds(1)
 		};
 		_timer.Tick += UpdateTimer;
 		CurrentPageAnchor.ModelChanged += OnPageChanged;

@@ -42,4 +42,6 @@
 	<Color x:Key="GraphModeSelectorBackground">#D9D9D9</Color >
 	<Color x:Key="GraphModeSelectorBackgroundHover">#E5E5E5</Color >
 	<Color x:Key="GraphModeSelectorBackgroundPressed">#C3C3C3</Color >
+
+	<Color x:Key="CeditsOwnerRectBackground">#DF4807</Color >
 </ResourceDictionary>

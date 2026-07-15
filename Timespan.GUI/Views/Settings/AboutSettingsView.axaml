@@ -15,61 +15,172 @@
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/SettingsViewCommon.axaml" />
 		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/AboutSettingsView.styles.axaml" />
 		
+		<Style Selector="TextBlock.text">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="LetterSpacing" Value="-0.24"/>
+		</Style>
+
 		<Style Selector="TextBlock.link" >
 			<Setter Property="TextDecorations" Value="Underline"/>
 			<Setter Property="Foreground" Value="Blue"/>
+			<Setter Property="Cursor" Value="Hand"/>
 		</Style>
 	</UserControl.Styles>
 
-	<Grid ShowGridLines="True">
+	<Grid ShowGridLines="False">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="6*" />
 			<RowDefinition Height="6*" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="24*" />
-			<RowDefinition Height="33*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="18*" />
+			<RowDefinition Height="4*" />
+			<RowDefinition Height="27*" />
+			<RowDefinition Height="6*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="3*" />
-			<ColumnDefinition Width="13*" />
-			<ColumnDefinition Width="3*" />
+			
+			<ColumnDefinition Width="14*" />
+			<ColumnDefinition Width="8*" />
+			<ColumnDefinition Width="24*" />
+			<ColumnDefinition Width="14*" />
 		</Grid.ColumnDefinitions>
+		
 		<TextBlock Text="{ Binding $parent[cls:AboutSettingsView].TitleLabelText }"
 				   Grid.Row="1"
 				   Grid.Column="1"
+				   Grid.ColumnSpan="2"
 				   Classes="h2" />
-		<StackPanel Grid.Row="3"
+
+		<Viewbox Stretch="Uniform"
+				 HorizontalAlignment="Left"
+				 Grid.Row="3"
+				 Grid.Column="1"
+				 Grid.RowSpan="1"
+				 Grid.ColumnSpan="2">
+			<StackPanel Orientation="Vertical"
+						Width="540"
+						Height="125"
+						Background="Transparent">
+				<TextBlock Text="Timespan wurde durch Alexander Lehnert, ein Azubi aus der IT-Ausbildung des" Classes="text"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Name="SrhButton" Text="SRH Berufssbildungswerk Dresden" PointerPressed="TextClick" Classes="text link"/>
+					<TextBlock Text=" ins Leben gerufen und entwickelt, sowie von" Classes="text"/>
+				</StackPanel>
+				<TextBlock Text="Ben Müller, Azubi aus der Mediengestalter-Ausbildung im SRH Berufsbildungwerk" Classes="text"/>
+				<TextBlock Text="Dresden gestaltet." Classes="text"/>
+				<TextBlock Text="" Classes="text"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Du benötigst Hilfe mit dem " Classes="text"/>
+					<TextBlock Name="ProgrammButton" Text="Programm" Classes="text link" PointerPressed="TextClick"/>
+					<TextBlock Text=", hast eine Frage oder möchtest Feedback" Classes="text"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="teilen? Dann melde ich gerne " Classes="text"/>
+					<TextBlock Name="EmailButton" Text="per E-Mail" Classes="text link" PointerPressed="TextClick"/>
+					<TextBlock Text=" an uns." Classes="text"/>
+				</StackPanel>
+			</StackPanel>
+		</Viewbox>
+		
+
+		<Viewbox Stretch="Uniform"
+				 HorizontalAlignment="Left"
+				 Grid.Row="5"
+				 Grid.Column="1"
+				 Grid.RowSpan="1"	
+				 Grid.ColumnSpan="1">
+			<StackPanel Orientation="Vertical"
+						Width="130"
+						Height="200"
+						Background="Transparent">
+				<TextBlock Text="Credits" FontSize="18" FontWeight="SemiBold"/>
+				<TextBlock Text="" />
+				<TextBlock Name="DotnetButton"
+						   Text="Dotnet"
+						   Classes="text link"
+						   PointerPressed="TextClick"
+						   Padding="0, 5, 0, 0"/>
+				<TextBlock Name="AvaloniaButton"
+						   Text="AvaloniaUi"
+						   Classes="text link"
+						   PointerPressed="TextClick"
+						   Padding="0, 5, 0, 0"/>
+				<TextBlock Name="VisualStudioButton"
+						   Text="Visual Studio"
+						   Classes="text link"
+						   PointerPressed="TextClick"
+						   Padding="0, 5, 0, 0"/>
+				<TextBlock Name="FigmaButton"
+						   Text="Figma"
+						   Classes="text link"
+						   PointerPressed="TextClick"
+						   Padding="0, 5, 0, 0"/>
+				<TextBlock Name="IllustratorButton"
+						   Text="Adobe Illustrator"
+						   Classes="text link"
+						   PointerPressed="TextClick"
+						   Padding="0, 5, 0, 0"/>
+				<TextBlock Name="KofiButton"
+						   Text="Kofi"
+						   Classes="text link"
+						   PointerPressed="TextClick"
+						   Padding="0, 5, 0, 0"/>
+			</StackPanel>
+		</Viewbox>
+
+		<Rectangle Grid.Row="5"
+				   Grid.Column="2"
+				   HorizontalAlignment="Stretch"
+				   VerticalAlignment="Stretch"
+				   RadiusX="20"
+				   RadiusY="20"
+				   Fill="{DynamicResource CeditsOwnerRectBackground}" />
+		<Grid Grid.Row="5"
+			  Grid.Column="2"
+			  RowDefinitions="*,5*,*"
+			  ColumnDefinitions="5*,36*,3*,36*,5*">
+			<Border Grid.Row="1"
 					Grid.Column="1"
-					Orientation="Vertical">
-			<TextBlock Text="Timespan wurde durch Alexander Lehnert, ein Azubi aus der IT-Ausbildung des" />
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Name="SrhButton" Text="SRH Berufssbildungswerk Dresden" Classes="link" PointerPressed="TextClick"/>
-				<TextBlock Text=" ins Leben gerufen und entwickelt, sowie von"/>
-			</StackPanel>
-			<TextBlock Text="Ben Müller, Azubi aus der Mediengestalter-Ausbildung im SRH Berufsbildungwerk" />
-			<TextBlock Text="Dresden gestaltet." />
-			<TextBlock Text="" />
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Du benötigst Hilfe mit dem "/>
-				<TextBlock Name="ProgrammButton" Text="Programm" Classes="link" PointerPressed="TextClick"/>
-				<TextBlock Text=", hast eine Frage oder möchtest Feedback"/>
-			</StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="teilen? Dann melde ich gerne "/>
-				<TextBlock Name="EmailButton" Text="per E-Mail" Classes="link" PointerPressed="TextClick"/>
-				<TextBlock Text=" an uns." />
-			</StackPanel>
-			<TextBlock Text="" />
-			<TextBlock Text="" />
-			<TextBlock Text="Credits" />
-			<TextBlock Text="" />
-			<TextBlock Name="DotnetButton" Text="Dotnet" Classes="link" PointerPressed="TextClick"/>
-			<TextBlock Name="AvaloniaButton" Text="AvaloniaUi" Classes="link" PointerPressed="TextClick"/>
-			<TextBlock Name="VisualStudioButton" Text="Visual Studio" Classes="link" PointerPressed="TextClick"/>
-			<TextBlock Name="FigmaButton" Text="Figma" Classes="link" PointerPressed="TextClick"/>
-			<TextBlock Name="IllustratorButton" Text="Adobe Illustrator" Classes="link" PointerPressed="TextClick"/>
-			<TextBlock Name="GithubButton" Text="Github Repo" Classes="link" PointerPressed="TextClick"/>
-			<TextBlock Name="KofiButton" Text="Kofi" Classes="link" PointerPressed="TextClick"/>
-		</StackPanel>
+					CornerRadius="14,0,0,14"
+					ClipToBounds="True"
+					Background="Transparent">
+				<Panel>
+					<Viewbox Stretch="UniformToFill">
+						<Image Source="avares://Timespan.GUI/Assets/Images/yellow.png" />
+					</Viewbox>
+					<Grid RowDefinitions="2*,*">
+						<Rectangle Grid.Row="1">
+							<Rectangle.Fill>
+								<LinearGradientBrush StartPoint="50%,100%" EndPoint="50%,0%">
+									<GradientStop Color="#FF000000" Offset="0.0"/>
+									<GradientStop Color="#00D9D9D9" Offset="1.0"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+					</Grid>
+				</Panel>
+			</Border>
+			<Border Grid.Row="1"
+					Grid.Column="3"
+					CornerRadius="0,14,14,0"
+					ClipToBounds="True"
+					Background="Transparent">
+				<Panel>
+					<Viewbox Stretch="UniformToFill">
+						<Image Source="avares://Timespan.GUI/Assets/Images/Contributors/BenMüller.png" />
+					</Viewbox>
+					<Grid RowDefinitions="2*,*">
+						<Rectangle Grid.Row="1">
+							<Rectangle.Fill>
+								<LinearGradientBrush StartPoint="50%,100%" EndPoint="50%,0%">
+									<GradientStop Color="#FF000000" Offset="0.0"/>
+									<GradientStop Color="#00D9D9D9" Offset="1.0"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+					</Grid>
+				</Panel>
+			</Border>	
+		</Grid>
 	</Grid>
 </UserControl>

@@ -3,8 +3,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-using Timespan.Util.Services;
-
 public partial class AboutSettingsViewModel : ViewModelBase, ISettingsViewChild {
 
 	public AboutSettingsViewModel() : base() {
@@ -15,7 +13,7 @@ public partial class AboutSettingsViewModel : ViewModelBase, ISettingsViewChild 
 	}
 
 	internal static void OnEmailButtonClick() {
-		OpenUrl("mailto://support.timespan@gmail.com");
+		OpenUrl("""mailto://support.timespan@gmail.com?subject=Feedback Timespan&body=Hallo,""");
 	}
 
 	internal static void OnVisualStudioButtonClick() {
