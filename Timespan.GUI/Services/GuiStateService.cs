@@ -12,7 +12,7 @@ public partial class GuiStateService : ObservableObject {
 	private Color selectedColor = new Color(0, 0, 0, 0);
 
 	[ObservableProperty]
-	private DateTime selectedDay = DateTime.MinValue;
+	private DateTime selectedDay = DateTimeService.FloorDay(DateTime.Now);
 
 	[ObservableProperty]
 	private Timespan.Types.Models.Task? selectedTask;

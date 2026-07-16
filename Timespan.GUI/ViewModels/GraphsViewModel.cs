@@ -143,12 +143,23 @@ public partial class GraphsViewModel : ViewModelBase, IMainViewChild {
 	[RelayCommand]
 	internal void OnLoad() {
 		GlobalEventService.Subscribe<IntervallChangedEventArgs>(UpdateIntervall);
+		CurrentPageAnchor.ModelChanged += OnCurrentPageChanged;
 	}
 
 	[RelayCommand]
 	internal void OnUnLoad() {
 		HideTask();
 		GlobalEventService.UnSubscribe<IntervallChangedEventArgs>(UpdateIntervall);
+		CurrentPageAnchor.ModelChanged -= OnCurrentPageChanged;
+	}
+
+	private void OnCurrentPageChanged(Type? from, Type to) {
+		if (to == typeof(DayPanelViewModel))
+			SelectedTimeMode = TimeModes[0];
+		else if (to == typeof(WeekPanelViewModel))
+			SelectedTimeMode = TimeModes[1];
+		else if (to == typeof(MonthPanelViewModel))
+			SelectedTimeMode = TimeModes[2];
 	}
 
 	private void UpdateIntervall(IntervallChangedEventArgs args) {

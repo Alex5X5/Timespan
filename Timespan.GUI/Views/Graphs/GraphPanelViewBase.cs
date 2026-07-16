@@ -4,12 +4,9 @@ using Avalonia.Interactivity;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Helpers;
-using Timespan.GUI.Services;
 using Timespan.GUI.Types;
 using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
@@ -141,11 +138,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	static GraphPanelViewBase() {
 		
 		AffectsRender<GraphPanelViewBase>(BoundsProperty);
-		//AffectsRender<GraphPanelViewBase>(TasksProperty);
-		//AffectsRender<GraphPanelViewBase>(MarkedRowsProperty);
-		//AffectsRender<GraphPanelViewBase>(BlockedRowsProperty);
-		//AffectsRender<GraphPanelViewBase>(MarkedColumnsProperty);
-		//AffectsRender<GraphPanelViewBase>(BlockedColumnsProperty);
 	}
 
 	public GraphPanelViewBase() {
@@ -508,8 +500,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	private void OnDoubleClickBase(object? sender, TappedEventArgs args) {
 		var point = args.GetPosition(this);
-		int row = (int)Math.Floor(point.Y / YAxisSegmentSize);
-		int col = (int)Math.Floor(point.X / XAxisSegmentSize);
+		int row = (int)Math.Floor((point.Y - PaddingY) / YAxisSegmentSize);
+		int col = (int)Math.Floor((point.X - PaddingX) / XAxisSegmentSize);
 		var args_ = new DoubleClickedEventArgs(row, col);
 		if(DoubleClickedCommand.CanExecute(args_))
 			DoubleClickedCommand.Execute(args_);
