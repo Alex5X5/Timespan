@@ -1,10 +1,10 @@
 ? automatisches selecten einer Farbe je nachdem ob eine Description Stichwörter entält
 ! verschiedene stufen der Exportierung der Zeit.
 ? auslesen aus der Webseite der Berufsschule. 
-? kopieren der description markierter Tasks in zwischenablage
-? einfügen von Tasks aus der zwischenablage
+(X) kopieren der description markierter Tasks in zwischenablage
+(X) einfügen von Tasks aus der zwischenablage
 
 
 !Typefaces beachten
-!Textgrößen genau beachten
-!Navigation Bar zu "zerbrechlich" -> Font genau nachmachen
+X Textgrößen genau beachten
+X Navigation Bar zu "zerbrechlich" -> Font genau nachmachen
