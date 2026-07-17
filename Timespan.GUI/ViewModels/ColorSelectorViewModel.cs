@@ -66,6 +66,10 @@ public partial class ColorSelectorViewModel : ViewModelBase {
 		Button4Color = colorService.TASK_BACKGROUND_DARK_GREEN;
 		Button5Color = colorService.TASK_BACKGROUND_DARK_BLUE;
 		Button6Color = colorService.TASK_BACKGROUND_DARK_PURPLE;
+		if (stateService.SelectedTask != null) {
+			stateService.SelectedColor = stateService.SelectedTask.DisplayColor;
+			OnTaskChanged();
+		}
 	}
 
 	#region button commands
@@ -186,7 +190,10 @@ public partial class ColorSelectorViewModel : ViewModelBase {
 	}
 
 	private void OnShowTask(ShowTaksEventArgs args) {
-		OnTaskChanged();
+		if (stateService.SelectedTask != null) {
+			stateService.SelectedColor = stateService.SelectedTask.DisplayColor;
+			OnTaskChanged();
+		}
 	}
 
 	private void OnTaskChanged() {
