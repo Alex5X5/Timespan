@@ -15,8 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Timespan.GUI.Services;
 using Timespan.GUI.ViewModels;
-using Timespan.GUI.ViewModels.Graphs;
-using Timespan.GUI.ViewModels.Settings;
 using Timespan.GUI.Views;
 using Timespan.GUI.Views.Graphs;
 using Timespan.GUI.Views.Settings;
@@ -38,6 +36,7 @@ public partial class App : Application {
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
 		instanciator.AddCommonServiceSingleton<RedirectionService, RedirectionService>();
 		instanciator.AddCommonServiceSingleton<GuiStateService, GuiStateService>();
+		instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
 
 		if (!Design.IsDesignMode) {
 			TimespanDbService dbService = new();
@@ -48,6 +47,7 @@ public partial class App : Application {
 		instanciator.RegisterWindow<MainWindow>();
 
 		instanciator.RegisterViewTransient<TaskDetailsView>();
+		instanciator.RegisterViewTransient<ColorSelectorView>();
 
 		instanciator.AddContentBindingType<IGraphsViewChild>();
 		instanciator.RegisterViewTransient<DayPanelView>();

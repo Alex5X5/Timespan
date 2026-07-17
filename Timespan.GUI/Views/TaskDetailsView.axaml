@@ -214,13 +214,11 @@
 						 TextWrapping="Wrap"
 						 CornerRadius="5,5,5,5"
 						 Text="{Binding Description}"/>
-				<controls:ColorSelectorControl Grid.Row="5"
-											   Grid.Column="0"
-											   Grid.ColumnSpan="3"
-											   HorizontalAlignment="Stretch"
-											   VerticalAlignment="Stretch"
-											   ColorChangedCommand="{Binding ColorSelectedCommand}"
-											   SelectedTask="{Binding SelectedTask}"/>
+				<views:ColorSelectorView Grid.Row="5"
+										 Grid.Column="0"
+										 Grid.ColumnSpan="3"
+										 HorizontalAlignment="Stretch"
+										 VerticalAlignment="Stretch"/>
 			</Grid>
 		</Grid>
 	</Panel>

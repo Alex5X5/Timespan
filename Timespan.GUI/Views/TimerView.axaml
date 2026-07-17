@@ -72,13 +72,11 @@
 					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.21 }" 
 					 PlaceholderText="{ Binding $parent[cls:TimerView].DescriptionLabelText }"
 					 Text="{ Binding DescriptionTextboxText }"/>
-			<controls:ColorSelectorControl Grid.Row="7"
-										   Grid.Column="0"
-										   Grid.ColumnSpan="3"
-										   HorizontalAlignment="Stretch"
-										   VerticalAlignment="Stretch"
-										   ColorChangedCommand="{Binding ColorSelectedCommand}"
-											   SelectedTask="{Binding SelectedTask}"/>
+			<views:ColorSelectorView Grid.Row="7"
+									 Grid.Column="0"
+									 Grid.ColumnSpan="3"
+									 HorizontalAlignment="Stretch"
+									 VerticalAlignment="Stretch"/>
 			<Grid Grid.Row="9" 
 				  Grid.Column="0"
 				  Grid.ColumnSpan="3"
@@ -107,4 +105,4 @@
 			</Grid>
 		</Grid>
 	</Grid>
-</UserControl>
+</UserControl> 

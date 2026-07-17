@@ -14,6 +14,7 @@ using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
 using Timespan.GUI.Services.Mapping;
 using Timespan.GUI.Types;
+using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 
@@ -38,9 +39,6 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 
 	[ObservableProperty]
 	private ObservableTask selectedTask;
-
-	[ObservableProperty]
-	private Color selectedColor;
 
 	public bool IsStartButtonEnabled { get => stateService.RunningTask == null; }
 	public bool IsStopButtonEnabled { get => stateService?.RunningTask != null; }
@@ -95,7 +93,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		if (dbService != null)
 			stateService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
-				SelectedColor,
+				stateService.SelectedColor,
 				null,
 				new Timespan.Types.Models.Worker { name = "new user" },
 				null
@@ -123,11 +121,9 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		UpdateButtons();
 	}
 
-	[RelayCommand]
-	private async Task OnColorSelected(Avalonia.Media.Color color) {
-		SelectedColor = color;
+	private async void OnColorSelected(ColorSelectedEventArgs args) {
 		if (SelectedTask != null) {
-			SelectedTask.DisplayColor = color;
+			SelectedTask.DisplayColor = stateService.SelectedColor;
 			await dbService.UpdateTaskAsync(SelectedTask.Value);
 		}
 	}
@@ -138,6 +134,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	}
 
 	public void OnLoad() {
+		GlobalEventService.Subscribe<ColorSelectedEventArgs>(OnColorSelected);
 		stateService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
 		UpdateButtons();
 		if (stateService.RunningTask?.running ?? false) {
@@ -147,6 +144,7 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 	}
 
 	public void OnUnload() {
+		GlobalEventService.UnSubscribe<ColorSelectedEventArgs>(OnColorSelected);
 		_timer.Stop();
 	}
 }

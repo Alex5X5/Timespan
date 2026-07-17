@@ -10,6 +10,8 @@ public partial class GuiStateService : ObservableObject {
 
 	[ObservableProperty]
 	private Color selectedColor = new Color(0, 0, 0, 0);
+	[ObservableProperty]
+	private Color pickedColor = new Color(0, 0, 0, 0);
 
 	[ObservableProperty]
 	private DateTime selectedDay = DateTimeService.FloorDay(DateTime.Now);

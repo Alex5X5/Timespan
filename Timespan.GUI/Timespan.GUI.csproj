@@ -41,8 +41,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Controls\ColorSelectorControl.axaml.cs">
-	    <DependentUpon>ColorSelectorControl.axaml</DependentUpon>
+	  <Compile Update="Views\ColorSelectorView.axaml.cs">
+	    <DependentUpon>ColorSelectorView.axaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\TaskDetailsView.axaml.cs">
 	    <DependentUpon>TaskDetailsView.axaml</DependentUpon>
@@ -71,6 +71,10 @@
 	  <Compile Update="Views\TimerView.axaml.cs">
 	    <DependentUpon>TimerView.axaml</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Controls\" />
 	</ItemGroup>
 
 </Project>

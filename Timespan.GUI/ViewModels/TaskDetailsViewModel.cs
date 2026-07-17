@@ -1,14 +1,11 @@
 ﻿namespace Timespan.GUI.ViewModels;
 
-using Avalonia.Interactivity;
 using Avalonia.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Helpers;
@@ -157,18 +154,23 @@ public partial class TaskDetailsViewModel : ViewModelBase {
 	[RelayCommand]
 	private void OnLoad() {
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(OnShowTask);
+		GlobalEventService.Subscribe<ColorSelectedEventArgs>(OnColorSelected);
 		GlobalEventService.Subscribe<TasksChangedEventArgs>(OnTasksChanged);
 	}
 
 	[RelayCommand]
 	private void OnUnload() {
 		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(OnShowTask);
+		GlobalEventService.UnSubscribe<ColorSelectedEventArgs>(OnColorSelected);
 		GlobalEventService.UnSubscribe<TasksChangedEventArgs>(OnTasksChanged);
 	}
 
-	[RelayCommand]
-	private void OnColorSelected(Color color) {
-		SelectedColor = color;
+	private async void OnColorSelected(ColorSelectedEventArgs args) {
+		if (SelectedTask != null) {
+			SelectedTask.DisplayColor = stateService.SelectedColor;
+			await dbService.UpdateTaskAsync(SelectedTask);
+			await Dispatcher.UIThread.InvokeAsync(()=>GlobalEventService.Raise<TasksChangedEventArgs>());
+		}
 	}
 
 	private async void OnShowTask(ShowTaksEventArgs args) {
