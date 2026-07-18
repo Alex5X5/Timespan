@@ -323,36 +323,3 @@ public enum DatabasePathFormat {
 	FileName,
 	ReadConfig
 }
-
-
-public static class AnonymousObjectMutator {
-	private const BindingFlags FieldFlags = BindingFlags.NonPublic | BindingFlags.Instance;
-	private static readonly string[] BackingFieldFormats = { "<{0}>i__Field", "<{0}>" };
-
-	public static T Set<T, TProperty>(
-		this T instance,
-		Expression<Func<T, TProperty>> propExpression,
-		TProperty newValue) where T : class {
-		var pi = (propExpression.Body as MemberExpression).Member;
-		var backingFieldNames = BackingFieldFormats.Select(x => string.Format(x, pi.Name)).ToList();
-		var fi = typeof(T)
-			.GetFields(FieldFlags)
-			.FirstOrDefault(f => backingFieldNames.Contains(f.Name));
-		if (fi == null)
-			throw new NotSupportedException(string.Format("Cannot find backing field for {0}", pi.Name));
-		fi.SetValue(instance, newValue);
-		return instance;
-	}
-}
-
-
-//internal static class Ext {
-//    public static IEnumerable<Type> GetBaseTypes(this Type type) {
-//        if (type.BaseType == null) 
-//            return type.GetBaseTypes();
-//        return Enumerable.Repeat(type.BaseType, 1)
-//            .Concat(type.GetInterfaces())
-//            .Concat(type.GetInterfaces().SelectMany(GetBaseTypes))
-//            .Concat(type.BaseType.GetBaseTypes());
-//    }
-//}
