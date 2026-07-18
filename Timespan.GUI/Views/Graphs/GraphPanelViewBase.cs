@@ -331,8 +331,16 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		context.DrawGeometry(background, null, rrect);
 	}
 
-	protected virtual bool DrawTaskDescriptionStub(DrawingContext context, ObservableTask task, Rect taskRect) {
-		bool didFit = false;
+	private static Rect GetTextBoundsForFill(Rect graphBounds) {
+		double padding = Math.Min(graphBounds.Width * 0.05, graphBounds.Height * 0.05);
+		double x = graphBounds.X + padding;
+		double y = graphBounds.Y + padding;
+		double width = graphBounds.Width - 2 * padding;
+		double height = graphBounds.Height - 2 * padding;
+		return new Rect(x, y, width, height);
+	}
+
+	protected virtual void DrawTaskDescriptionStub(DrawingContext context, ObservableTask task, Rect taskRect) {
 		var formattedText = new FormattedText(
 			TaskHelper.GetTitleString(task.Description, true),
 			System.Globalization.CultureInfo.CurrentCulture,
@@ -343,10 +351,16 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		);
 		double xPos = 0;
 		if (FillColumn) {
-			xPos = taskRect.X;
-			xPos += (taskRect.Width / 2.0);
-			xPos -= (formattedText.Width / 2.0);
+			Rect textBounds = GetTextBoundsForFill(taskRect);
 			formattedText.SetForegroundBrush(new SolidColorBrush(GetTaskDescriptionTextColor(task)));
+			using (context.PushClip(textBounds)) {
+				double _xPos = textBounds.X;
+				xPos += (textBounds.Width / 2.0);
+				xPos -= (textBounds.Width / 2.0);
+				double _yPos = taskRect.Y + ((taskRect.Height / 2.0) - (formattedText.Height / 2.0));
+				context.DrawText(formattedText, new Point(_xPos, _yPos));
+			}
+			return;
 		} else {
 			if (formattedText.Width < taskRect.Width) {
 				xPos = taskRect.X;
@@ -365,7 +379,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		}
 		double yPos = taskRect.Y + ((taskRect.Height / 2.0) - (formattedText.Height / 2.0));
 		context.DrawText(formattedText, new Point(xPos, yPos));
-		return didFit;
+		return;
 	}
 
 	protected abstract void DrawTimeline(DrawingContext context);
