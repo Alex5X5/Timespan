@@ -16,15 +16,27 @@ public partial class TimespanDbService : ITimespanDbService {
 		new(PathService.FilesPath("database"), DatabasePathFormat.FileName, null);
 
 
-    public async Task<bool> UpdateTaskAsync(Types.Task updatedTask) =>
-        await _accessor.UpdateAsync(updatedTask, false);
+    public async Task<bool> UpdateTaskAsync(Types.Task updatedTask) {
+        return await _accessor.ApplyUpdatesOnSingleAsync<Types.Task>(
+            updatedTask.Id,
+            (task) => {
+                task.description = updatedTask.description;
+                task.start = updatedTask.start;
+                task.finish = updatedTask.finish;
+                task.displayColorRed = updatedTask.displayColorRed;
+                task.displayColorGreen = updatedTask.displayColorGreen;
+                task.displayColorBlue = updatedTask.displayColorBlue;
+                task.blocksTime = updatedTask.blocksTime;
+            });
+    }
 
     public async Task DeleteTaskAsync(Types.Task task) =>
         await _accessor.DeleteAsync(task);
 
 
     public async Task<Types.Task> StartNewTaskAsnc(string description, Color color, Types.Project? project, Types.Worker worker, Types.Ticket? ticket) {
-        long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+		await FinishCurrentTaskAsync();
+		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
         Types.Task task = new() {
             DisplayColor = color,
             description = description,
@@ -39,34 +51,47 @@ public partial class TimespanDbService : ITimespanDbService {
         return task;
     }
 
-    public async Task<Types.Task> ContiniueTaskAsync(Types.Task taskToContiniue) { 
-		Types.Task? runningTask = await QueryCurrentTaskAsync();
-		if (runningTask != null)
-			await FinishCurrentTaskAsync(
-				runningTask.start,
-				runningTask.finish,
-				runningTask.description,
-				runningTask.project,
-				runningTask.ticket
-			);
-		taskToContiniue.finish = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-		taskToContiniue.running = true;
-		await _accessor.UpdateAsync(taskToContiniue, false);
+    public async Task<Types.Task> ContiniueTaskAsync(Types.Task taskToContiniue) {
+        if (! await FinishCurrentTaskAsync())
+            return taskToContiniue;
+        await _accessor.ApplyUpdatesOnSingleAsync<Types.Task>(
+            taskToContiniue.Id,
+            task => {
+		        taskToContiniue.finish = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+		        taskToContiniue.running = true;
+            }
+        );
 		return taskToContiniue;
 	}
 
-	public async Task<Types.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Types.Project? project, Types.Ticket? ticket) {
+    public async Task<bool> FinishCurrentTaskAsync() {
+		Types.Task? runningTask = await QueryCurrentTaskAsync();
+        if(runningTask == null)
+            return false;
+		return await FinishCurrentTaskAsync(
+			runningTask.start,
+			runningTask.finish,
+			runningTask.description,
+			runningTask.project,
+			runningTask.ticket
+		);
+	}
+
+	public async Task<bool> FinishCurrentTaskAsync(long? start, long? finish, string description, Types.Project? project, Types.Ticket? ticket) {
 		Types.Task? current = await QueryCurrentTaskAsync();
-		if (current == null)
-			return null;
-		if (start != null)
-			current.start = (long)start;
-		current.description = description;
-		current.finish = finish ?? DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-		current.running = false;
-		if(await _accessor.UpdateAsync(current, false))
-			return null;
-		return current;
+        if (current == null)
+            return true;
+        return await _accessor.ApplyUpdatesOnSingleAsync<Types.Task>(
+            current.Id,
+            (task) => {
+				if (start != null)
+					task.start = (long)start;
+                if (finish != null)
+                    task.finish = (long)finish;
+                else
+                    task.finish = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+				task.running = false;
+			});
 	}
 
 

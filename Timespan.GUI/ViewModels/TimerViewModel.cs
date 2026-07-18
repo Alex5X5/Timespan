@@ -108,13 +108,13 @@ public partial class TimerViewModel : ViewModelBase, IMainViewChild, INotifyProp
 		Console.WriteLine("model stop task button event!");
 		_timer.Stop();
 		if (dbService != null)
-			stateService.RunningTask = await dbService.FinishCurrentTaskAsync(
+			if (await dbService.FinishCurrentTaskAsync(
 				stateService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
 				DateTimeService.ToSeconds(DateTime.Now),
 				DescriptionTextboxText,
 				null,
-				null
-			);
+				null))
+				stateService.RunningTask = null;
 		DescriptionTextboxText = "";
 		StartTextboxText = "";
 		FinishTextboxText = "";

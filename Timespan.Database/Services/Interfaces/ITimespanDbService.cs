@@ -40,7 +40,7 @@ public interface ITimespanDbService {
 	
     public Task<Types.Task> StartNewTaskAsnc(string description, Color color, Types.Project? project, Types.Worker worker, Types.Ticket? ticket);
 	
-    public Task<Types.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Types.Project? project, Types.Ticket? ticket);
+    public Task<bool> FinishCurrentTaskAsync(long? start, long? finish, string description, Types.Project? project, Types.Ticket? ticket);
 
 	public Task<Types.Task> ContiniueTaskAsync(Types.Task updatedTask);
 
