@@ -7,8 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 public class PageInstanciator {
 
 	private readonly IServiceCollection serviceCollection = new ServiceCollection();
@@ -117,8 +115,4 @@ public class ScopedViewModelFactory<ViewBaseType>(Func<Type, IServiceScope, View
 		afterCreation?.Invoke((T?)viewModel);
 		return viewModel;
 	}
-}
-
-public class ModelProvider {
-	
 }

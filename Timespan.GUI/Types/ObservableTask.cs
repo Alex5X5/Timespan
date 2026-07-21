@@ -1,13 +1,6 @@
-﻿using Avalonia.Media;
-
-using CommunityToolkit.Mvvm.ComponentModel;
-
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Timespan.GUI.Types;
 
 using Timespan.Types.Models;
-
-namespace Timespan.GUI.Types;
 
 public class ObservableTask: ReactiveObject, IReactiveObject {
 

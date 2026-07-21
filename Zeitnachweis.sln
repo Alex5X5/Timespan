@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Database", "Timesp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseUtil", "DatabaseUtil\DatabaseUtil.csproj", "{61941540-77D3-ECD2-7EB7-6DD8EC39E515}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Installer", "Timespan.Installer\Timespan.Installer.csproj", "{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{698A4CC3-1BBA-4C16-AB23-44FF777E9367}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -48,10 +46,6 @@ Global
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.Build.0 = Release|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Release|Any CPU.Build.0 = Release|Any CPU
 		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Release|Any CPU.ActiveCfg = Release|Any CPU
