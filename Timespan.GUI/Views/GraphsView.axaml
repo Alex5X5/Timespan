@@ -120,6 +120,7 @@
 			<!--task bar-->
 			<Grid Grid.Row="1"
 				  ShowGridLines="False">
+				<!--
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="12*" />
 					<ColumnDefinition Width="1*" />
@@ -133,13 +134,21 @@
 					<ColumnDefinition Width="2*" />
 					<ColumnDefinition Width="12*" />
 				</Grid.ColumnDefinitions>
+				-->
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="12*" />
+					<ColumnDefinition Width="18*" />
+					<ColumnDefinition Width="20*" />
+					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="12*" />
+				</Grid.ColumnDefinitions>
 
 				<!--title-->
 				<TextBlock Text="{ Binding $parent[cls:GraphsView].TitleLabelText }"
 						   Classes="h2" />
 				
 				<!--Date-->
-				<Grid Grid.Column="4"
+				<Grid Grid.Column="2"
 					  ColumnDefinitions="15*, *, 4*, 4*"
 					  ShowGridLines="False">
 					<Grid Grid.Row="0"
@@ -176,8 +185,7 @@
 						</Grid>
 					</Button>
 				</Grid>
-
-				<!--select button-->
+				<!--
 				<Button	Grid.Column="6"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
@@ -199,7 +207,6 @@
 					</Grid>
 				</Button>
 
-				<!--delete button-->
 				<Button	Grid.Column="8"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
@@ -220,9 +227,9 @@
 						</Viewbox>
 					</Grid>
 				</Button>
-
+				-->
 				<!--mode combobox-->
-				<Grid Grid.Column="10"
+				<Grid Grid.Column="4"
 					  RowDefinitions="*, 8*, *"
 					  ShowGridLines="False">
 					<ComboBox Grid.Row="1"
