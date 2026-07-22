@@ -146,7 +146,7 @@
 					Background="Transparent">
 				<Panel>
 					<Viewbox Stretch="UniformToFill">
-						<Image Source="avares://Timespan.GUI/Assets/Images/yellow.png" />
+						<Image Source="avares://Timespan.GUI/Assets/Images/Contributors/AlexanderLehnert.png" />
 					</Viewbox>
 					<Grid RowDefinitions="2*,*">
 						<Rectangle Grid.Row="1">
@@ -157,6 +157,18 @@
 								</LinearGradientBrush>
 							</Rectangle.Fill>
 						</Rectangle>
+					</Grid>
+					<Grid ShowGridLines="False"
+						  RowDefinitions="46*, 7*, 6*"
+						  ColumnDefinitions="*, 16*, *">
+						<TextBlock Grid.Row="1"
+								   Grid.Column="1"
+								   Text="Alexander Lehnert"
+								   Foreground="#FFFFFF"
+								   FontWeight="SemiBold"
+								   HorizontalAlignment="Stretch"
+								   VerticalAlignment="Stretch"
+								   Classes="DynamicTextHeight"/>
 					</Grid>
 				</Panel>
 			</Border>
@@ -178,6 +190,18 @@
 								</LinearGradientBrush>
 							</Rectangle.Fill>
 						</Rectangle>
+					</Grid>
+					<Grid ShowGridLines="False"
+						  RowDefinitions="46*, 7*, 6*"
+						  ColumnDefinitions="*, 12*, *">
+						<TextBlock Grid.Row="1"
+								   Grid.Column="1"
+								   Text="Ben Müller"
+								   Foreground="#FFFFFF"
+								   FontWeight="SemiBold"
+								   HorizontalAlignment="Stretch"
+								   VerticalAlignment="Stretch"
+								   Classes="DynamicTextHeight"/>
 					</Grid>
 				</Panel>
 			</Border>	

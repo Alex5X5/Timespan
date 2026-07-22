@@ -165,9 +165,9 @@
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
-					<!--
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
+					<!--
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
@@ -189,7 +189,6 @@
 						Command="{Binding GoToUserDataSettingsCommand}">
 					<TextBlock Text="{Binding $parent[cls:MainView].UserDataSettingsButtonText}"/>
 				</Button>
-				<!--
 				<Button Grid.Row="1"
 						Grid.Column="5"
 						Classes="Rounded Navigation"
@@ -197,6 +196,7 @@
 						Command="{Binding GoToAboutSettingsCommand}">
 					<TextBlock Text="{Binding $parent[cls:MainView].AboutSettingsButtonText}"/>
 				</Button>
+				<!--
 				<Button Grid.Row="1"
 						Grid.Column="7"
 						Classes="Rounded Navigation"
