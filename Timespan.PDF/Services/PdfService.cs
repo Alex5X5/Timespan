@@ -147,7 +147,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			string[] lines = ["", "", "", "", "", ""];
 			List<Types.Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
 			if (tasks_.Count == 0)
-				return;
+				continue;
 			foreach (Types.Task task in tasks_) {
 				if (task.running)
 					continue;
