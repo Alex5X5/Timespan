@@ -52,9 +52,8 @@ public partial class TimespanDbService : ITimespanDbService {
     }
 
     public async Task<Types.Task> ContiniueTaskAsync(Types.Task taskToContiniue) {
-        if (! await FinishCurrentTaskAsync())
-            return taskToContiniue;
-        await _accessor.ApplyUpdatesOnSingleAsync<Types.Task>(
+        await FinishCurrentTaskAsync();
+		await _accessor.ApplyUpdatesOnSingleAsync<Types.Task>(
             taskToContiniue.Id,
             task => {
 		        taskToContiniue.finish = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
