@@ -22,17 +22,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 
 	#region observable properties
 
-	//[ObservableProperty]
-	//public partial ObservableCollection<ObservableBool> MarkedRows { set; get; }
-
-	//[ObservableProperty]
-	//public partial ObservableCollection<ObservableBool> BlockedRows { set; get; }
-
-	//[ObservableProperty]
-	//public partial ObservableCollection<ObservableBool> MarkedColumns { set; get; }
-
-	//[ObservableProperty]
-	//public partial ObservableCollection<ObservableBool> BlockedColumns { set; get; }
 
 	[ObservableProperty]
 	public partial ObservableCollection<ObservableTask> Tasks { set; get; }
