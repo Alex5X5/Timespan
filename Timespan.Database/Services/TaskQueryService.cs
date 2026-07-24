@@ -15,7 +15,7 @@ public partial class TimespanDbService {
 
 	public async Task<Types.Task?> QueryTasksByIdAsync(long id) =>
 		await _accessor.QuerySingleByKeyAsync<Types.Task>(id);
-	
+
 	public async Task<List<Types.Task>> QueryTasksInIntervallAsync(long intervallStartSeconds, long intervallFinishSeconds) {
 		List<Types.Task> tasks = await QueryTasksAsync();
 		return tasks
@@ -24,6 +24,15 @@ public partial class TimespanDbService {
 					.Where(x => x.blocksTime == Types.BlockedTimeIntervallType.None)
 						.OrderBy(p => p.start)
 							.ToList();
+	}
+
+	public async Task<List<Types.Task>> QueryAllTasksInIntervallAsync(long intervallStartSeconds, long intervallFinishSeconds) {
+		List<Types.Task> tasks = await QueryTasksAsync();
+		return tasks
+			.Where(x => x.start >= intervallStartSeconds && x.start <= intervallFinishSeconds)
+				.Where(x => x.finish >= intervallStartSeconds && x.finish <= intervallFinishSeconds)
+					.OrderBy(p => p.start)
+						.ToList();
 	}
 
 	public async Task<Types.Task?> QueryCurrentTaskAsync() {
@@ -50,6 +59,12 @@ public partial class TimespanDbService {
 		return await QueryTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
 	}
 
+	public async Task<List<Types.Task>> QueryAllTasksOfDayAtDateAsync(DateTime date) {
+		DateTime start = DateTimeService.FloorDay(date);
+		DateTime finfish = start.AddDays(1);
+		return await QueryAllTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
+	}
+
 	public async Task<List<Types.Task>> QueryTasksOfCurrentDayAsync() =>
 		await QueryTasksOfDayAtDateAsync(DateTime.Now);
 
@@ -59,6 +74,12 @@ public partial class TimespanDbService {
 		return await QueryTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
 	}
 
+	public async Task<List<Types.Task>> QueryAllTasksOfWeekAtDateAsync(DateTime date) {
+		DateTime start = DateTimeService.FloorWeek(date);
+		DateTime finfish = start.AddDays(5);
+		return await QueryAllTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
+	}
+
 	public async Task<List<Types.Task>> QueryTasksOfCurrentWeekAsync() =>
 		await QueryTasksOfWeekAtDateAsync(DateTime.Now);
 
@@ -66,6 +87,12 @@ public partial class TimespanDbService {
 		DateTime start = DateTimeService.FloorMonth(date);
 		DateTime finfish = start.AddDays(DateTime.DaysInMonth(date.Year, date.Month));
 		return await QueryTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
+	}
+
+	public async Task<List<Types.Task>> QueryAllTasksOfMonthAtDateAsync(DateTime date) {
+		DateTime start = DateTimeService.FloorMonth(date);
+		DateTime finfish = start.AddDays(DateTime.DaysInMonth(date.Year, date.Month));
+		return await QueryAllTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
 	}
 
 	public async Task<List<Types.Task>> QueryTasksOfCurrentMonthAsync() =>
@@ -90,10 +117,11 @@ public partial class TimespanDbService {
 		DateTime hour = DateTimeService.FloorHour(date);
 		DateTime day = DateTimeService.FloorDay(date);
 		DateTime week = DateTimeService.FloorWeek(date);
-		IEnumerable<Types.Task> tasks = await QueryBlockingTasksInIntervallAsync(DateTimeService.ToSeconds(week), DateTimeService.ToSeconds(week.AddDays(7)));
-		return tasks.Where(x => x.StartDateTime == hour && x.Duration == TimeSpan.SecondsPerHour)
-			.Concat(tasks.Where(x => x.StartDateTime == day && x.Duration == TimeSpan.SecondsPerDay))
-				.Concat(tasks.Where(x => x.StartDateTime == week && x.Duration == TimeSpan.SecondsPerDay * 7))
-					.ToList();
+		IEnumerable<Types.Task> tasks = (QueryBlockingTasksInIntervallAsync(DateTimeService.ToSeconds(week), DateTimeService.ToSeconds(week.AddDays(7)))).Result;
+		var hourTasks = tasks.Where(x => x.StartDateTime == hour && x.Duration == TimeSpan.SecondsPerHour - 1);
+		var dayTasks = tasks.Where(x => x.StartDateTime == day && x.Duration == TimeSpan.SecondsPerDay - 1);
+		return hourTasks
+			.Concat(dayTasks)
+			.ToList();
 	}
 }

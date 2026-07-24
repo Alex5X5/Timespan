@@ -202,7 +202,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			if (!WaitForIndexing())
 				return null;
 		PdfDocumentData data = new PdfDocumentData();
-		List<Types.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
+		List<Types.Task> tasks = _dbService.QueryAllTasksOfWeekAtDateAsync(selectedWeek).Result;
 		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
 			{ "monday", DayOfWeek.Monday },
 			{ "tuesday", DayOfWeek.Tuesday },

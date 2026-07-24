@@ -22,15 +22,21 @@ public interface ITimespanDbService {
 
     public Task<List<Types.Task>> QueryTasksOfDayAtDateAsync(DateTime date);
 
-    public Task<List<Types.Task>> QueryTasksOfCurrentDayAsync();
+	public Task<List<Types.Task>> QueryAllTasksOfDayAtDateAsync(DateTime date);
+
+	public Task<List<Types.Task>> QueryTasksOfCurrentDayAsync();
 
     public Task<List<Types.Task>> QueryTasksOfWeekAtDateAsync(DateTime date);
 
-    public Task<List<Types.Task>> QueryTasksOfCurrentWeekAsync();
+    public Task<List<Types.Task>> QueryAllTasksOfWeekAtDateAsync(DateTime date);
+
+	public Task<List<Types.Task>> QueryTasksOfCurrentWeekAsync();
 
     public Task<List<Types.Task>> QueryTasksOfMonthAtDateAsync(DateTime date);
 
-    public Task<List<Types.Task>> QueryTasksOfCurrentMonthAsync();
+	public Task<List<Types.Task>> QueryAllTasksOfMonthAtDateAsync(DateTime date);
+
+	public Task<List<Types.Task>> QueryTasksOfCurrentMonthAsync();
 
 
     public Task<bool> UpdateTaskAsync(Types.Task updatedTask);

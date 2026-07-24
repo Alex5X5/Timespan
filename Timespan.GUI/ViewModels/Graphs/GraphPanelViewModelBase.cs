@@ -246,11 +246,11 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected virtual async Task SetTimeIntervallBlocked(Timespan.Types.Models.BlockedTimeIntervallType reason) {
 		if (reason == Timespan.Types.Models.BlockedTimeIntervallType.None) {
 			await SetTimeIntervallUnblocked();
-			return;
+		} else {
+			List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
+			ForeachCell(tasks, (row, col, start, finish, task)=>SetCellBlocked(row, col, start, finish, task, reason));
+			UpdateColumnMarkers();
 		}
-		List<Timespan.Types.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TimeIntervallStartSeconds, TimeIntervallStopSeconds).Result;
-		ForeachCell(tasks, (row, col, start, finish, task)=>SetCellBlocked(row, col, start, finish, task, reason));
-		UpdateColumnMarkers();
 	}
 
 	private void SetCellBlocked(int row, int column, long start, long finish, List<Timespan.Types.Models.Task> tasks, Timespan.Types.Models.BlockedTimeIntervallType reason) {
