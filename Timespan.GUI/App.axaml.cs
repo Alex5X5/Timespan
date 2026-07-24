@@ -4,20 +4,20 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
-using Timespan.Database.Services;
-using Timespan.Database.Services.Interfaces;
-using Timespan.PDF.Services;
-using Timespan.PDF.Services.Interfaces;
-using Timespan.Util.Services;
+using Avalonia.Platform;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Timespan.Database.Services;
+using Timespan.Database.Services.Interfaces;
 using Timespan.GUI.Services;
 using Timespan.GUI.ViewModels;
 using Timespan.GUI.Views;
 using Timespan.GUI.Views.Graphs;
 using Timespan.GUI.Views.Settings;
+using Timespan.PDF.Services;
+using Timespan.PDF.Services.Interfaces;
+using Timespan.Util.Services;
 
 public partial class App : Application {
 
@@ -75,7 +75,7 @@ public partial class App : Application {
 			desktop.MainWindow = new MainWindow() {
 				DataContext = Services.GetRequiredService<MainViewModel>(),
 				Title = "Timespan",
-				Icon = new WindowIcon(new Avalonia.Media.Imaging.Bitmap(PathService.AssetsPath("HourgalssIcon4.png")))
+				Icon = new WindowIcon(new Avalonia.Media.Imaging.Bitmap(AssetLoader.Open(new Uri("avares://Timespan.GUI/Assets/Images/timespan-logo.png"))))
 			};
 		} else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform) {
 			singleViewPlatform.MainView = new MainView() {

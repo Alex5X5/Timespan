@@ -10,7 +10,10 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<ApplicationIcon>Assets/HourgalssIcon4.ico</ApplicationIcon>
+		<!--
+		<ApplicationIcon>Assets\HourgalssIcon4.ico</ApplicationIcon>
+		-->
+		<ApplicationIcon>Assets\timespan-logo.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -34,28 +37,10 @@
 		<ProjectReference Include="..\DatabaseUtil\DatabaseUtil.csproj" />
 		<ProjectReference Include="..\Timespan.Database\Timespan.Database.csproj" />
 		<ProjectReference Include="..\Timespan.PDF\Timespan.PDF.csproj" />
-		<!--
-		<ProjectReference Include="..\Timespan.Installer\Timespan.Installer.csproj" />
-		-->
 		<ProjectReference Include="..\Timespan.Gui\Timespan.Gui.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Include="Assets\**\*" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Resources.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Update="Properties\Resources.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
 	</ItemGroup>
 </Project>
