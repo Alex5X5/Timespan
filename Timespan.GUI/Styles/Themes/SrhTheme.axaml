@@ -18,9 +18,11 @@
 	<Color x:Key="Foreground">#000000</Color >
 	<Color x:Key="ForegroundLight">#101010</Color >
 	
+	<Color x:Key="MessageOverlayBackground">#D9D9D9</Color >
 	
-	<Color x:Key="HeaderBarBackgroundColor">#DF4807</Color >
+	<Color x:Key="TaskDetailsBackground">#D9D9D9</Color >
 
+	<Color x:Key="HeaderBarBackgroundColor">#DF4807</Color >
 	<Color x:Key="NavigationBarBackground">#1D1D1B</Color >
 
 	<Color x:Key="NavigationButtonHover">#2C2C29</Color >

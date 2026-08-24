@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 using Timespan.Database.Services;
 using Timespan.Database.Services.Interfaces;
@@ -51,6 +52,11 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 	private bool showSettingsNavigationBar = false;
 	[ObservableProperty]
 	private bool showNormalNavigationBar = true;
+
+	[ObservableProperty]
+	private bool showMessageOverlay = false;
+	[ObservableProperty]
+	private string messageOverlayString = "";
 
 	internal bool GeneralSettingsButtonSelected =>
 		redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.IsActive<GeneralSettingsViewModel>() ?? false;
@@ -129,6 +135,8 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	[RelayCommand]
 	internal void GoBack() {
+		if (CurrentPage.GetType() == typeof(SettingsViewModel))
+			settingsService.CancelEdit();
 		CurrentPageAnchor.GoBack();
 	}
 
@@ -153,7 +161,6 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 			if (from == typeof(SettingsViewModel) && to != typeof(SettingsViewModel)) {
 				redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.ModelChanged += UpdateNormalNavigationBar;
 				redirectionService.GetAnchor<SettingsViewModel, ISettingsViewChild>()?.ModelChanged -= UpdateSettingsNavigationBar;
-				settingsService.CancelEdit();
 				GlobalEventService.Raise<CloseSettingsEventArgs>();
 			}
 		}
@@ -178,17 +185,37 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		CurrentPageAnchor?.ChangeModel<TimerViewModel>();
 		GlobalEventService.Subscribe<TasksChangedEventArgs>(TasksChanged);
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
+		GlobalEventService.Subscribe<ShowMessageEventArgs>(ShowMessage);
 		_timer.Start();
 	}
 
 	internal void OnUnload() {
 		GlobalEventService.UnSubscribe<TasksChangedEventArgs>(TasksChanged);
 		GlobalEventService.UnSubscribe<ShowTaksEventArgs>(ShowTask);
+		GlobalEventService.UnSubscribe<ShowMessageEventArgs>(ShowMessage);
 		_timer.Stop();
 	}
 
 	private void TasksChanged(TasksChangedEventArgs args) {
 		UpdateTimer(this, args);
+	}
+
+	private void ShowTask(ShowTaksEventArgs args) {
+		CurrentPageAnchor.ChangeModel<GraphsViewModel>();
+	}
+
+	private void ShowMessage(ShowMessageEventArgs args) {
+		MessageOverlayString = args.Message;
+		ShowMessageOverlay = true;
+		Task.Run(
+			async ()=>{
+				await Task.Delay(3500);
+				await Dispatcher.UIThread.InvokeAsync(HideMessage);
+			});
+	}
+
+	private void HideMessage() {
+		ShowMessageOverlay = false;
 	}
 
 	private async void UpdateTimer(object? sender, EventArgs args) {
@@ -202,10 +229,5 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		stateService.RunningTask = await dbService.QueryCurrentTaskAsync();
 		ShowTimer = true;
 		TimerString = DateTimeService.ToHourMinuteSecondsStringAbsolute(stateService.RunningTask!.Duration);
-	}
-
-
-	private void ShowTask(ShowTaksEventArgs args) {
-		CurrentPageAnchor.ChangeModel<GraphsViewModel>();
 	}
 }

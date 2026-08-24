@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
@@ -60,19 +61,19 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 		this.redirectionService = redirectionService;
 		this.stateService = stateService;
 		TableItems = [];
-		Dispatcher.UIThread.Invoke(
-			() => {
-				var data = pdf?.GetExportData(stateService.SelectedDay) ?? new PdfDocumentData();
-				for (int day = 0; day < 5; day++)
-					for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
-						int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
-						PdfDocumentLine entry = data.Data[line];
-						TableItems.Add(new DescriptionItem(entry.Task, line, entry.Description));
-						TableItems.Add(new HourItem(entry.Task, line, entry.Hours));
-						TableItems.Add(new HourRangeItem(entry.Task, line, entry.HourRange));
-					}
-			}
-		);
+		//Dispatcher.UIThread.Invoke(
+		//	() => {
+		//		var data = pdf?.GetExportData(stateService.SelectedDay) ?? new PdfDocumentData();
+		//		for (int day = 0; day < 5; day++)
+		//			for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
+		//				int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
+		//				PdfDocumentLine entry = data.Data[line];
+		//				TableItems.Add(new DescriptionItem(entry.Task, line, entry.Description));
+		//				TableItems.Add(new HourItem(entry.Task, line, entry.Hours));
+		//				TableItems.Add(new HourRangeItem(entry.Task, line, entry.HourRange));
+		//			}
+		//	}
+		//);
 	}
 
 	[RelayCommand]
@@ -81,13 +82,16 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	[RelayCommand]
-	private void Export() {
-		Console.WriteLine("export button click!");
-		new Thread(
+	private async Task Export() {
+		await Task.Run(
 			() => {
 				pdf?.Export(stateService.SelectedDay);
-			}
-		).Start();
+			});
+		await Dispatcher.UIThread.InvokeAsync(
+			()=> {
+				var fileName = pdf?.GetFileNameForDate(stateService.SelectedDay) ?? "";
+				MessageService.ShowMessage($"Successfullly exported to\n{fileName}");
+			});
 	}
 
 	[RelayCommand]

@@ -17,7 +17,7 @@
 
 	<Panel>
 		<!--Background-->
-		<Rectangle Fill="#D9D9D9"
+		<Rectangle Fill="{DynamicResource TaskDetailsBackground}"
 				   Grid.Row="1"
 				   HorizontalAlignment="Stretch"
 				   VerticalAlignment="Stretch"

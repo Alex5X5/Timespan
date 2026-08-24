@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using System.Threading.Tasks;
+
 using Timespan.GUI.Services;
 using Timespan.GUI.Types.Events;
 using Timespan.GUI.ViewModels.Settings;
@@ -24,15 +26,21 @@ public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 		this.settingsService = settingsService;
 		CurrentPageAnchor = new ScopedRedirectionAnchor<ISettingsViewChild>(scopeFactory);
 		redirectionService.Register<SettingsViewModel, ISettingsViewChild>(CurrentPageAnchor);
-		CurrentPageAnchor.ModelChanged += (from, to) => {
-			OnPropertyChanged(nameof(CurrentPage));
-		};
 	}
 
 	[RelayCommand]
 	internal void OnSave() {
 		settingsService.SaveSettings();
-		redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.GoBack();
+		if (settingsService.RequiresRestart) {
+			Task.Run(
+				async ()=> {
+					MessageService.ShowMessage("The Application will exit now, to save the changes.");
+					await Task.Delay(3000);
+					Environment.Exit(0);
+				});
+		} else {
+			redirectionService.GetAnchor<MainViewModel, IMainViewChild>()?.GoBack();
+		}
 	}
 
 	[RelayCommand]
@@ -42,11 +50,17 @@ public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 	}
 
 	internal void OnLoad() {
+		CurrentPageAnchor.ModelChanged += CurrentPageChanged;
 		CurrentPageAnchor.CreateScope();
 		CurrentPageAnchor.ChangeModel<GeneralSettingsViewModel>();
 	}
 
 	internal void OnUnLoad() {
 		CurrentPageAnchor.CloseScope();
+		CurrentPageAnchor.ModelChanged -= CurrentPageChanged;
+	}
+
+	private void CurrentPageChanged(Type? from, Type to) {
+		OnPropertyChanged(nameof(CurrentPage));
 	}
 }

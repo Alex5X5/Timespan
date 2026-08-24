@@ -188,7 +188,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = FileService.EncodeBufferAnsi(document, documentCharCount, out int fileSize);
-		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName(selectedWeek)}"), fileSize);
+		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetFileNameForDate(selectedWeek)}"), fileSize);
 		NativeMemory.Free(resultFile);
 		NativeMemory.Free(document);
 		InsertOperations.Clear();
@@ -369,7 +369,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
         BufferValue("new_sick_days", Convert.ToString(sickDaysCount));
     }
 
-	private string GetNewFileName(DateTime selectedWeek) {
+	public string GetFileNameForDate(DateTime selectedWeek) {
 		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
 		DateTime dayTo = DateTimeService.GetFridayOfWeekAtDate(selectedWeek);
 		var week = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, selectedWeek);

@@ -237,10 +237,55 @@
 				</Button>
 			</Grid>
 		</Panel>
+		<!--main content-->
 		<ContentControl Grid.Row="2"
 					    Grid.Column="1"
 					    Grid.ColumnSpan="1"
 						Background="white"
 						Content="{Binding CurrentPage}"/>
+		<!--message box-->
+		<Grid Grid.Row="2"
+			  Grid.Column="1"
+			  ShowGridLines="False"
+			  IsVisible="{Binding ShowMessageOverlay}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="10*" />
+				<RowDefinition Height="50*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="3*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Border Grid.Row="1"
+					Grid.Column="1"
+					CornerRadius="10,10"
+					ClipToBounds="True">
+				<Grid ShowGridLines="False">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*" />
+						<RowDefinition Height="5*" />
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="20*"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Rectangle Grid.RowSpan="3"
+							   Grid.ColumnSpan="3"
+							   Fill="{DynamicResource MessageOverlayBackground}"/>
+					<TextBlock Grid.Row="1"
+							   Grid.Column="1"
+							   Text="{Binding MessageOverlayString}"
+							   FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.54 }" 
+							   TextAlignment="Center"
+							   HorizontalAlignment="Stretch"
+							   VerticalAlignment="Stretch"
+							   TextWrapping="Wrap" /> 
+				</Grid>
+			</Border>
+		</Grid>
 	</Grid>
 </UserControl>

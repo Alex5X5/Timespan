@@ -25,6 +25,8 @@ public partial class SettingsService {
 
 	public bool HasUnsavedChanges { get; private set; } = false;
 
+    public bool RequiresRestart { get; private set; } = false;
+
     public SettingsService() {
         Settings = LoadSettings();
         UnchangedSettings = BackupSettings();
@@ -70,7 +72,6 @@ public partial class SettingsService {
         using StreamWriter streamWriter = new(fileHandle);
         streamWriter.Write(res);
         HasUnsavedChanges = false;
-        OnPreSettingsSave = () => { };
 	}
 
     public void CancelEdit() {
@@ -102,6 +103,7 @@ public partial class SettingsService {
     public string Language {
         set {
             SetSetting(LANGUAGE_KEY, value);
+            RequiresRestart = true;
             OnLanguageChanged?.Invoke(Language);
         }
         get => GetSetting(LANGUAGE_KEY);
@@ -113,7 +115,8 @@ public partial class SettingsService {
     public string Theme {
         set {
             SetSetting(THEME_KEY, value);
-            OnThemeChanged?.Invoke(Theme);
+			RequiresRestart = true;
+			OnThemeChanged?.Invoke(Theme);
         }
         get => GetSetting(THEME_KEY);
     }
