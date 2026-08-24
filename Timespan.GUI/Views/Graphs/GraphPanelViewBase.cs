@@ -1,4 +1,6 @@
-﻿using Avalonia.Input;
+﻿namespace Timespan.GUI.Views.Graphs;
+
+using Avalonia.Input;
 using Avalonia.Interactivity;
 
 using System.Collections.ObjectModel;
@@ -12,8 +14,6 @@ using Timespan.GUI.Types.Events;
 using Timespan.Util.Services;
 
 using SharedTypes = Timespan.Types.Models;
-
-namespace Timespan.GUI.Views.Graphs;
 
 public abstract partial class GraphPanelViewBase : UserControl {
 
@@ -80,14 +80,14 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private int maxCellTasks;
-	[BasicStyledProperty<GraphPanelViewBase>]
-	private int taskGridRowCount;
-	[BasicStyledProperty<GraphPanelViewBase>]
-	private int taskGridColumnCount;
+	//[BasicStyledProperty<GraphPanelViewBase>]
+	//private int taskGridRowCount;
+	//[BasicStyledProperty<GraphPanelViewBase>]
+	//private int taskGridColumnCount;
 
-	public long TaskGridColumnDuration {
-		get => IntervalDuration / (long)TaskGridColumnCount;
-	}
+	//public long TaskGridColumnDuration {
+	//	get => IntervalDuration / (long)XAxisSegmentCount;
+	//}
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private bool fillColumn = false;
@@ -132,6 +132,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private bool[,] isToday;
+
+	[BasicStyledProperty<GraphPanelViewBase>]
+	private DateTime selectedDate;
 
 	#endregion
 
@@ -210,8 +213,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		if (offset < 0)
 			return 0;
 		int res = (int)Math.Floor((double)offset / (double)YAxisSegmentDuration);
-		res = Math.Max(res, 0);
-		res = Math.Min(res, YAxisSegmentCount - 1);
 		return res;
 	}
 
@@ -220,14 +221,20 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		if (offset < 0)
 			return 0;
 		int res = (int)Math.Floor(((double)offset % (double)YAxisSegmentDuration) / (double)XAxisSegmentDuration);
-		res = Math.Max(res, 0);
-		res = Math.Min(res, XAxisSegmentCount - 1);
 		return res;
 	}
 
 	protected virtual Rect GetTaskRectangle(ObservableTask task, int[,] cellTaskCount, double additionalWidth, double additionalHeight) {
 		int row = GetTaskRow(task);
 		int column = GetTaskColummn(task);
+		if (row < 0)
+			return new Rect();
+		if (row > YAxisSegmentCount - 1)
+			return new Rect();
+		if (column < 0)
+			return new Rect();
+		if (column > XAxisSegmentCount - 1)
+			return new Rect();
 		double graphPosX = column * XAxisSegmentSize;
 		double graphPosY = row * YAxisSegmentSize;
 		double width = additionalWidth * 2;
@@ -245,7 +252,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		} else {
 			double proportion = GraphAreaWidth / IntervalDuration;
 			long startOffset = task.Start - IntervalStartSeconds;
-			graphPosX += ((double)startOffset % (double)TaskGridColumnDuration) * proportion;
+			graphPosX += (double)startOffset * proportion;
 			long duration = task.Running ? DateTimeService.ToSeconds(DateTime.Now) - task.Start : task.Finish - task.Start;
 			double graphLength = duration * proportion;
 			width += Math.Max(graphLength, MinimalGraphWidth);
@@ -301,7 +308,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	}
 
 	private void DrawTasks(DrawingContext context) {
-		int[,] cells = new int[TaskGridRowCount, TaskGridColumnCount];
+		int[,] cells = new int[YAxisSegmentCount, XAxisSegmentCount];
 		for (int row = 0; row < cells.GetLength(0); row++)
 			for (int column = 0; column < cells.GetLength(1); column++)
 				cells[row, column] = 0;
@@ -456,7 +463,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		} else if (change.Property == XAxisSegmentCountProperty | change.Property == YAxisSegmentCountProperty) {
 			Console.WriteLine($"resizing isToday array to ({YAxisSegmentCount}, {XAxisSegmentCount})");
 			IsToday = ArrayHelper.ResizeArray(IsToday, YAxisSegmentCount, XAxisSegmentCount, false);
-			InvalidateVisual();
 		}
 	}
 
@@ -490,9 +496,9 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	private void OnClickBase(object? sender, TappedEventArgs e) {
 		ObservableTask? clickedTask = null;
 		Point mousePos = e.GetPosition(this);
-		int[,] cells = new int[TaskGridRowCount, TaskGridColumnCount];
-		for (int row = 0; row < TaskGridRowCount; row++)
-			for (int column = 0; column < TaskGridColumnCount; column++)
+		int[,] cells = new int[YAxisSegmentCount, XAxisSegmentCount];
+		for (int row = 0; row < YAxisSegmentCount; row++)
+			for (int column = 0; column < XAxisSegmentCount; column++)
 				cells[row, column] = 0;
 		int i = 0;
 		foreach (var task in Tasks) {

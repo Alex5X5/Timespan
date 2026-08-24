@@ -84,14 +84,14 @@ public partial class TimespanDbService {
 		await QueryTasksOfWeekAtDateAsync(DateTime.Now);
 
 	public async Task<List<Types.Task>> QueryTasksOfMonthAtDateAsync(DateTime date) {
-		DateTime start = DateTimeService.FloorMonth(date);
-		DateTime finfish = start.AddDays(DateTime.DaysInMonth(date.Year, date.Month));
+		DateTime start = DateTimeService.FloorWeek(DateTimeService.FloorMonth(date));
+		DateTime finfish = DateTimeService.CeilWeek(DateTimeService.CeilMonth(date));
 		return await QueryTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
 	}
 
 	public async Task<List<Types.Task>> QueryAllTasksOfMonthAtDateAsync(DateTime date) {
-		DateTime start = DateTimeService.FloorMonth(date);
-		DateTime finfish = start.AddDays(DateTime.DaysInMonth(date.Year, date.Month));
+		DateTime start = DateTimeService.FloorWeek(DateTimeService.FloorMonth(date));
+		DateTime finfish = DateTimeService.CeilWeek(DateTimeService.CeilMonth(date));
 		return await QueryAllTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
 	}
 

@@ -179,8 +179,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase, IGraphsVi
 	protected virtual void OnIntervallChanged(IntervallChangedEventArgs args) {
 		stateService.SelectedDay = FloorIntervall(stateService.SelectedDay);
 		SelectedDay = stateService.SelectedDay;
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(stateService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(stateService.SelectedDay));
+		var start = FloorIntervall(stateService.SelectedDay);
+		var finish = CeilIntervall(stateService.SelectedDay);
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(start);
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(finish);
 		UpdateColumnMarkers();
 	}
 

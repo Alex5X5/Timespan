@@ -62,18 +62,22 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 		stateService.SelectedDay = FloorIntervall(stateService.SelectedDay);
 		SelectedDay = stateService.SelectedDay;
 		YAxisSegmentCount = DateTimeService.WeeksInMonth(stateService.SelectedDay);
-		TimeIntervallStartSeconds = DateTimeService.ToSeconds(FloorIntervall(stateService.SelectedDay));
-		TimeIntervallStopSeconds = DateTimeService.ToSeconds(CeilIntervall(stateService.SelectedDay));
+		var start = DateTimeService.FloorWeek(DateTimeService.FloorMonth(stateService.SelectedDay));
+		var finish = DateTimeService.CeilWeek(DateTimeService.CeilMonth(stateService.SelectedDay));
+		TimeIntervallStartSeconds = DateTimeService.ToSeconds(start);
+		TimeIntervallStopSeconds = DateTimeService.ToSeconds(finish);
 		WeekOffset = DateTimeService.GetWeekCountAtDate(settingsService.StartDate, SelectedDay);
 		UpdateColumnMarkers();
 	}
 
 	protected override void ForeachCell(List<Timespan.Types.Models.Task> tasks, Action<int, int, long, long, List<Timespan.Types.Models.Task>> callback) {
-		var startDate = DateTimeService.FloorWeek(DateTimeService.FromSeconds(TimeIntervallStartSeconds));
-		long start = DateTimeService.ToSeconds(startDate);
+		long start = TimeIntervallStartSeconds;
 		long finish = start + XAxisSegmentDuration;
 		for (int row = 0; row < YAxisSegmentCount; row++) {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
+				var st = DateTimeService.FromSeconds(start);
+				var fsh = DateTimeService.FromSeconds(finish);
+				Console.WriteLine($"start of cell is {st} finish is {fsh}");
 				callback(row, column, start, finish, tasks);
 				start += XAxisSegmentDuration;
 				finish += XAxisSegmentDuration;

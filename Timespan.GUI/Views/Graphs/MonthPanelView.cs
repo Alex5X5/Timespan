@@ -7,9 +7,6 @@ using Timespan.GUI.Generators.Attributes;
 using Timespan.GUI.Types;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
-
-using static System.Net.Mime.MediaTypeNames;
-
 public partial class MonthPanelView : GraphPanelViewBase {
 
 	[BasicStyledProperty<MonthPanelView>]
@@ -28,10 +25,11 @@ public partial class MonthPanelView : GraphPanelViewBase {
 	}
 
 	protected override int GetTaskRow(ObservableTask task) {
-		int res = DateTimeService.WeekOfMonth(task.StartDateTime);
-		res = Math.Max(res, 0);
-		res = Math.Min(res, YAxisSegmentCount - 1);
-		return res;
+		DateTime firstWeek = DateTimeService.FloorWeek(DateTimeService.FloorMonth(SelectedDate));
+		DateTime taskWeek = DateTimeService.FloorWeek(task.StartDateTime);
+		long diffSeconds = DateTimeService.ToSeconds(taskWeek) - DateTimeService.ToSeconds(firstWeek);
+		double weeks = (double)diffSeconds / 604800.0;
+		return (int)Math.Floor(weeks);
 	}
 
 	protected override int GetTaskColummn(ObservableTask task) {
