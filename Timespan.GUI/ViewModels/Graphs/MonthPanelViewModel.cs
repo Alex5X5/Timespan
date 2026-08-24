@@ -77,7 +77,6 @@ public partial class MonthPanelViewModel : GraphPanelViewModelBase {
 			for (int column = 0; column < XAxisSegmentCount; column++) {
 				var st = DateTimeService.FromSeconds(start);
 				var fsh = DateTimeService.FromSeconds(finish);
-				Console.WriteLine($"start of cell is {st} finish is {fsh}");
 				callback(row, column, start, finish, tasks);
 				start += XAxisSegmentDuration;
 				finish += XAxisSegmentDuration;

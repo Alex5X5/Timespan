@@ -102,5 +102,37 @@ public partial class MonthPanelView : GraphPanelViewBase {
 				);
 			}
 		}
+
+		DrawDayIndicators(context);
+	}
+
+	private void DrawDayIndicators(DrawingContext context) {
+		var date = DateTimeService.FloorWeek(DateTimeService.FloorMonth(SelectedDate));
+		var textBrush = new SolidColorBrush(Colors.Black);
+		double textSize = ArialHeightToPt(YAxisSegmentSize, 0.2);
+		double yPos = PaddingY + YAxisSegmentSize * 0.05;
+		for (int row = 0; row < YAxisSegmentCount; row++) {
+			double xPos = PaddingX + XAxisSegmentSize * 0.05;
+			for (int col = 0; col < XAxisSegmentCount; col++) {
+				var day = date.Day.ToString();
+				var formattedText = new FormattedText(
+					day,
+					System.Globalization.CultureInfo.CurrentCulture,
+					FlowDirection.LeftToRight,
+					new Typeface("Arial"),
+					textSize,
+					textBrush
+				);
+				context.DrawText(formattedText, new Point(xPos, yPos));
+				date = date.AddDays(1);
+				xPos += XAxisSegmentSize;
+			}
+			yPos += YAxisSegmentSize;
+		}
+	}
+
+	protected override Rect GetTaskRectangle(ObservableTask task, int[,] cellTaskCount, double additionalWidth, double additionalHeight) {
+		var rect = base.GetTaskRectangle(task, cellTaskCount, additionalWidth, additionalHeight);
+		return new Rect(rect.X, rect.Y + YAxisSegmentSize * 0.2, rect.Width, rect.Height);
 	}
 }

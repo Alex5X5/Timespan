@@ -80,14 +80,6 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private int maxCellTasks;
-	//[BasicStyledProperty<GraphPanelViewBase>]
-	//private int taskGridRowCount;
-	//[BasicStyledProperty<GraphPanelViewBase>]
-	//private int taskGridColumnCount;
-
-	//public long TaskGridColumnDuration {
-	//	get => IntervalDuration / (long)XAxisSegmentCount;
-	//}
 
 	[BasicStyledProperty<GraphPanelViewBase>]
 	private bool fillColumn = false;
@@ -301,8 +293,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		if (SuspendRendering)
 			return;
 		DrawBackground(context);
-		DrawTimeline(context);
 		DrawColumnMarkers(context);
+		DrawTimeline(context);
 		DrawTasks(context);
 		DrawMouseRectangle(context);
 	}
@@ -461,7 +453,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 			}
 			InvalidateVisual();
 		} else if (change.Property == XAxisSegmentCountProperty | change.Property == YAxisSegmentCountProperty) {
-			Console.WriteLine($"resizing isToday array to ({YAxisSegmentCount}, {XAxisSegmentCount})");
+			//Console.WriteLine($"resizing isToday array to ({YAxisSegmentCount}, {XAxisSegmentCount})");
 			IsToday = ArrayHelper.ResizeArray(IsToday, YAxisSegmentCount, XAxisSegmentCount, false);
 		}
 	}
