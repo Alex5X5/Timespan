@@ -90,7 +90,8 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 		await Dispatcher.UIThread.InvokeAsync(
 			()=> {
 				var fileName = pdf?.GetFileNameForDate(stateService.SelectedDay) ?? "";
-				MessageService.ShowMessage($"Successfullly exported to\n{fileName}");
+				string message = TranslatorService.Singleton["Views.Pages.Export.Messages.Export.Success"];
+				MessageService.ShowMessage($"{message}\n{fileName}");
 			});
 	}
 

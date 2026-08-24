@@ -31,6 +31,7 @@ Views.Pages.Settings.Buttons.Visual:Visuals
 Views.Pages.Settings.Buttons.Export:Export
 Views.Pages.Settings.Buttons.Save:Save Settings
 Views.Pages.Settings.Buttons.Cancel:Cancel
+Views.Pages.Settings.Messages.Exit:The Application will exit now, to save the changes.
 
 Views.Pages.Settings.General.Labels.Language:Language
 
@@ -41,6 +42,7 @@ Views.Pages.Settings.UserData.Labels.JobName:Job Name
 Views.Pages.Export.Buttons.Import:Import
 Views.Pages.Export.Buttons.Export:Export
 Views.Pages.Export.Buttons.Folder:Open Folder
+Views.Pages.Export.Messages.Export.Success:Successfullly exported to
 
 Views.Pages.TaskDetails.Buttons.Stop:Stop
 Views.Pages.TaskDetails.Buttons.Continiue:Continiue

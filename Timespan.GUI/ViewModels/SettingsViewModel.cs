@@ -34,7 +34,8 @@ public partial class SettingsViewModel : ViewModelBase, IMainViewChild {
 		if (settingsService.RequiresRestart) {
 			Task.Run(
 				async ()=> {
-					MessageService.ShowMessage("The Application will exit now, to save the changes.");
+					string messsage = TranslatorService.Singleton["Views.Pages.Settings.Messages.Exit"];
+					MessageService.ShowMessage(messsage);
 					await Task.Delay(3000);
 					Environment.Exit(0);
 				});
