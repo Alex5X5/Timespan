@@ -22,6 +22,7 @@ public partial class MonthPanelView : GraphPanelViewBase {
 	#endregion fields
 
 	public MonthPanelView() : base() {
+		FillTasksYMargin = 0.3;
 	}
 
 	protected override int GetTaskRow(ObservableTask task) {

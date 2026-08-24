@@ -42,6 +42,8 @@ public abstract partial class GraphPanelViewBase : UserControl {
 
 	protected double TaskDescriptionPadding => 5;
 
+	protected double FillTasksYMargin = 0.5;
+
 	protected double GraphAreaWidth => Bounds.Width - 2 * PaddingX;
 	protected double GraphAreaHeight => Bounds.Height - 2 * PaddingY;
 
@@ -236,7 +238,7 @@ public abstract partial class GraphPanelViewBase : UserControl {
 		graphPosY += PaddingY;
 		graphPosY -= additionalHeight;
 		graphPosY += YAxisSegmentSize * 0.05;
-		graphPosY += cellTaskCount[row, column] * YAxisSegmentSize / MaxCellTasks * 1.5;
+		graphPosY += cellTaskCount[row, column] * YAxisSegmentSize / MaxCellTasks * (1.0 + FillTasksYMargin);
 		height += YAxisSegmentSize / MaxCellTasks;
 		if (FillColumn) {
 			graphPosX += XAxisSegmentSize * 0.05;
@@ -513,7 +515,11 @@ public abstract partial class GraphPanelViewBase : UserControl {
 	private void OnDoubleClickBase(object? sender, TappedEventArgs args) {
 		var point = args.GetPosition(this);
 		int row = (int)Math.Floor((point.Y - PaddingY) / YAxisSegmentSize);
+		row = Math.Max(row, 0);
+		row = Math.Min(row, YAxisSegmentCount - 1);
 		int col = (int)Math.Floor((point.X - PaddingX) / XAxisSegmentSize);
+		col = Math.Max(col, 0);
+		col = Math.Min(col, XAxisSegmentCount - 1);
 		var args_ = new DoubleClickedEventArgs(row, col);
 		if(DoubleClickedCommand.CanExecute(args_))
 			DoubleClickedCommand.Execute(args_);
