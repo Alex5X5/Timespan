@@ -1,0 +1,144 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:controls="using:Timespan.GUI.Controls"
+			 xmlns:vc="using:Timespan.GUI.Converters"
+			 mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="80"
+			 x:CompileBindings="True"
+			 x:DataType="models:ColorSelectorViewModel"
+			 x:Class="Timespan.GUI.Views.ColorSelectorView">
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/ColorSelectorView.styles.axaml" />
+	</UserControl.Styles>
+
+	<Panel>
+		<!--Main Container-->
+		<Grid Grid.Row="5"
+				Grid.Column="0"
+				Grid.ColumnSpan="3"
+				ShowGridLines="False" >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="10*" />
+				<ColumnDefinition Width="30*" />
+			</Grid.ColumnDefinitions>
+			<Viewbox Grid.Column="0" Stretch="Uniform">
+				<Button Name="Color1Button"
+						Width="100"
+						Height="100"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding Color1ButtonSelected}"
+						Command="{Binding Color1ButtonClickCommand}">
+					<Button.Background>
+						<SolidColorBrush Color="{Binding Button1Color}"/>
+					</Button.Background>
+				</Button>
+			</Viewbox>
+			<Viewbox Grid.Column="2" Stretch="Uniform">
+				<Button Name="Color2Button"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding Color2ButtonSelected}"
+						Width="100"
+						Height="100"
+						Command="{Binding Color2ButtonClickCommand}">
+					<Button.Background>
+						<SolidColorBrush Color="{Binding Button2Color}"/>
+					</Button.Background>
+				</Button>
+			</Viewbox>
+			<Viewbox Grid.Column="4" Stretch="Uniform">
+				<Button Name="Color3Button"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding Color3ButtonSelected}"
+						Width="100"
+						Height="100"
+						Command="{Binding Color3ButtonClickCommand}">
+					<Button.Background>
+						<SolidColorBrush Color="{Binding Button3Color}"/>
+					</Button.Background>
+				</Button>
+			</Viewbox>
+			<Viewbox Grid.Column="6" Stretch="Uniform">
+				<Button Name="Color4Button"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding Color4ButtonSelected}"
+						Width="100"
+						Height="100"
+						Command="{Binding Color4ButtonClickCommand}">
+					<Button.Background>
+						<SolidColorBrush Color="{Binding Button4Color}"/>
+					</Button.Background>
+				</Button>
+			</Viewbox>
+			<Viewbox Grid.Column="8" Stretch="Uniform">
+				<Button Name="Color5Button"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding Color5ButtonSelected}"
+						Width="100"
+						Height="100"
+						Command="{Binding Color5ButtonClickCommand}">
+					<Button.Background>
+						<SolidColorBrush Color="{Binding Button5Color}"/>
+					</Button.Background>
+				</Button>
+			</Viewbox>
+			<Viewbox Grid.Column="10" Stretch="Uniform">
+				<Button Name="Color6Button"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding Color6ButtonSelected}"
+						Width="100"
+						Height="100"
+						Command="{Binding Color6ButtonClickCommand}">
+					<Button.Background>
+						<SolidColorBrush Color="{Binding Button6Color}"/>
+					</Button.Background>
+				</Button>
+			</Viewbox>
+			<Viewbox Grid.Column="12" Stretch="Uniform">
+				<Button Name="ColorPickerButton"
+						Classes="DynamicBackground Circle"
+						Classes.Selected="{Binding Color7ButtonSelected}"
+						Command="{Binding PickerButtonClickCommand}">
+					<Grid Width="100"
+						  Height="100"
+						  RowDefinitions="12*, 6*, *"
+						  ColumnDefinitions="12*, 6*, *">
+						<Image Source="avares://Timespan.GUI/Assets/Images/color-picker.png"
+							   Grid.RowSpan="3"
+							   Grid.ColumnSpan="3"/>
+						<Border Grid.Row="1"
+								Grid.Column="1"
+								BorderBrush="#FF000000"
+								BorderThickness="2"
+								ClipToBounds="True"
+								CornerRadius="17"
+								Background="Transparent">
+							<Rectangle HorizontalAlignment="Stretch"
+									   VerticalAlignment="Stretch"
+									   RadiusX="13"
+									   RadiusY="13">
+								<Rectangle.Fill>
+									<SolidColorBrush Color="{Binding PickedColor}"/>
+								</Rectangle.Fill>
+							</Rectangle>
+						</Border>
+					</Grid>
+				</Button>
+			</Viewbox>
+		</Grid>
+	</Panel>
+</UserControl>

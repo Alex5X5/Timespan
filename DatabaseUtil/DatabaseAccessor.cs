@@ -151,7 +151,7 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 	}
 
 	public bool PrimaryKeyValueExistsInDatabase<EntityType>(object? key) where EntityType : class {
-		if (key?.GetType() == null)
+		if (key == null)
 			return false;
 		if (_context?.Set<EntityType>().Find(key) != null)
 			return true;
@@ -189,8 +189,9 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 	}
 	
 	public async Task<List<T>> QueryAllAsync<T>() where T : class {
-		var res = _context != null ? await _context.Set<T>().ToListAsync() : [];
-		return res;
+		if (_context == null)
+			return [];
+		return await _context.Set<T>().ToListAsync();
 	}
 
 	public IEnumerable<T> QueryAllEnumerable<T>() where T : class {
@@ -232,61 +233,49 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		return true;
 	}
 
-	public async Task<bool> UpdateAsync<T>(T updatedObject, bool createIfNotExists) where T : class {
-		object? primaryKeyValue = primaryKeyProperties[typeof(T)]?.GetValue(updatedObject);
-		if (primaryKeyValue == null)
-			return false;
-		ExpandoObject dynamicObject = new ExpandoObject();
-		var dict = (IDictionary<string, object?>)dynamicObject;
-		var primaryKeyProperty = primaryKeyProperties[typeof(T)];
-		if (primaryKeyProperty != null) {
-			dict.Add(primaryKeyProperty.Name, primaryKeyValue);
-		}
-		return await UpdateAsync(ExpandoToDynamicType(dynamicObject), updatedObject, createIfNotExists);
-	}
-
-	public async Task<bool> UpdateAsync<T>(object? filter, T value, bool createIfNotExists) where T : class {
+	public async Task<bool> ApplyUpdatesOnSingleAsync<T>(object key, Action<T> updateFunc, bool createIfNotExists = false) where T : class {
 		if (_context == null)
 			return false;
-		if (filter == null)
-			return true;
-		IEnumerable<T> filteredItems = _context.Set<T>();
-		List<PropertyInfo> filterObjectProperties = [.. filter.GetType().GetProperties()];
-		foreach (var filterObjectProperty in filterObjectProperties) {
-			IEnumerable<PropertyInfo> entityTypeProperties = typeof(T).GetProperties();
-			PropertyInfo? valueObjectProperty = entityTypeProperties.FirstOrDefault(p => p.Name.Equals(filterObjectProperty.Name));
-			if (valueObjectProperty == null)
-				continue;
-			object? filterValue = filterObjectProperty.GetValue(filter);
-			filteredItems = filteredItems.Where(x => 
-				filterValue!=null &&
-				valueObjectProperty != null &&
-				filterValue.Equals(valueObjectProperty.GetValue(x))
-			);
-		}
-		List<T> _list = [.. filteredItems];
-		if (_list.Count == 0) {
+		T? item = await QuerySingleByKeyAsync<T>(key);
+		if (item == null)
 			return false;
-		} else {
-			IEnumerable<PropertyInfo> objectProperties = typeof(T).GetProperties();
-			foreach (T ob in _list)
-				foreach (PropertyInfo p in objectProperties) {
-					if (p.Name == primaryKeyProperties[typeof(T)]?.Name)
-						continue;
-					if (p.IsDefined(typeof(NotMappedAttribute), inherit: true))
-						continue;
-					p.SetValue(ob, p.GetValue(value), null);
-				}
+		updateFunc(item);
+		return await SaveChangesAsync();
+	}
+
+	public async Task<bool> ApplyUpdatesOnAllAsync<T>(Action<List<T>> updateFunc) where T : class {
+		if (_context == null)
+			return false;
+		List<T> items = await QueryAllAsync<T>();
+		updateFunc(items);
+		return await SaveChangesAsync();
+	}
+
+	private async Task<bool> UpdateAsync<T>(T value, bool createIfNotExists) where T : class {
+		if (_context == null)
+			return false;
+		T? item = await QuerySingleByKeyAsync<T>(value);
+		if (item == null) {
+			if (createIfNotExists) {
+				return await AddAsync<T>(value, false);
+			} else {
+				return false;
+			}
+		}
+		IEnumerable<PropertyInfo> objectProperties = typeof(T).GetProperties();
+		foreach (PropertyInfo p in objectProperties) {
+			if (p.Name == primaryKeyProperties[typeof(T)]?.Name)
+				continue;
+			if (p.IsDefined(typeof(NotMappedAttribute), inherit: true))
+				continue;
+			p.SetValue(item, p.GetValue(value), null);
 		}
 		return await SaveChangesAsync();
 	}
 
 	public bool UpdateBlocking<T>(T updatedObject, bool createIfNotExists) where T : class =>
-		UpdateAsync(updatedObject, updatedObject, createIfNotExists).Result;
-
-	public bool UpdateBlocking<T>(object? filter, T value, bool createIfNotExists) where T : class =>
-		UpdateAsync(filter, value, createIfNotExists).Result;
-
+		UpdateAsync(updatedObject, createIfNotExists).Result;
+	
 	public async Task<bool> DeleteAsync<T>(T item) where T : class =>
 		await DeleteByKeyAsync<T>(PrimVal(item));
 
@@ -334,36 +323,3 @@ public enum DatabasePathFormat {
 	FileName,
 	ReadConfig
 }
-
-
-public static class AnonymousObjectMutator {
-	private const BindingFlags FieldFlags = BindingFlags.NonPublic | BindingFlags.Instance;
-	private static readonly string[] BackingFieldFormats = { "<{0}>i__Field", "<{0}>" };
-
-	public static T Set<T, TProperty>(
-		this T instance,
-		Expression<Func<T, TProperty>> propExpression,
-		TProperty newValue) where T : class {
-		var pi = (propExpression.Body as MemberExpression).Member;
-		var backingFieldNames = BackingFieldFormats.Select(x => string.Format(x, pi.Name)).ToList();
-		var fi = typeof(T)
-			.GetFields(FieldFlags)
-			.FirstOrDefault(f => backingFieldNames.Contains(f.Name));
-		if (fi == null)
-			throw new NotSupportedException(string.Format("Cannot find backing field for {0}", pi.Name));
-		fi.SetValue(instance, newValue);
-		return instance;
-	}
-}
-
-
-//internal static class Ext {
-//    public static IEnumerable<Type> GetBaseTypes(this Type type) {
-//        if (type.BaseType == null) 
-//            return type.GetBaseTypes();
-//        return Enumerable.Repeat(type.BaseType, 1)
-//            .Concat(type.GetInterfaces())
-//            .Concat(type.GetInterfaces().SelectMany(GetBaseTypes))
-//            .Concat(type.BaseType.GetBaseTypes());
-//    }
-//}

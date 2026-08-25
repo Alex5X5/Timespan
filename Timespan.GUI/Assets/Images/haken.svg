@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+    <defs>
+        <style>
+            .cls-1 {
+                stroke: #1d1d1b;
+                stroke-linecap: round;
+                stroke-miterlimit: 10;
+                stroke-width: 5px;
+                stroke: none;
+            }
+        </style>
+    </defs>
+    <g transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+	    <path class="cls-1" d="M 31.63 79.75 c -0.009 0 -0.017 0 -0.026 0 c -1.156 -0.008 -2.251 -0.515 -3.005 -1.39 L 0.969 46.273 c -1.441 -1.674 -1.253 -4.2 0.421 -5.642 c 1.673 -1.442 4.199 -1.253 5.641 0.421 L 31.67 69.666 l 51.333 -58.065 c 1.464 -1.655 3.991 -1.811 5.646 -0.347 c 1.655 1.463 1.811 3.991 0.348 5.646 l -54.37 61.5 C 33.868 79.259 32.776 79.75 31.63 79.75 z" />
+    </g>
+</svg>

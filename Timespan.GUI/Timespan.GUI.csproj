@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.0" />
+		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.3" />
+		<PackageReference Include="ReactiveUI.Avalonia" Version="12.0.1" />
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.9" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.15" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="Xaml.Behaviors.Interactions" Version="12.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.11" />
+	</ItemGroup>
+	
+	<!--
+	<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+	-->
+
+	<ItemGroup>
+		<Compile Remove="Generated\**\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Timespan.Database\Timespan.Database.csproj" />
+		<ProjectReference Include="..\Timespan.PDF\Timespan.PDF.csproj" />
+		<ProjectReference Include="..\Timespan.GUI.Generators\Timespan.GUI.Generators.csproj" OutputItemType="Analyzer" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\ColorSelectorView.axaml.cs">
+	    <DependentUpon>ColorSelectorView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TaskDetailsView.axaml.cs">
+	    <DependentUpon>TaskDetailsView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\ExportView.axaml.cs">
+	    <DependentUpon>ExportView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TaskDetailsView.axaml.cs">
+	    <DependentUpon>TaskDetailsView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Settings\AboutSettingsView.axaml.cs">
+	    <DependentUpon>AboutSettingsView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Settings\ExportSettingsView.axaml.cs">
+	    <DependentUpon>ExportSettingsView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Settings\GeneralSettingsView.axaml.cs">
+	    <DependentUpon>GeneralSettingsView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Settings\GraphicsSettingsView.axaml.cs">
+	    <DependentUpon>GraphicsSettingsView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Settings\UserDataSettingsView.axaml.cs">
+	    <DependentUpon>UserDataSettingsView.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TimerView.axaml.cs">
+	    <DependentUpon>TimerView.axaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+</Project>

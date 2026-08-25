@@ -1,7 +1,0 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
-					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
-	<Thickness  x:Key="DefaultBorderThickness"> 2 </Thickness >
-	<Thickness  x:Key="HoverBorderThickness"> 3 </Thickness >
-	<Thickness  x:Key="ClickBorderThickness"> 3 </Thickness >
-</ResourceDictionary>

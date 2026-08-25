@@ -1,0 +1,112 @@
+Views.Pages.Export.Labels.Title:Export
+Views.Pages.Graphs.Labels.Title:Graphs
+Views.Pages.Timer.Labels.Title:Timer
+
+Views.Pages.Settings.About.Labels.Title:About Us
+Views.Pages.Settings.Export.Labels.Title:Export Settings
+Views.Pages.Settings.General.Labels.Title:General Settings
+Views.Pages.Settings.Graphics.Labels.Title:Graphics Settings
+Views.Pages.Settings.UserData.Labels.Title:User Data Settings
+
+Views.Pages.Main.Buttons.Timer:Timer
+Views.Pages.Main.Buttons.Graphs:Graphs
+Views.Pages.Main.Buttons.Export:Export
+Views.Pages.Main.Buttons.General:General
+Views.Pages.Main.Buttons.About:About Us
+Views.Pages.Main.Buttons.Graphics:Graphics
+Views.Pages.Main.Buttons.UserData:User Data
+
+Views.Pages.Timer.Buttons.Start:Start
+Views.Pages.Timer.Buttons.Stop:Stop
+Views.Pages.Timer.Labels.Start:Start
+Views.Pages.Timer.Labels.Stop:Finish
+Views.Pages.Timer.Labels.Description:Description
+Views.Pages.Graphs.Labels.Week:CW
+
+Views.Pages.Settings.Buttons.Back:Back
+Views.Pages.Settings.Buttons.General:General
+Views.Pages.Settings.Buttons.UserData:User Data
+Views.Pages.Settings.Buttons.About:About
+Views.Pages.Settings.Buttons.Visual:Visuals
+Views.Pages.Settings.Buttons.Export:Export
+Views.Pages.Settings.Buttons.Save:Save Settings
+Views.Pages.Settings.Buttons.Cancel:Cancel
+Views.Pages.Settings.Messages.Exit:The Application will exit now, to save the changes.
+
+Views.Pages.Settings.General.Labels.Language:Language
+
+Views.Pages.Settings.UserData.Labels.Username:Username
+Views.Pages.Settings.UserData.Labels.StartDate:Start Date
+Views.Pages.Settings.UserData.Labels.JobName:Job Name
+
+Views.Pages.Export.Buttons.Import:Import
+Views.Pages.Export.Buttons.Export:Export
+Views.Pages.Export.Buttons.Folder:Open Folder
+Views.Pages.Export.Messages.Export.Success:Successfullly exported to
+
+Views.Pages.TaskDetails.Buttons.Stop:Stop
+Views.Pages.TaskDetails.Buttons.Continiue:Continiue
+Views.Pages.TaskDetails.Buttons.StartNew:Start New
+Views.Pages.TaskDetails.Buttons.Save:Save
+Views.Pages.TaskDetails.Buttons.Delete:Delete
+
+Views.Pages.TaskDetails.Labels.Start:Start
+Views.Pages.TaskDetails.Labels.Stop:Finish
+Views.Pages.TaskDetails.Labels.Description:Description
+
+Views.Pages.Graphs.Buttons.Select:Select
+Views.Pages.Graphs.Buttons.Delete:Delete
+Views.Pages.Graphs.Labels.Week:CW
+
+Days.Monday:Monday
+Days.Tuesday:Tuesday
+Days.Wednesday:Wendsday
+Days.Thursday:Thursday
+Days.Friday:Friday
+Days.Saturday:Saturday
+Days.Sunday:Sunday
+
+Days.Short.Monday:Mo
+Days.Short.Tuesday:Tu
+Days.Short.Wednesday:We
+Days.Short.Thursday:Th
+Days.Short.Friday:Fr
+Days.Short.Saturday:Sa
+Days.Short.Sunday:Su
+
+Months.January:January
+Months.February:February
+Months.March:March
+Months.April:April
+Months.May:May
+Months.June:June
+Months.July:July
+Months.August:August
+Months.September:September
+Months.October:October
+Months.November:November
+Months.December:December
+
+Months.Short.January:Jan
+Months.Short.February:Feb
+Months.Short.March:Mar
+Months.Short.April:Apr
+Months.Short.May:May
+Months.Short.June:Jun
+Months.Short.July:Jul
+Months.Short.August:Aug
+Months.Short.September:Sep
+Months.Short.October:Oct
+Months.Short.November:Nov
+Months.Short.December:Dec
+
+Absence.Sick:Sick
+Absence.Holiday:Holiday
+Absence.Vacant:Vacant
+Absence.HomeWork:Home Work
+Absence.NoExcuse:No Excuse
+Absence.None:Present
+
+TimeMode.Day:Day
+TimeMode.Week:Week
+TimeMode.Month:Month

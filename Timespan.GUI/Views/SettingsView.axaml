@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
+			 xmlns:settingsModels="using:Timespan.GUI.ViewModels.Settings"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:CompileBindings="True"
+			 x:DataType="models:SettingsViewModel"
+			 x:Class="Timespan.GUI.Views.SettingsView"
+			 Loaded="UserControl_Loaded"
+			 Unloaded="UserControl_UnLoaded">
+
+
+	<UserControl.DataTemplates>
+		<DataTemplate DataType="settingsModels:GeneralSettingsViewModel">
+			<settingsViews:GeneralSettingsView />
+		</DataTemplate>
+		<DataTemplate DataType="settingsModels:UserDataSettingsViewModel">
+			<settingsViews:UserDataSettingsView />
+		</DataTemplate>
+		<DataTemplate DataType="settingsModels:AboutSettingsViewModel">
+			<settingsViews:AboutSettingsView />
+		</DataTemplate>
+		<DataTemplate DataType="settingsModels:GraphicsSettingsViewModel">
+			<settingsViews:GraphicsSettingsView />
+		</DataTemplate>
+		<DataTemplate DataType="settingsModels:ExportSettingsViewModel">
+			<settingsViews:ExportSettingsView />
+		</DataTemplate>
+	</UserControl.DataTemplates>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="22*"/>
+			<RowDefinition Height="1*"/>
+			<RowDefinition Height="1.5*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="15*"/>
+		</Grid.ColumnDefinitions>
+		<ContentControl Grid.ColumnSpan="1"
+						Content="{ Binding CurrentPage }"/>
+		<Grid Grid.Row="9" 
+				Grid.Column="0"
+				Grid.ColumnSpan="3"
+				ColumnDefinitions="6*, 3*, 2*, 3*, 6*"
+				ShowGridLines="false">
+			<Button Grid.Column="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Background="{ StaticResource ResourceKey=StartButtonColor }"
+					Classes="DynamicBackground ThreeRounded DynamicTextHeight"
+					Command="{ Binding SaveCommand }">
+				<TextBlock Text="{ Binding $parent[cls:SettingsView].SaveButtonText }" />
+			</Button>
+			<Button Grid.Column="3"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Background="{ StaticResource ResourceKey=StopButtonColor }"
+					Classes="DynamicBackground ThreeRounded DynamicTextHeight"
+					Command="{ Binding CancelCommand }">
+				<TextBlock Text="{ Binding $parent[cls:SettingsView].CancelButtonText }" />
+			</Button>
+		</Grid>
+	</Grid>
+</UserControl>

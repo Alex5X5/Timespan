@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_2" data-name="Ebene 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 23.57 28.04">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #1d1d1b;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #1d1d1b;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 3px;
+      }
+
+      .cls-3 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <polygon class="cls-2" points="7.61 25.61 2.29 26.54 1.5 21.2 14.96 2.55 21.07 6.96 7.61 25.61"/>
+    </clipPath>
+  </defs>
+  <g id="Ebene_1-2" data-name="Ebene 1">
+    <g>
+      <g class="cls-3">
+        <rect class="cls-1" x="10.84" y="2.36" width="11.06" height="9.29" transform="translate(7.2 -8.26) rotate(35.83)"/>
+      </g>
+      <polygon class="cls-2" points="7.61 25.61 2.29 26.54 1.5 21.2 14.96 2.55 21.07 6.96 7.61 25.61"/>
+    </g>
+  </g>
+</svg>

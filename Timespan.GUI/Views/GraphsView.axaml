@@ -1,0 +1,258 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:controls="using:Timespan.GUI.Controls"
+			 xmlns:graphViews="using:Timespan.GUI.Views.Graphs"
+			 xmlns:graphModels="using:Timespan.GUI.ViewModels.Graphs"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="models:GraphsViewModel"
+			 x:Class="Timespan.GUI.Views.GraphsView">
+	
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/GraphsView.styles.axaml" />
+	</UserControl.Styles>
+  
+	<UserControl.DataTemplates>
+		<DataTemplate DataType="graphModels:DayPanelViewModel">
+			<graphViews:DayPanelView IsMarked="{ Binding IsMarked }"
+									 IsBlocked="{ Binding IsBlocked }"
+									 IsToday="{ Binding IsTodaySegment }"
+									 SelectedDate="{ Binding SelectedDay }"
+									 Tasks="{ Binding Tasks }"
+									 MaxCellTasks="7"
+									 FillColumn="False"
+									 MinimalGraphWidth="10"
+									 XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+									 YAxisSegmentCount="{ Binding YAxisSegmentCount }"
+									 XAxisSegmentDuration="{Binding XAxisSegmentDuration}"
+									 IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+									 IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+									 MousePressedCommand="{ Binding MousePressedCommand }"
+									 MouseReleasedCommand="{ Binding MouseReleasedCommand }"
+									 MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									 MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
+									 ClickedCommand="{ Binding ClickedCommand }"
+									 TaskClickedCommand="{ Binding TaskClickedCommand }"
+									 DoubleClickedCommand="{Binding DoubleClickCommand}"
+									 LoadCommand="{ Binding LoadCommand }"
+									 UnloadCommand="{ Binding UnloadCommand }"/>
+		</DataTemplate>
+		<DataTemplate DataType="graphModels:WeekPanelViewModel">
+			<graphViews:WeekPanelView IsMarked="{ Binding IsMarked }"
+									  IsBlocked="{ Binding IsBlocked }"
+									  IsToday="{ Binding IsTodaySegment }"
+									  SelectedDate="{ Binding SelectedDay }"
+									  Tasks="{ Binding Tasks }"
+									  MaxCellTasks="10"
+									  FillColumn="True"
+									  MinimalGraphWidth="10"
+									  XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+									  YAxisSegmentCount="{ Binding YAxisSegmentCount }"
+									  XAxisSegmentDuration="{Binding XAxisSegmentDuration}"
+									  IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+									  IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+									  MousePressedCommand="{ Binding MousePressedCommand }"
+									  MouseReleasedCommand="{ Binding MouseReleasedCommand }"
+									  MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									  MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
+									  ClickedCommand="{ Binding ClickedCommand }"
+									  TaskClickedCommand="{ Binding TaskClickedCommand }"
+									  DoubleClickedCommand="{Binding DoubleClickCommand}"
+									  LoadCommand="{ Binding LoadCommand }"
+									  UnloadCommand="{ Binding UnloadCommand }"/>
+		</DataTemplate>
+		<DataTemplate DataType="graphModels:MonthPanelViewModel">
+			<graphViews:MonthPanelView IsMarked="{ Binding IsMarked }"
+									   IsBlocked="{ Binding IsBlocked }"
+									   IsToday="{ Binding IsTodaySegment }"
+									   SelectedDate="{ Binding SelectedDay }"
+									   Tasks="{ Binding Tasks }"
+									   MaxCellTasks="7"
+									   FillColumn="True"
+									   MinimalGraphWidth="10"
+									   XAxisSegmentCount="{ Binding XAxisSegmentCount }"
+									   YAxisSegmentCount="{ Binding YAxisSegmentCount }"
+									   XAxisSegmentDuration="{Binding XAxisSegmentDuration}"
+									   IntervalStartSeconds="{ Binding TimeIntervallStartSeconds }"
+									   IntervalStopSeconds="{ Binding TimeIntervallStopSeconds }"
+									   MousePressedCommand="{ Binding MousePressedCommand }"
+									   MouseReleasedCommand="{ Binding MouseReleasedCommand }"
+									   MouseDraggingCommand="{ Binding MouseDraggingCommand }"
+									   MissingContextClickedCommand="{ Binding MissingContextMenuClickedCommand }"
+									   ClickedCommand="{ Binding ClickedCommand }"
+									   TaskClickedCommand="{ Binding TaskClickedCommand }"
+									   DoubleClickedCommand="{Binding DoubleClickCommand}"
+									   LoadCommand="{ Binding LoadCommand }"
+									   UnloadCommand="{ Binding UnloadCommand }"
+									   WeekOffset="{Binding WeekOffset}"/>
+		</DataTemplate>
+	</UserControl.DataTemplates>
+
+	<Grid ShowGridLines="False">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="61*" />
+			<ColumnDefinition Width="{ Binding SpacerWidth }" />
+			<ColumnDefinition Width="{ Binding TaskPanelWidth }" />
+			<!--
+			<ColumnDefinition Width="2*" />
+			<ColumnDefinition Width="24*" />
+			-->
+		</Grid.ColumnDefinitions>
+		
+		<Grid ShowGridLines="False">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="6*" />
+				<RowDefinition Height="8*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="76*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="24*" />
+			</Grid.ColumnDefinitions>
+
+			<!--task bar-->
+			<Grid Grid.Row="1"
+				  ShowGridLines="False">
+				<!--
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="12*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="5*" />
+					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="14*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="1*" />
+					<ColumnDefinition Width="10*" />
+					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="12*" />
+				</Grid.ColumnDefinitions>
+				-->
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="12*" />
+					<ColumnDefinition Width="18*" />
+					<ColumnDefinition Width="20*" />
+					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="12*" />
+				</Grid.ColumnDefinitions>
+
+				<!--title-->
+				<TextBlock Text="{ Binding $parent[cls:GraphsView].TitleLabelText }"
+						   Classes="h2" />
+				
+				<!--Date-->
+				<Grid Grid.Column="2"
+					  ColumnDefinitions="15*, *, 4*, 4*"
+					  ShowGridLines="False">
+					<Grid Grid.Row="0"
+						  Grid.Column="0"
+						  RowDefinitions="*,2*,*">
+						<TextBlock Grid.Row="1"
+								   Text="{ Binding DateString }"
+								   Classes="p1"
+								   TextAlignment="Right" />
+					</Grid>
+					<Button Grid.Column="2"
+							Classes="OnlyClick"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							Command="{ Binding PreviousIntervallClickCommand }">
+						<Grid RowDefinitions="*,2*,*">
+							<Svg Grid.Row="1"
+								 HorizontalAlignment="Stretch"
+								 VerticalAlignment="Stretch"
+								 Path="avares://Timespan.GUI/Assets/Images/pfeil-link.svg" />
+						</Grid>
+					</Button>
+					<Button Grid.Row="1"
+							Grid.Column="4"
+							Classes="OnlyClick"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							Command="{ Binding FollowingIntervallClickCommand }">
+						<Grid RowDefinitions="*,2*,*">
+							<Svg Grid.Row="1"
+								 HorizontalAlignment="Stretch"
+								 VerticalAlignment="Stretch"
+								 Path="avares://Timespan.GUI/Assets/Images/pfeil-rechts.svg" />
+						</Grid>
+					</Button>
+				</Grid>
+				<!--
+				<Button	Grid.Column="6"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Padding="0,0,0,0"
+						Background="{ Binding $parent.Background }"
+						Command="{ Binding SelectCommand }">
+					<Grid RowDefinitions="*, 2*, 6*, 2*, *"
+						  ColumnDefinitions="2*, 8*, *, 18*, 2*"
+						  ShowGridLines="False">
+						<TextBlock Grid.Row="2"
+								   Grid.Column="3"
+								   Text="{ Binding $parent[cls:GraphsView].SelectButtonText }"
+								   Classes="p1" />
+						<Viewbox Grid.Row="2"
+								 Grid.Column="1"
+								 Stretch="Uniform">
+							<Svg Path="avares://Timespan.GUI/Assets/Images/haken-kreis.svg" />
+						</Viewbox>
+					</Grid>
+				</Button>
+
+				<Button	Grid.Column="8"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Padding="0,0,0,0"
+						Background="{ Binding $parent.Background }"
+						Command="{ Binding DeleteCommand }">
+					<Grid RowDefinitions="*, 2*, 6*, 2*, *"
+						  ColumnDefinitions="2*, 8*, *, 18*, 2*"
+						  ShowGridLines="False">
+						<TextBlock Grid.Row="2"
+								   Grid.Column="3"
+								   Text="{ Binding $parent[cls:GraphsView].DeleteButtonText }"
+								   Classes="p1" />
+						<Viewbox Grid.Row="2"
+								 Grid.Column="1"
+								 Stretch="Uniform">
+							<Svg Path="avares://Timespan.GUI/Assets/Images/loeschen.svg" />
+						</Viewbox>
+					</Grid>
+				</Button>
+				-->
+				<!--mode combobox-->
+				<Grid Grid.Column="4"
+					  RowDefinitions="*, 8*, *"
+					  ShowGridLines="False">
+					<ComboBox Grid.Row="1"
+							  Classes="Default p1"
+							  CornerRadius="17, 17, 17, 0"
+							  ItemsSource="{ Binding TimeModes }"
+							  SelectedItem="{ Binding SelectedTimeMode }">
+					</ComboBox>
+				</Grid>
+			</Grid>
+			<ContentControl Grid.Row="3"
+							Grid.Column="1"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							Content="{ Binding CurrentPage }"/>
+		</Grid>
+		<Grid Grid.Row="0"
+			  Grid.Column="2"
+			  Grid.ColumnSpan="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="17*" />
+				<RowDefinition Height="76*" />
+			</Grid.RowDefinitions>
+			<views:TaskDetailsView Grid.Row="1"
+								   HorizontalAlignment="Stretch"	 
+								   VerticalAlignment="Stretch"/>
+		</Grid>
+	</Grid>
+</UserControl>

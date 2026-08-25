@@ -1,0 +1,23 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vc="using:Timespan.GUI.Converters">
+	<Style Selector="Button">
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="Padding" Value="0,0,0,0"/>
+		<Setter Property="RenderTransformOrigin" Value="50%, 50%"/>
+		<Setter Property="Transitions">
+			<Transitions>
+				<TransformOperationsTransition Property="RenderTransform" Duration="0:0:.015" />
+			</Transitions>
+		</Setter>
+		<Setter Property="BorderBrush" Value="#FF5599FF"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Style Selector="^.Selected">
+			<Setter Property="BorderThickness" Value="10"/>
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<Setter Property="BorderThickness" Value="10"/>
+			</Style>
+		</Style>
+	</Style>
+</Styles>

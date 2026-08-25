@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views.Settings"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:settingsViews="using:Timespan.GUI.Views.Settings"
+			 xmlns:settingsModels="using:Timespan.GUI.ViewModels.Settings"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="settingsModels:GeneralSettingsViewModel"
+             x:Class="Timespan.GUI.Views.Settings.GeneralSettingsView">
+	
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/SettingsViewCommon.axaml" />
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/Settings/GeneralSettingsView.styles.axaml" />
+	</UserControl.Styles>
+  
+
+	<Grid ShowGridLines="False">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="33*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="6*" />
+			<ColumnDefinition Width="8*" />
+			<ColumnDefinition Width="6*" />
+		</Grid.ColumnDefinitions>
+		<TextBlock Text="{ Binding $parent[cls:GeneralSettingsView].TitleLabelText }"
+				   Grid.Row="1"
+				   Grid.Column="1"
+				   Classes="h2" />
+		<ComboBox Classes="Default Input" 
+				  Grid.Row="3"
+				  Grid.Column="1"
+				  ItemsSource="{ Binding AvailableLanguages }"
+				  SelectedItem="{ Binding SelectedLanguage }"
+				  PlaceholderText="{ Binding $parent[cls:GeneralSettingsView].LanguageLabelText }" />
+	</Grid>
+</UserControl>

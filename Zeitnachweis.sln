@@ -1,29 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11304.174 d18.0
+VisualStudioVersion = 18.1.11304.174
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.GUI", "HourGlass.GUI\Hourglass.GUI.csproj", "{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270} = {3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.PDF", "Timespan.PDF\Timespan.PDF.csproj", "{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.PDF", "HourGlass.PDF\Hourglass.PDF.csproj", "{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan", "Timespan\Timespan.csproj", "{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass", "HourGlass\Hourglass.csproj", "{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Database", "HourGlass.Database\Hourglass.Database.csproj", "{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Database", "Timespan.Database\Timespan.Database.csproj", "{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseUtil", "DatabaseUtil\DatabaseUtil.csproj", "{61941540-77D3-ECD2-7EB7-6DD8EC39E515}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Util", "Hourglass.Util\Hourglass.Util.csproj", "{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Installer", "Hourglass.Installer\Hourglass.Installer.csproj", "{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{698A4CC3-1BBA-4C16-AB23-44FF777E9367}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.GUI", "Timespan.GUI\Timespan.GUI.csproj", "{312698D7-A170-4F2F-BF83-95F5A7FDA982}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Util", "Timespan.Util\Timespan.Util.csproj", "{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.Types", "Timespan.Types\Timespan.Types.csproj", "{97624F7D-A6DE-415D-9D5D-A3F016FDE6AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timespan.GUI.Generators", "Timespan.GUI.Generators\Timespan.GUI.Generators.csproj", "{9A0D7045-A179-4C13-AE9A-7103957ED88F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,14 +47,22 @@ Global
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E928C54-E81A-4A2B-8A6B-60FA90C76B47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{65BF6CF4-C0E7-4D3F-B5E2-8EBA24003621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{312698D7-A170-4F2F-BF83-95F5A7FDA982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D456FF6E-2303-FCD6-0BDE-B625FF3680FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97624F7D-A6DE-415D-9D5D-A3F016FDE6AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97624F7D-A6DE-415D-9D5D-A3F016FDE6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97624F7D-A6DE-415D-9D5D-A3F016FDE6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97624F7D-A6DE-415D-9D5D-A3F016FDE6AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A0D7045-A179-4C13-AE9A-7103957ED88F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A0D7045-A179-4C13-AE9A-7103957ED88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A0D7045-A179-4C13-AE9A-7103957ED88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A0D7045-A179-4C13-AE9A-7103957ED88F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

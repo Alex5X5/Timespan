@@ -1,0 +1,39 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vc="using:Timespan.GUI.Converters">
+		
+	<Style Selector="TextBlock">
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="TextAlignment" Value="Left" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="FontFamily" Value="Anybody" />
+		<Setter Property="Foreground" Value="Black" />
+		<Style Selector="^.p1">
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Setter Property="FontSize" Value="{
+				Binding $self.Bounds,
+				Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter },
+				ConverterParameter=1.32 }" />
+		</Style>
+		<Style Selector="^.p2">
+			<Setter Property="FontSize" Value="{
+				Binding $self.Bounds,
+				Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter },
+				ConverterParameter=1.32 }" />
+		</Style>
+		<Style Selector="^.p2_1">
+			<Setter Property="FontSize" Value="{
+				Binding $self.Bounds,
+				Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter },
+				ConverterParameter=0.18 }" />
+		</Style>
+		<Style Selector="^.p3">
+			<Setter Property="FontSize" Value="{
+				Binding $self.Bounds,
+				Converter={ x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter },
+				ConverterParameter=1.32 }" />
+		</Style>
+	</Style>
+</Styles>

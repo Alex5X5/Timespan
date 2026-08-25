@@ -1,0 +1,225 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cls="using:Timespan.GUI.Views"
+			 xmlns:views="using:Timespan.GUI.Views"
+			 xmlns:models="using:Timespan.GUI.ViewModels"
+			 xmlns:controls="using:Timespan.GUI.Controls"
+			 xmlns:vc="using:Timespan.GUI.Converters"
+			 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+			 x:CompileBindings="True"
+			 x:DataType="models:TaskDetailsViewModel"
+			 x:Class="Timespan.GUI.Views.TaskDetailsView">
+	<UserControl.Styles>
+		<StyleInclude Source="avares://Timespan.GUI/Styles/Views/TaskDetailsView.styles.axaml" />
+	</UserControl.Styles>
+
+	<Panel>
+		<!--Background-->
+		<Rectangle Fill="{DynamicResource TaskDetailsBackground}"
+				   Grid.Row="1"
+				   HorizontalAlignment="Stretch"
+				   VerticalAlignment="Stretch"
+				   RadiusX="20"
+				   RadiusY="20"/>
+		<!--Main Container-->
+		<Grid Grid.Row="0"
+			  Grid.Column="0"
+			  ShowGridLines="False">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="60*" />
+				<RowDefinition Height="2*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="3*"/>
+				<ColumnDefinition Width="50*"/>
+				<ColumnDefinition Width="3*"/>
+			</Grid.ColumnDefinitions>
+			<!--Header Container-->
+			<Grid Grid.Row="1"
+				  Grid.Column="1"
+				  ShowGridLines="False">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="6*" />
+					<ColumnDefinition Width="6*" />
+					<ColumnDefinition Width="4*" />
+					<ColumnDefinition Width="6*" />
+					<ColumnDefinition Width="4*" />
+					<ColumnDefinition Width="6*" />
+					<ColumnDefinition Width="4*" />
+					<ColumnDefinition Width="6*" />
+					<ColumnDefinition Width="4*" />
+					<ColumnDefinition Width="6*" />
+					<ColumnDefinition Width="6*" />
+					<ColumnDefinition Width="6*" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="3"
+						Classes="OnlyClick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						IsVisible="{Binding ShowRestartButton}"
+						Command="{Binding RestartTaskCommand}">
+					<Viewbox Stretch="Uniform">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/restart.svg" />
+					</Viewbox>
+				</Button>
+				<Button Grid.Column="5"
+						Classes="OnlyClick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						IsVisible="{Binding ShowStopButton}"
+						Command="{Binding StopTaskCommand}">
+					<Viewbox Stretch="Uniform">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/stop.svg" />
+					</Viewbox>
+				</Button>
+				<Button Grid.Column="5"
+						Classes="OnlyClick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						IsVisible="{Binding ShowContiniueButton}"
+						Command="{Binding ContiniueTaskCommand}">
+					<Viewbox Stretch="Uniform">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/start.svg" />
+					</Viewbox>
+				</Button>
+				<Button Grid.Column="7"
+						Classes="OnlyClick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						IsVisible="{Binding ShowReadonlyTaskPanel}"
+						Command="{Binding DeleteTaskCommand}">
+					<Viewbox Stretch="Uniform">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/loeschen.svg" />
+					</Viewbox>
+				</Button>
+				<Button Grid.Column="9"
+						Classes="OnlyClick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						IsVisible="{Binding ShowReadonlyTaskPanel}"
+						Command="{Binding EditTaskCommand}">
+					<Viewbox Stretch="Uniform"
+							 HorizontalAlignment="Stretch"
+							 VerticalAlignment="Stretch">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/stift.svg" />
+					</Viewbox>
+				</Button>
+				<Button Grid.Column="9"
+						Classes="OnlyClick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						IsVisible="{Binding ShowEditTaskPanel}"
+						Command="{Binding SaveTaskCommand}">
+					<Viewbox Stretch="Uniform"
+							 HorizontalAlignment="Stretch"
+							 VerticalAlignment="Stretch">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/haken.svg" />
+					</Viewbox>
+				</Button>
+				<Button Grid.Column="11"
+						Classes="OnlyClick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Command="{Binding CloseTaskCommand}">
+					<Viewbox Stretch="Uniform"
+							 HorizontalAlignment="Stretch"
+							 VerticalAlignment="Stretch">
+						<Svg Path="avares://Timespan.GUI/Assets/Images/kreuz.svg" />
+					</Viewbox>
+				</Button>
+			</Grid>
+			<!--Readonly TextBoxes Container-->
+			<Grid Grid.Row="3"
+				  Grid.Column="1"
+				  ShowGridLines="False"
+				  IsVisible="{Binding ShowReadonlyTaskPanel}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="12*" />
+					<RowDefinition Height="3*" />
+					<RowDefinition Height="7*" />
+					<RowDefinition Height="6*" />
+					<RowDefinition Height="60*" />
+					<RowDefinition Height="72*" />
+					<RowDefinition Height="6*" />
+				</Grid.RowDefinitions>
+				<TextBlock Name="TitleTextBlock"
+						   Grid.Row="0"
+						   Grid.Column="0"
+						   Classes="p1"
+						   HorizontalAlignment="Stretch"
+						   VerticalAlignment="Stretch"
+						   Text="{Binding Title}"/>
+				<Grid Grid.Row="2"
+					  ColumnDefinitions="8* * 8* 2*">
+					<TextBlock Name="DateTextBlock"
+							   Grid.Column="0"
+							   Classes="p3"
+							   IsVisible="{Binding ShowReadonlyTaskPanel}"
+							   Text="{Binding DateString}"/>
+					<TextBlock Name="TimeTextBlock"
+							   Grid.Column="2"
+							   Classes="p3"
+							   IsVisible="{Binding ShowReadonlyTaskPanel}"
+							   Text="{Binding TimeString}"/>
+				</Grid>
+				<TextBlock Name="DescriptionTextBlock"
+						   Grid.Row="4"
+						   Grid.Column="1"
+						   Classes="p2_1"
+						   TextWrapping="Wrap"
+						   IsVisible="{Binding ShowReadonlyTaskPanel}"
+						   Text="{Binding Description}"/>
+			</Grid>
+			<!--Edit TextBoxes Container-->
+			<Grid Grid.Row="3"
+				  Grid.Column="1"
+				  ShowGridLines="False"
+				  IsVisible="{Binding ShowEditTaskPanel}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="1*" />
+					<RowDefinition Height="2*" />
+					<RowDefinition Height="1*" />
+					<RowDefinition Height="12*" />
+					<RowDefinition Height="2*" />
+					<RowDefinition Height="2*" />
+					<RowDefinition Height="14*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="13*" />
+					<ColumnDefinition Width="4*" />
+					<ColumnDefinition Width="13*" />
+				</Grid.ColumnDefinitions>
+				<TextBox Classes="Default DynamicTextHeight" 
+						 Grid.Row="1"
+						 Grid.Column="0"
+						 VerticalContentAlignment="Center"
+						 CornerRadius="5,5,5,5"
+						 Text="{Binding StartTextboxText}"/>
+				<TextBox Classes="Default DynamicTextHeight"
+						 Grid.Row="1"
+						 Grid.Column="2"
+						 VerticalContentAlignment="Center"
+						 CornerRadius="5,5,5,5"
+						 Text="{Binding FinishTextboxText}"/>
+				<TextBox Grid.Row="3"
+						 Grid.Column="0"
+						 Grid.ColumnSpan="3"
+						 Classes="Default"
+						 VerticalContentAlignment="Top"
+						 TextWrapping="Wrap"
+						 CornerRadius="5,5,5,5"
+						 Text="{Binding Description}"/>
+				<views:ColorSelectorView Grid.Row="5"
+										 Grid.Column="0"
+										 Grid.ColumnSpan="3"
+										 HorizontalAlignment="Stretch"
+										 VerticalAlignment="Stretch"/>
+			</Grid>
+		</Grid>
+	</Panel>
+</UserControl>
