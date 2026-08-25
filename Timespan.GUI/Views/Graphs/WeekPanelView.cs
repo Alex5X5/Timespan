@@ -1,35 +1,19 @@
 namespace Timespan.GUI.Views.Graphs;
 
-using Avalonia.Input;
 using Avalonia.Media;
 
-using Timespan.GUI.Types;
 using Timespan.Util.Attributes;
 using Timespan.Util.Services;
 
 public partial class WeekPanelView : GraphPanelViewBase {
-
-	#region fields
 
 	[TranslateMember("Views.Pages.Timer.Labels.Title", "Timer")]
 	public string TitleLabelText { get; set; } = "";
 
 	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
 
-	#endregion fields
-
-	#region styledProperties
-
-	private const int MAX_COLUMN_COUNT = 24;
-
-	#endregion styledProperties
-
 	public WeekPanelView() : base() {
 	}
-
-
-	private static double ArialHeightToPt(double height, double x = 1) =>
-		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
 	protected override void DrawTimeline(DrawingContext context) {
 		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));

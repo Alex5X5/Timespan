@@ -9,20 +9,8 @@ using Timespan.Util.Services;
 
 public partial class DayPanelView : GraphPanelViewBase {
 
-	#region fields
-
 	[TranslateMember("Views.Pages.Timer.Labels.Title", "Timer")]
 	public string TitleLabelText { get; set; } = "";
-
-	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
-
-	#endregion fields
-
-	#region styledProperties
-
-	private const int MAX_COLUMN_COUNT = 24;
-
-	#endregion styledProperties
 
 	public DayPanelView() : base() {
 	}

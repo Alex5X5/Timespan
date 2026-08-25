@@ -9,17 +9,11 @@ using Timespan.Util.Attributes;
 using Timespan.Util.Services;
 public partial class MonthPanelView : GraphPanelViewBase {
 
-	[BasicStyledProperty<MonthPanelView>]
-	private int weekOffset = 0;
-
-	#region fields
-
 	[TranslateMember("Views.Pages.Timer.Labels.Title", "Timer")]
 	public string TitleLabelText { get; set; } = "";
 
-	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
-
-	#endregion fields
+	[BasicStyledProperty<MonthPanelView>]
+	private int weekOffset = 0;
 
 	public MonthPanelView() : base() {
 		FillTasksYMargin = 0.3;
