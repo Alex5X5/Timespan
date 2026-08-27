@@ -183,7 +183,7 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 
 	private static async void CheckForUpdateAndNotifyAsync() {
 		try {
-			Version? updatedVersion = await UpdateCheckerService.CheckForUpdate();
+			Version? updatedVersion = await UpdateCheckerService.CheckForUpdateAsync();
 			await Task.Run(
 				() => {
 					if (updatedVersion != null)

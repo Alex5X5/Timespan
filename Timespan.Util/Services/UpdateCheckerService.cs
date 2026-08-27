@@ -1,6 +1,7 @@
 ﻿namespace Timespan.Util.Services;
 
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -12,7 +13,11 @@ public static class UpdateCheckerService {
 	const string Repo = "Timespan";
 	const string CurrentVersionString = "6.0";
 
-	public static async Task<Version?> CheckForUpdate() {
+	public static async Task<Version?> CheckForUpdateAsync() {
+
+		if(!shouldCheck())
+			return null;
+
 		using var client = new HttpClient();
 
 		// GitHub API requires a User-Agent header.
@@ -47,6 +52,20 @@ public static class UpdateCheckerService {
 		if (githubVersion > currentVersion)
 			return githubVersion;
 		return null;
+	}
+
+	private static bool shouldCheck() {
+		string path = PathService.FilesPath("last_update_check");
+		string[] updateCheckInfo = ["1.1.2005"];
+		if (File.Exists(path)) {
+			updateCheckInfo = File.ReadAllLines(path);
+		}
+		DateTime lastCheckDate = DateTime.Parse(updateCheckInfo[0]);
+		if(lastCheckDate > DateTime.UtcNow.AddDays(-1))
+			return false;
+		updateCheckInfo[0] = DateTime.Today.Date.ToString();
+		File.WriteAllLines(path, updateCheckInfo);
+		return true;
 	}
 
 	private static Version ParseVersion(string raw) {
