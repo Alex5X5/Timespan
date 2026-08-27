@@ -10,7 +10,7 @@ public static class UpdateCheckerService {
 
 	const string Owner = "Alex5X5";
 	const string Repo = "Timespan";
-	const string CurrentVersionString = "5.0.0";
+	const string CurrentVersionString = "6.0";
 
 	public static async Task<Version?> CheckForUpdate() {
 		using var client = new HttpClient();
