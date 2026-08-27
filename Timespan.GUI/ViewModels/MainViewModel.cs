@@ -181,12 +181,25 @@ public partial class MainViewModel : ViewModelBase, INotifyPropertyChanged {
 		OnPropertyChanged(nameof(ExportButtonSelected));
 	}
 
+	private static async void CheckForUpdateAndNotifyAsync() {
+		try {
+			Version? updatedVersion = await UpdateCheckerService.CheckForUpdate();
+			await Task.Run(
+				() => {
+					if (updatedVersion != null)
+						MessageService.ShowMessage($"Version {updatedVersion} is available on GitHub.");
+				});
+		} catch { 
+		}
+	}
+
 	internal void OnLoad() {
 		CurrentPageAnchor?.ChangeModel<TimerViewModel>();
 		GlobalEventService.Subscribe<TasksChangedEventArgs>(TasksChanged);
 		GlobalEventService.Subscribe<ShowTaksEventArgs>(ShowTask);
 		GlobalEventService.Subscribe<ShowMessageEventArgs>(ShowMessage);
 		_timer.Start();
+		CheckForUpdateAndNotifyAsync();
 	}
 
 	internal void OnUnload() {
