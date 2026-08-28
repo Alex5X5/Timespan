@@ -11,15 +11,57 @@ public static class UpdateCheckerService {
 
 	const string Owner = "Alex5X5";
 	const string Repo = "Timespan";
-	const string CurrentVersionString = "6.0";
+	private static readonly Version CurrentVersion = new(5, 0);
 
 	public static async Task<Version?> CheckForUpdateAsync() {
+		ReadLastCheckInfo(out DateTime lastCheckDate, out Version cachedVerstion);
+		if (!shouldCheck(lastCheckDate, cachedVerstion)) {
+			if (cachedVerstion > CurrentVersion) {
+				return cachedVerstion;
+			} else {
+				return null;
+			}
+		}
+		var githubVersion = await GetLatestVersionFromGithub();
+		SaveLastCheckInfo(DateTime.Today, githubVersion ?? CurrentVersion);
+		if (githubVersion > CurrentVersion)
+			return githubVersion;
+		return null;
+	}
 
-		if(!shouldCheck())
-			return null;
+	private static bool shouldCheck(DateTime lastCheckDate, Version chached) {
+		return lastCheckDate < DateTime.Now.AddDays(-1);
+	}
 
+	private static void SaveLastCheckInfo(DateTime lastCheckDate, Version version) {
+		string path = PathService.FilesPath("last_update_check");
+		string[] updateCheckInfo = [
+			lastCheckDate.Date.ToString(),
+			version.ToString()
+		];
+		File.WriteAllLines(path, updateCheckInfo);
+	}
+
+	private static void ReadLastCheckInfo(out DateTime lastCheckDate, out Version version) {
+		string path = PathService.FilesPath("last_update_check");
+		string[] updateCheckInfo = ["1.1.2005", "1.0"];
+		if (File.Exists(path)) {
+			updateCheckInfo = File.ReadAllLines(path);
+		}
+		if (updateCheckInfo.Length >= 1 && DateTime.TryParse(updateCheckInfo[0], out DateTime savedLastCheckDate)) {
+			lastCheckDate = savedLastCheckDate;
+		} else {
+			lastCheckDate = new DateTime(2005, 1, 1);
+		}
+		if (updateCheckInfo.Length >= 2 && Version.TryParse(updateCheckInfo[1], out Version? savedVersion)) {
+			version = savedVersion!;
+		} else {
+			version = new Version(1, 0);
+		}
+	}
+
+	private static async Task<Version?> GetLatestVersionFromGithub() {
 		using var client = new HttpClient();
-
 		// GitHub API requires a User-Agent header.
 		client.DefaultRequestHeaders.UserAgent.Add(
 			new ProductInfoHeaderValue("ReleaseChecker", "1.0"));
@@ -47,25 +89,7 @@ public static class UpdateCheckerService {
 			return null;
 		}
 
-		var currentVersion = Version.Parse(CurrentVersionString);
-		var githubVersion = ParseVersion(tagName);
-		if (githubVersion > currentVersion)
-			return githubVersion;
-		return null;
-	}
-
-	private static bool shouldCheck() {
-		string path = PathService.FilesPath("last_update_check");
-		string[] updateCheckInfo = ["1.1.2005"];
-		if (File.Exists(path)) {
-			updateCheckInfo = File.ReadAllLines(path);
-		}
-		DateTime lastCheckDate = DateTime.Parse(updateCheckInfo[0]);
-		if(lastCheckDate > DateTime.UtcNow.AddDays(-1))
-			return false;
-		updateCheckInfo[0] = DateTime.Today.Date.ToString();
-		File.WriteAllLines(path, updateCheckInfo);
-		return true;
+		return ParseVersion(tagName);
 	}
 
 	private static Version ParseVersion(string raw) {
