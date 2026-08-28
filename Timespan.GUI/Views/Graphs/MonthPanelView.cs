@@ -122,6 +122,7 @@ public partial class MonthPanelView : GraphPanelViewBase {
 				date = date.AddDays(1);
 				xPos += XAxisSegmentSize;
 			}
+			date = date.AddDays(2);
 			yPos += YAxisSegmentSize;
 		}
 	}
