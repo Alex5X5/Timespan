@@ -97,7 +97,7 @@ public partial class ExportViewModel : ViewModelBase, IMainViewChild {
 
 	[RelayCommand]
 	private void OpenExplorer() {
-		string folderPath = PathService.FilesPath(@"Nachweise\");
+		string folderPath = PathService.EXPORTS_DIRECTORY;
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
 			Process.Start("explorer.exe", $"{folderPath}");
 		} else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
