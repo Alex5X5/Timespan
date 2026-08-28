@@ -11,7 +11,7 @@ public static class UpdateCheckerService {
 
 	const string Owner = "Alex5X5";
 	const string Repo = "Timespan";
-	private static readonly Version CurrentVersion = new(5, 0);
+	private static readonly Version CurrentVersion = new(6, 1);
 
 	public static async Task<Version?> CheckForUpdateAsync() {
 		ReadLastCheckInfo(out DateTime lastCheckDate, out Version cachedVerstion);
