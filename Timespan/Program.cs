@@ -12,13 +12,17 @@ public class Program {
 	[STAThread]
 	public static void Main(string[] args) {
 		PathService.ExtractFiles("Timespan");
+#if !DEBUG
 		try {
-			BuildAvaloniaApp()
+#endif
+		BuildAvaloniaApp()
 				.StartWithClassicDesktopLifetime(args);
+#if !DEBUG
 		} catch (Exception ex) {
 			string path = PathService.CrashesPath($"crash-{DateTimeService.ToDayAndMonthAndYearString(DateTime.Now)}.log");
 			File.WriteAllText(path, ex.ToString());
 		}
+#endif
 	}
 
 	public static AppBuilder BuildAvaloniaApp()

@@ -2,7 +2,7 @@
 
 public static class TaskHelper {
 
-	public const int MAX_TASK_DESCRIPTION_CHARS = 20;
+	public const int MAX_TASK_DESCRIPTION_CHARS = 21;
 
 	public static string GetTitleString(string description, bool addDots = false, int maxChars = MAX_TASK_DESCRIPTION_CHARS) {
 		if (description.Length <= maxChars)
@@ -11,19 +11,23 @@ public static class TaskHelper {
 		List<char> word = [];
 		for (int i = 0; i < maxChars && i < description.Length; i++) {
 			char current = description[i];
+			word.Add(current);
 			if (current == ' ') {
-				if (res.Count + 1 + word.Count <= maxChars) {
-					res.AddRange(word);
-					res.Add(current);
-					word = [];
-				}
+				res.AddRange(word);
+				word = [];
 				continue;
 			}
-			word.Add(current);
+			if (res.Count + 1 + word.Count >= maxChars) {
+				if (res.Count == 0) {
+					res.AddRange(word);
+				}
+				break;
+			}
 		}
 		if (addDots) {
-			if (res[^1] == ' ')
-				res.RemoveAt(res.Count - 1);
+			if(res.Count > 1)
+				if (res[^1] == ' ')
+					res.RemoveAt(res.Count - 1);
 			res.AddRange(['.', '.', '.']);
 		}
 		return new(res.ToArray());
